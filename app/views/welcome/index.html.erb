@@ -1,3 +1,10 @@
 
 <h2>Hello, Term-F Team!</h2>
 <p>Sequence Game</p>
+
+<%- if signed_in? %>
+  <h1>Signed in</h1>
+  <a href="/users/sign_out">Sign Out</a>
+<% else -%>
+  <a href="/users/sign_in">Sign In</a>
+<% end-%>
