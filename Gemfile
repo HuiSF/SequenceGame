@@ -29,6 +29,10 @@ gem 'rails_12factor', group: :production
 
 # User Authentication library
 gem "devise"
+gem "pusher"
+gem 'sinatra'
+gem 'uuid'
+gem 'json'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
