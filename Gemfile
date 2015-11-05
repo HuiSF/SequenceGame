@@ -29,6 +29,8 @@ gem 'rails_12factor', group: :production
 
 # User Authentication library
 gem "devise"
+
+# pusher dependencies
 gem "pusher"
 gem 'sinatra'
 gem 'uuid'

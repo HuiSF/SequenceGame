@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'chats' => 'chats#index'
-  post 'chats' => 'chats#get_post'
+  post 'chats' => 'chats#post'
   devise_for :users
   get 'welcome/index'
 
