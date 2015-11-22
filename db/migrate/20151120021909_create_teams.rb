@@ -2,14 +2,11 @@ class CreateTeams < ActiveRecord::Migration
   def change
     create_table :teams do |t|
       t.integer :color
-      t.array :tokens
-      t.array :sequences
       t.timestamps null: false
     end
     change_table :users do |t|
-      t.string :username, null: false
+      t.string :username, null: false, default: ""
       t.string :avatar
-      t.integer :hand, array: true, default: []
       t.integer :current_team_id
     end
     create_table :teams_users, id: false do |t|
