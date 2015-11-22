@@ -5,4 +5,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   serialize :hand, Array 
+  belongs_to :current_team, :class_name => 'Team', :foreign_key => 'current_team_id'
+  has_and_belongs_to_many :teams
 end
