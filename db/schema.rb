@@ -18,17 +18,14 @@ ActiveRecord::Schema.define(version: 20151120021909) do
 
   create_table "teams", force: :cascade do |t|
     t.integer  "color"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "current_user_id"
+    t.integer  "next_user_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  create_table "teams_users", id: false, force: :cascade do |t|
-    t.integer "team_id"
-    t.integer "user_id"
-  end
-
-  add_index "teams_users", ["team_id"], name: "index_teams_users_on_team_id", using: :btree
-  add_index "teams_users", ["user_id"], name: "index_teams_users_on_user_id", using: :btree
+  add_index "teams", ["current_user_id"], name: "index_teams_on_current_user_id", using: :btree
+  add_index "teams", ["next_user_id"], name: "index_teams_on_next_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
