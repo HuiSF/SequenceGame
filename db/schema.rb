@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151120021909) do
+ActiveRecord::Schema.define(version: 20151123231626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,8 +20,10 @@ ActiveRecord::Schema.define(version: 20151120021909) do
     t.integer  "color"
     t.integer  "current_user_id"
     t.integer  "next_user_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.text     "sequences",       default: [],              array: true
+    t.text     "tokens",          default: [],              array: true
   end
 
   add_index "teams", ["current_user_id"], name: "index_teams_on_current_user_id", using: :btree
@@ -43,6 +45,7 @@ ActiveRecord::Schema.define(version: 20151120021909) do
     t.string   "username",               default: "", null: false
     t.string   "avatar"
     t.integer  "current_team_id"
+    t.text     "hand",                   default: [],              array: true
   end
 
   add_index "users", ["current_team_id"], name: "index_users_on_current_team_id", using: :btree
