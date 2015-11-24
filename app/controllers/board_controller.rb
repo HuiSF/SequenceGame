@@ -52,7 +52,7 @@ class BoardController < ApplicationController
   #   position (token)
   #   card (token)
   def addToken
-    
+
   end
 
   # remove a token from the board

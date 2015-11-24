@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: boards
+#
+#  id                :integer          not null, primary key
+#  current_team      :integer
+#  deck              :text             default([]), is an Array
+#  last_discard      :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  number_of_seats   :integer
+#  number_of_players :integer
+#
+
 class Board < ActiveRecord::Base
   has_many :teams, :foreign_key => "board_id"
   belongs_to :current_team, :class_name => "Team"
