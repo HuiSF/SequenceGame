@@ -39,7 +39,11 @@ class BoardController < ApplicationController
   # the users for this board
   #   board_id
   def users
-    # Board.find
+    @users = []
+    teams = Board.find(params[:board_id]).teams.all
+    teams.each do |team|
+      @users.push(team.users.all)
+    end
   end
 
   # add a token to the board
@@ -48,7 +52,7 @@ class BoardController < ApplicationController
   #   position (token)
   #   card (token)
   def addToken
-
+    
   end
 
   # remove a token from the board
