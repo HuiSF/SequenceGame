@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
+  get 'lobby/boards'
+
   get 'chats' => 'chats#index'
   post 'chats' => 'chats#post'
   devise_for :users
+
   get 'welcome/index'
 
   root 'welcome#index'
