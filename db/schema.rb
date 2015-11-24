@@ -11,17 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151123232526) do
+ActiveRecord::Schema.define(version: 20151124000017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "boards", force: :cascade do |t|
     t.integer  "current_team"
-    t.text     "deck",         default: [],              array: true
+    t.text     "deck",              default: [],              array: true
     t.integer  "last_discard"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "number_of_seats"
+    t.integer  "number_of_players"
   end
 
   add_index "boards", ["current_team"], name: "index_boards_on_current_team", using: :btree
