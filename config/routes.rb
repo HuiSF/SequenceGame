@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'lobby/boards' => 'boards#index'
-  get 'board/:id/users' => 'boards#users'
+  post 'board/users' => 'boards#users'
   post 'board/add_token' => 'boards#addToken'
   post 'board/remove_token' => 'boards#removeToken'
 
