@@ -27,6 +27,9 @@ gem 'rspec-rails'
 
 gem 'rails_12factor', group: :production
 
+# Annotate to help view the models
+gem 'annotate'
+
 # User Authentication library
 gem "devise"
 
