@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: teams
+#
+#  id              :integer          not null, primary key
+#  color           :integer
+#  current_user_id :integer
+#  next_user_id    :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  sequences       :text             default([]), is an Array
+#  tokens          :text             default([]), is an Array
+#  board_id        :integer
+#
+
 class Team < ActiveRecord::Base
   enum color: [:red, :blue, :green]
   has_many :users, :foreign_key => "current_team_id"
