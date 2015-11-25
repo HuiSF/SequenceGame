@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   get 'lobby/boards' => 'boards#index'
-  post 'board/users' => 'boards#users'
-  post 'board/add_token' => 'boards#addToken'
-  post 'board/remove_token' => 'boards#removeToken'
+  post 'boards/users' => 'boards#users'
+  post 'boards/add_token' => 'boards#addToken'
+  post 'boards/remove_token' => 'boards#removeToken'
 
-  post 'board/discard' => 'boards#discard'
+  post 'boards/discard' => 'boards#discard'
   resources :boards
 
   get 'chats' => 'chats#index'

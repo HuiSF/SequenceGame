@@ -1,4 +1,4 @@
-class BoardController < ApplicationController
+class BoardsController < ApplicationController
   # page to list all boards (the lobby)
   def index
     @boards_2p = Board.find_by_number_of_players(2)
