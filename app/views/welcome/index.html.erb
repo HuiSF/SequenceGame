@@ -4,6 +4,7 @@
 
 <%- if signed_in? %>
   <h1>Signed in</h1>
+  <p>Hello, <%= current_user.username %></p>
   <a href="/users/sign_out">Sign Out</a>
 <%- else -%>
   <script type="text/javascript">
