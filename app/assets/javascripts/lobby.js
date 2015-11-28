@@ -13,9 +13,9 @@ function Lobby(pusher, options) {
     debug: true
   }, options);
 
-  if(this.settings.debug && !Pusher.log) {
+  if (this.settings.debug && !Pusher.log) {
     Pusher.log = function(msg) {
-      if(console && console.log) {
+      if (console && console.log) {
         console.log(msg);
       }
     };
@@ -24,12 +24,15 @@ function Lobby(pusher, options) {
   this.settings.channelName = Lobby.getValidChannelName(this.settings.channelName);
   this._channel = this._pusher.subscribe(this.settings.channelName);
 
-  this._channel.bind('updata_boards', function (data) {
+  this._channel.bind('updata_boards', function(data) {
     _this._updateBoards(data);
   });
   this._channel.bind('chat-message', function(data) {
     _this._chatMessageReceived(data);
   });
+
+  // this._ping();
+
   this._itemCount = 0;
   this._widget = Lobby._createHTML(this.settings.appendTo);
   this._nicknameEl = this._widget.find('input[name=nickname]');
@@ -53,7 +56,7 @@ function Lobby(pusher, options) {
   messageEl.scroll(function() {
     var el = messageEl.get(0);
     var scrollableHeight = (el.scrollHeight - messageEl.height());
-    _this._autoScroll = ( scrollableHeight === messageEl.scrollTop() );
+    _this._autoScroll = (scrollableHeight === messageEl.scrollTop());
   });
 
   this._startTimeMonitor();
@@ -65,7 +68,7 @@ Lobby.prototype._chatMessageReceived = function(data) {
   console.log('message coming');
   var _this = this;
 
-  if(this._itemCount === 0) {
+  if (this._itemCount === 0) {
     this._messagesEl.html('');
   }
 
@@ -73,7 +76,7 @@ Lobby.prototype._chatMessageReceived = function(data) {
   messageEl.hide();
   this._messagesEl.append(messageEl);
   messageEl.slideDown(function() {
-    if(_this._autoScroll) {
+    if (_this._autoScroll) {
       var messageEl = _this._messagesEl.get(0);
       var scrollableHeight = (messageEl.scrollHeight - _this._messagesEl.height());
       _this._messagesEl.scrollTop(messageEl.scrollHeight);
@@ -82,7 +85,7 @@ Lobby.prototype._chatMessageReceived = function(data) {
 
   ++this._itemCount;
 
-  if(this._itemCount > this.settings.maxItems) {
+  if (this._itemCount > this.settings.maxItems) {
     /* get first li of list */
     this._messagesEl.children(':first').slideUp(function() {
       $(this).remove();
@@ -92,14 +95,8 @@ Lobby.prototype._chatMessageReceived = function(data) {
 
 /* @private */
 Lobby.prototype._sendChatButtonClicked = function() {
-  // var nickname = $.trim(this._nicknameEl.val()); // optional
-  // var email = $.trim(this._emailEl.val()); // optional
-  // if(!nickname) {
-  //   alert('please supply a nickname');
-  //   return;
-  // }
   var message = $.trim(this._messageInputEl.val());
-  if(!message) {
+  if (!message) {
     alert('please supply a chat message');
     return;
   }
@@ -128,7 +125,7 @@ Lobby.prototype._sendChatMessage = function(data) {
       // console.log(xhr);
       // console.log(status);
       // Pusher.log('Chat message sent. Result: ' + status + ' : ' + xhr.responseText);
-      if(xhr.status === 200) {
+      if (xhr.status === 200) {
         _this._messageInputEl.val('');
       }
       _this._messageInputEl.removeAttr('readonly');
@@ -138,8 +135,8 @@ Lobby.prototype._sendChatMessage = function(data) {
       var activity = result.activity;
       var imageInfo = activity.actor.image;
       var image = $('<div class="pusher-chat-widget-current-user-image">' +
-                      '<img src="' + imageInfo.url + '" width="32" height="32" />' +
-                    '</div>');
+        '<img src="' + imageInfo.url + '" width="32" height="32" />' +
+        '</div>');
       var name = $('<div class="pusher-chat-widget-current-user-name">' + activity.actor.displayName.replace(/\\'/g, "'") + '</div>');
       var header = _this._widget.find('.pusher-chat-widget-header');
       header.html(image).append(name);
@@ -164,17 +161,17 @@ Lobby.prototype._startTimeMonitor = function() {
 /* @private */
 Lobby._createHTML = function(appendTo) {
   var html = '' +
-  '<div class="pusher-chat-widget">' +
+    '<div class="pusher-chat-widget">' +
     '<div class="pusher-chat-widget-messages">' +
-      '<ul class="activity-stream">' +
-        '<li class="initial">No chat messages available</li>' +
-      '</ul>' +
+    '<ul class="activity-stream">' +
+    '<li class="initial">No chat messages available</li>' +
+    '</ul>' +
     '</div>' +
     '<div class="pusher-chat-widget-input col-sm-12">' +
-      '<div class="col-sm-10"><textarea name="message" rows="4" maxlength="140" placeholder="Input message, press enter or click send button to send"></textarea></div>' +
-      '<div class="col-sm-2"><button class="pusher-chat-widget-send-btn">Send</button></div>' +
+    '<div class="col-sm-10"><textarea name="message" rows="4" maxlength="140" placeholder="Input message, press enter or click send button to send"></textarea></div>' +
+    '<div class="col-sm-2"><button class="pusher-chat-widget-send-btn">Send</button></div>' +
     '</div>' +
-  '</div>';
+    '</div>';
   var widget = $(html);
   $(appendTo).append(widget);
   return widget;
@@ -189,8 +186,8 @@ Lobby._buildListItem = function(activity) {
 
   var imageInfo = activity.actor.image;
   var image = $('<div class="image">' +
-                  '<img src="' + imageInfo.url + '" width="' + imageInfo.width + '" height="' + imageInfo.height + '" />' +
-                '</div>');
+    '<img src="' + imageInfo.url + '" width="' + imageInfo.width + '" height="' + imageInfo.height + '" />' +
+    '</div>');
   item.append(image);
 
   var content = $('<div class="content"></div>');
@@ -201,26 +198,22 @@ Lobby._buildListItem = function(activity) {
     myself = 'myself';
   }
   var user = $('<div class="activity-row">' +
-                '<span class="user-name">' +
-                  '<span class="screen-name ' + myself + '">' + activity.actor.displayName.replace(/\\'/g, "'") + '</span>' +
-                  //'<span class="full-name">' + activity.actor.displayName + '</span>' +
-                '</span>' +
-              '</div>');
+    '<span class="user-name">' +
+    '<span class="screen-name ' + myself + '">' + activity.actor.displayName.replace(/\\'/g, "'") + '</span>' +
+    '</span>' +
+    '</div>');
   content.append(user);
 
   var message = $('<div class="activity-row">' +
-                    '<div class="text">' + activity.body.replace(/\\('|&quot;)/g, '$1') + '</div>' +
-                  '</div>');
+    '<div class="text">' + activity.body.replace(/\\('|&quot;)/g, '$1') + '</div>' +
+    '</div>');
   content.append(message);
 
   var time = $('<div class="activity-row">' +
-                  '<span class="timestamp" title="' + activity.published + '" data-activity-published="' + activity.published + '">' + Lobby.timeToDescription(activity.published) + '</span>' +
-                '<span class="activity-actions">' +
-                  /*'<span class="tweet-action action-favorite">' +
-                    '<a href="#" class="like-action" data-activity="like" title="Like"><span><i></i><b>Like</b></span></a>' +
-                  '</span>' +*/
-                '</span>' +
-              '</div>');
+    '<span class="timestamp" title="' + activity.published + '" data-activity-published="' + activity.published + '">' + Lobby.timeToDescription(activity.published) + '</span>' +
+    '<span class="activity-actions">' +
+    '</span>' +
+    '</div>');
   content.append(time);
 
 
@@ -243,36 +236,29 @@ Lobby.getValidChannelName = function(from) {
  * time description.
  */
 Lobby.timeToDescription = function(time) {
-  if(time instanceof Date === false) {
+  if (time instanceof Date === false) {
     time = new Date(Date.parse(time));
   }
   var desc = "dunno";
   var now = new Date();
   var howLongAgo = (now - time);
-  var seconds = Math.round(howLongAgo/1000);
-  var minutes = Math.round(seconds/60);
-  var hours = Math.round(minutes/60);
-  if(seconds === 0) {
+  var seconds = Math.round(howLongAgo / 1000);
+  var minutes = Math.round(seconds / 60);
+  var hours = Math.round(minutes / 60);
+  if (seconds === 0) {
     desc = "just now";
-  }
-  else if(minutes < 1) {
-    desc = seconds + " second" + (seconds !== 1?"s":"") + " ago";
-  }
-  else if(minutes < 60) {
-    desc = "about " + minutes + " minute" + (minutes !== 1?"s":"") + " ago";
-  }
-  else if(hours < 24) {
-    desc = "about " + hours + " hour"  + (hours !== 1?"s":"") + " ago";
-  }
-  else {
+  } else if (minutes < 1) {
+    desc = seconds + " second" + (seconds !== 1 ? "s" : "") + " ago";
+  } else if (minutes < 60) {
+    desc = "about " + minutes + " minute" + (minutes !== 1 ? "s" : "") + " ago";
+  } else if (hours < 24) {
+    desc = "about " + hours + " hour" + (hours !== 1 ? "s" : "") + " ago";
+  } else {
     desc = time.getDay() + " " + ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"][time.getMonth()];
   }
   return desc;
 };
 
-Lobby.prototype._pingForBoardsUpdate = function () {
-  $data = {
-    channelName: this.settings.channelName,
-
-  };
+Lobby.prototype._updateBoards = function(data) {
+  console.log(data);
 };

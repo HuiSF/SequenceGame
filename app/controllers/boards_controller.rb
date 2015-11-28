@@ -1,6 +1,13 @@
 class BoardsController < ApplicationController
+  protect_from_forgery
+  skip_before_action :verify_authenticity_token, if: :json_request?
+  @is_pusher_set = false
   # page to list all boards (the lobby)
   def index
+    # initialize pusher
+    # when json data is ready call push_info(data)
+    @channel_name = get_channel_name(request.original_url)
+    @update_boards_event = 'updata_boards'
     @boards_2p = Board.find_by_number_of_players(2)
     @boards_3p = Board.find_by_number_of_players(3)
     @boards_4p = Board.find_by_number_of_players(4)
@@ -84,5 +91,20 @@ class BoardsController < ApplicationController
 
   end
 
+  def push_info(data)
+    # data will be the json of boards\' data
+    Pusher[@channel_name].trigger(@update_boards_event, data);
+  end
 
+  protected
+
+  def json_request?
+    request.format.json?
+  end
+
+  def get_channel_name(http_referer)
+    pattern = /(\W)+/
+    channel_name = http_referer.gsub pattern, '-'
+    channel_name
+  end
 end
