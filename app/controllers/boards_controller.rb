@@ -57,7 +57,6 @@ class BoardsController < ApplicationController
   #   position (token)
   #   card (token)
   def addToken
-    board = Board.find(params[:board_id])
 
   end
 
@@ -75,6 +74,8 @@ class BoardsController < ApplicationController
   #   board_id
   #   user_id
   def discard
+    @board = Board.find(params[:board_id])
+    @user = Board.find(params[:user_id])
 
   end
 
@@ -87,13 +88,5 @@ class BoardsController < ApplicationController
   end
 
   private
-
-    # def board_params
-    #   params.require(:board).
       
-    # end
-    # def board_users
-      
-    # end
-
 end
