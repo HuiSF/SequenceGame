@@ -9,20 +9,21 @@ class BoardsController < ApplicationController
   # page to show a single board (game view)
   def show
     @board = Board.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.json {render :json => @board}
-    end
   end
 
   # page to make a new board
   def new
-
+    @board = Board.new
   end
 
   # create a new board
   def create
-
+    # @board = Board.new(board_params)
+    # if @board.save
+    #   redirect_to @board
+    # else
+    #   render 'new'
+    # end
   end
 
   # page to edit board with :id
@@ -56,6 +57,7 @@ class BoardsController < ApplicationController
   #   position (token)
   #   card (token)
   def addToken
+    board = Board.find(params[:board_id])
 
   end
 
@@ -84,5 +86,14 @@ class BoardsController < ApplicationController
 
   end
 
+  private
+
+    # def board_params
+    #   params.require(:board).
+      
+    # end
+    # def board_users
+      
+    # end
 
 end
