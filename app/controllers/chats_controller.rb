@@ -12,6 +12,7 @@ set :public_folder, '../'
 #   File.read('../index.html')
 # end
 class ChatsController < ApplicationController
+  layout false
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :json_request?
 
@@ -45,7 +46,7 @@ class ChatsController < ApplicationController
       STDERR.puts '=========================='
       STDERR.puts data
       STDERR.puts '=========================='
-      Pusher[channel_name].trigger('chat_message', data)
+      Pusher[channel_name].trigger('chat-message', data)
 
       # result = {'activity' => data, 'pusherResponse' => response}
       #

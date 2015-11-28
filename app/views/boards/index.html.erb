@@ -1,20 +1,115 @@
-<div class="container">
-  
-</div>
-<div class="container">
+<div class="container-fluid">
+  <% if signed_in? %>
+  <%= current_user.username %>
+  <% else %>
+  <%= current_user.username %>
+  <% end %>
   <div class="row">
     <div class="col-md-9 col-sm-12 boards-column">
+      <div class="logo logo-in-page">
+        <span class="large">S</span>EQUENCE
+        <span class="text-muted logo-instruction">Chose a table and start to play!</span>
+      </div>
       <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">2 Players Tables</a></li>
-        <li role="presentation"><a href="#">3 Players Tables</a></li>
-        <li role="presentation"><a href="#">4 Players Tables</a></li>
+        <li role="presentation" class="two-players-tab active" data-panel="two-players-boards"><a href="#">2 Players Tables (1 vs 1)</a></li>
+        <li role="presentation" class="three-players-tab" data-panel="three-players-boards"><a href="#">3 Players Tables (1 vs 1 vs 1)</a></li>
+        <li role="presentation" class="four-players-tab" data-panel="four-players-boards"><a href="#">4 Players Tables (2 vs 2)</a></li>
       </ul>
-      <div class="col-sm-12 2players-boards"></div>
-      <div class="col-sm-12 3players-boards"></div>
-      <div class="col-sm-12 4players-boards"></div>
+      <div class="col-sm-12 two-players-boards">
+        <div class="col-sm-6 col-md-4">
+          <div class="table-container waiting">
+            <div class="table-number">1</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+            <div class="status"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 playing">
+          <div class="table-container">
+            <div class="table-number">2</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+            <div class="status"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 full">
+          <div class="table-container">
+            <div class="table-number">3</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+            <div class="status"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="table-container waiting">
+            <div class="table-number">4</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="table-container waiting">
+            <div class="table-number">5</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="table-container waiting">
+            <div class="table-number">6</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="table-container">
+            <div class="table-number">7</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="table-container">
+            <div class="table-number">8</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="table-container waiting">
+            <div class="table-number">9</div>
+            <div class="seats player-1"></div>
+            <div class="seats player-2"></div>
+            <div class="seats player-3"></div>
+            <div class="seats player-4"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 three-players-boards"></div>
+      <div class="col-sm-12 four-players-boards"></div>
     </div>
     <div class="col-md-3 col-sm-12 lobby-chat-room">
+      <div class="col-sm-12 chat-container">
+        <div class="messages">
 
+        </div>
+      </div>
     </div>
   </div>
 </div>
