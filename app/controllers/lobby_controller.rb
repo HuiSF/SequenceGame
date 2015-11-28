@@ -23,8 +23,52 @@ class LobbyController < ApplicationController
         else
           # error
       end
-
-      render :json => @boards_json
     end
+    @boards_json = {
+      "2players" => [
+        {"board_id" => 1, "number_of_seats" => 2, "number_of_players": 2},
+        {"board_id" => 2, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 3, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 4, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 5, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 6, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 7, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 8, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 9, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 10, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 11, "number_of_seats" => 2, "number_of_players": 0},
+        {"board_id" => 12, "number_of_seats" => 2, "number_of_players": 0}
+      ],
+      "3players" => [
+        {"board_id" => 1, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 2, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 3, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 4, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 5, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 6, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 7, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 8, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 9, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 10, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 11, "number_of_seats" => 3, "number_of_players": 0},
+        {"board_id" => 12, "number_of_seats" => 3, "number_of_players": 0}
+      ],
+      "4players" => [
+        {"board_id" => 1, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 2, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 3, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 4, "number_of_seats" => 4, "number_of_players": 4},
+        {"board_id" => 5, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 6, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 7, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 8, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 9, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 10, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 11, "number_of_seats" => 4, "number_of_players": 0},
+        {"board_id" => 12, "number_of_seats" => 4, "number_of_players": 0}
+      ]
+    }
+    render :json => @boards_json
   end
+
 end

@@ -11,7 +11,7 @@ if ($('.boards.index').length > 0) {
       boardsEndPoint: '/lobby/boards'
     });
     resizeLobbyChatRoom();
-    resizeAvatar();
+    resizeSeats();
     resizeMessagesContainer();
 
     var tabs = [], tab, panels = [];
@@ -35,11 +35,11 @@ if ($('.boards.index').length > 0) {
 
     $window.resize(function() {
       resizeLobbyChatRoom();
-      resizeAvatar();
+      resizeSeats();
       resizeMessagesContainer();
     });
 
-    function resizeAvatar() {
+    function resizeSeats() {
       var tableContainerWidth = $('.table-container').innerWidth(),
         tableStatusWidth = $('.table-number').outerWidth(),
         seatsWidth = (tableContainerWidth - tableStatusWidth - 72) / 4;
@@ -54,7 +54,7 @@ if ($('.boards.index').length > 0) {
           $previousTab = $('li.active');
       panels.forEach(function (panel) {
         if ($(panel).hasClass(tabPanel)) {
-          $(panel).fadeIn(300);
+          $(panel).fadeIn(500);
           $previousTab.removeClass('active');
           $tab.addClass('active');
         } else {

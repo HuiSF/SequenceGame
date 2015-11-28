@@ -24,14 +24,12 @@ function Lobby(pusher, options) {
   this.settings.channelName = Lobby.getValidChannelName(this.settings.channelName);
   this._channel = this._pusher.subscribe(this.settings.channelName);
 
-  this._channel.bind('updata_boards', function(data) {
+  this._channel.bind('update_boards', function(data) {
     _this._updateBoards(data);
   });
   this._channel.bind('chat-message', function(data) {
     _this._chatMessageReceived(data);
   });
-
-  // this._ping();
 
   this._itemCount = 0;
   this._widget = Lobby._createHTML(this.settings.appendTo);
@@ -59,6 +57,13 @@ function Lobby(pusher, options) {
     _this._autoScroll = (scrollableHeight === messageEl.scrollTop());
   });
 
+  $.ajax({
+    type: 'GET',
+    url: '/lobby',
+    success: function (data) {
+      _this._updateBoards(data);
+    }
+  });
   this._startTimeMonitor();
 }
 
@@ -260,5 +265,50 @@ Lobby.timeToDescription = function(time) {
 };
 
 Lobby.prototype._updateBoards = function(data) {
-  console.log(data);
+  var twoPlayersTables = data['2players'],
+      threePlayersTables = data['3players'],
+      fourPlayersTables = data['4players'],
+      i, j;
+
+  $('.two-players-boards').html('');
+  for (i = 0; i < twoPlayersTables.length; i++) {
+    $aTable = createATable(twoPlayersTables[i]);
+    $('.two-players-boards').append($aTable);
+  }
+  $('.three-players-boards').html('');
+  for (i = 0; i < threePlayersTables.length; i++) {
+    $aTable = createATable(threePlayersTables[i]);
+    $('.three-players-boards').append($aTable);
+  }
+  $('.four-players-boards').html('');
+  for (i = 0; i < fourPlayersTables.length; i++) {
+    $aTable = createATable(fourPlayersTables[i]);
+    $('.four-players-boards').append($aTable);
+  }
+
+  function createATable(tableData) {
+    $aTable = $('<div class="col-sm-6 col-md-4"></div>');
+    $tableContainer = $('<div class="table-container"></div>');
+    $tableContainer.attr({
+      'data-table-type': 'two-players',
+      'data-table-id': tableData.board_id
+    });
+    if (tableData.number_of_seats > tableData.number_of_players) {
+      $tableContainer.addClass('waiting');
+      $tableContainer.attr('data-joinable', true);
+    } else if (tableData.number_of_seats === tableData.number_of_players){
+      $tableContainer.addClass('full');
+      $tableContainer.attr('data-joinable', false);
+    }
+    $tableContainer.append('<div class="table-number">' + tableData.board_id + '</div>');
+    for (j = 0; j < tableData.number_of_seats; j++) {
+      $aSeat = $('<div class="seats"></div>');
+      $tableContainer.append($aSeat);
+    }
+    $status = $('<div class="status"></div>');
+    $tableContainer.append($status);
+    $aTable.append($tableContainer);
+    return $aTable;
+  }
+  $(window).resize();
 };

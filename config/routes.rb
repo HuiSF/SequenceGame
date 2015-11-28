@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   post 'boards/users' => 'boards#users'
   post 'boards/add_token' => 'boards#addToken'
   post 'boards/remove_token' => 'boards#removeToken'
+  post 'boards/join' => 'boards#join'
+  post 'boards/leave' => 'boards#leave'
+  get 'lobby' => 'lobby#boards' #first time access lobby and generate list of boards
 
   post 'boards/discard' => 'boards#discard'
   resources :boards
@@ -17,7 +20,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get 'users/sign_out' => 'devise/sessions#destroy'
-    
+
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -1,9 +1,13 @@
 class BoardsController < ApplicationController
   # page to list all boards (the lobby)
   def index
-    @boards_2p = Board.find_by_number_of_players(2)
-    @boards_3p = Board.find_by_number_of_players(3)
-    @boards_4p = Board.find_by_number_of_players(4)
+    # initialize pusher
+    # when json data is ready, call push_info(data)
+    @channel_name = get_channel_name(request.original_url)
+    @update_boards_event = 'update_boards'
+    # @boards_2p = Board.find_by_number_of_players(2)
+    # @boards_3p = Board.find_by_number_of_players(3)
+    # @boards_4p = Board.find_by_number_of_players(4)
   end
 
   # page to show a single board (game view)
@@ -56,6 +60,7 @@ class BoardsController < ApplicationController
       end
     end
     redirect_to 'lobby/boards'
+    #
   end
 
   # the users for this board
@@ -102,6 +107,49 @@ class BoardsController < ApplicationController
   #   team_id
   def addSequence
 
+  end
+
+  protected
+
+  def json_request?
+    request.format.json?
+  end
+
+  def get_channel_name(http_referer)
+    pattern = /(\W)+/
+    channel_name = http_referer.gsub pattern, '-'
+    channel_name
+  end
+
+  def push_info()
+    @boards_json = {}
+    @boards_json['2players'] = []
+    @boards_json['3players'] = []
+    @boards_json['4players'] = []
+
+    boards = Board.all
+    boards.each do |each_board|
+      case each_board.number_of_players
+        when 2
+          @boards_json['2players'].push(
+              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
+          )
+        when 3
+          @boards_json['3players'].push(
+              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
+          )
+        when 4
+          @boards_json['4players'].push(
+              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
+          )
+        else
+          # error
+      end
+    end
+    STDERR.puts @boards_json
+    STDERR.puts @channel_name
+    STDERR.puts @update_boards_event
+    Pusher[@channel_name].trigger(@update_boards_event, @boards_json);
   end
 
   private
