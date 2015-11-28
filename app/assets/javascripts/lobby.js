@@ -24,13 +24,12 @@ function Lobby(pusher, options) {
   this.settings.channelName = Lobby.getValidChannelName(this.settings.channelName);
   this._channel = this._pusher.subscribe(this.settings.channelName);
 
-  // this._channel.bind('updata_boards', function (data) {
-  //   _this._updateBoards(data);
-  // });
+  this._channel.bind('updata_boards', function (data) {
+    _this._updateBoards(data);
+  });
   this._channel.bind('chat-message', function(data) {
     _this._chatMessageReceived(data);
   });
-console.log(this._channel);
   this._itemCount = 0;
   this._widget = Lobby._createHTML(this.settings.appendTo);
   this._nicknameEl = this._widget.find('input[name=nickname]');
@@ -41,6 +40,13 @@ console.log(this._channel);
   this._widget.find('button').click(function(e) {
     e.preventDefault();
     _this._sendChatButtonClicked();
+  });
+  this._widget.find('textarea').keydown(function(e) {
+    var code = e.keyCode || e.which;
+    if (code === 13) {
+      e.preventDefault();
+      _this._sendChatButtonClicked();
+    }
   });
 
   var messageEl = this._messagesEl;
@@ -86,12 +92,12 @@ Lobby.prototype._chatMessageReceived = function(data) {
 
 /* @private */
 Lobby.prototype._sendChatButtonClicked = function() {
-  var nickname = $.trim(this._nicknameEl.val()); // optional
-  var email = $.trim(this._emailEl.val()); // optional
-  if(!nickname) {
-    alert('please supply a nickname');
-    return;
-  }
+  // var nickname = $.trim(this._nicknameEl.val()); // optional
+  // var email = $.trim(this._emailEl.val()); // optional
+  // if(!nickname) {
+  //   alert('please supply a nickname');
+  //   return;
+  // }
   var message = $.trim(this._messageInputEl.val());
   if(!message) {
     alert('please supply a chat message');
@@ -99,9 +105,9 @@ Lobby.prototype._sendChatButtonClicked = function() {
   }
 
   var chatInfo = {
-    nickname: nickname,
-    email: email,
+    nickname: currentUser,
     text: message,
+    chatEvent: 'chat-message'
   };
   this._sendChatMessage(chatInfo);
 };
@@ -159,19 +165,13 @@ Lobby.prototype._startTimeMonitor = function() {
 Lobby._createHTML = function(appendTo) {
   var html = '' +
   '<div class="pusher-chat-widget">' +
-    '<div class="pusher-chat-widget-header">' +
-      '<label for="nickname">Name</label>' +
-      '<input type="text" name="nickname" />' +
-      '<label for="email" title="So we can look up your Gravatar">Email (optional)</label>' +
-      '<input type="email" name="email" />' +
-    '</div>' +
     '<div class="pusher-chat-widget-messages">' +
       '<ul class="activity-stream">' +
-        '<li class="waiting">No chat messages available</li>' +
+        '<li class="initial">No chat messages available</li>' +
       '</ul>' +
     '</div>' +
     '<div class="pusher-chat-widget-input col-sm-12">' +
-      '<div class="col-sm-10"><textarea name="message" rows="4" maxlength="140" placeholder="message"></textarea></div>' +
+      '<div class="col-sm-10"><textarea name="message" rows="4" maxlength="140" placeholder="Input message, press enter or click send button to send"></textarea></div>' +
       '<div class="col-sm-2"><button class="pusher-chat-widget-send-btn">Send</button></div>' +
     '</div>' +
   '</div>';
@@ -196,9 +196,13 @@ Lobby._buildListItem = function(activity) {
   var content = $('<div class="content"></div>');
   item.append(content);
 
+  var myself = '';
+  if (activity.actor.displayName.replace(/\\'/g, "'") === currentUser) {
+    myself = 'myself';
+  }
   var user = $('<div class="activity-row">' +
                 '<span class="user-name">' +
-                  '<a class="screen-name" title="' + activity.actor.displayName.replace(/\\'/g, "'") + '">' + activity.actor.displayName.replace(/\\'/g, "'") + '</a>' +
+                  '<span class="screen-name ' + myself + '">' + activity.actor.displayName.replace(/\\'/g, "'") + '</span>' +
                   //'<span class="full-name">' + activity.actor.displayName + '</span>' +
                 '</span>' +
               '</div>');
@@ -210,9 +214,7 @@ Lobby._buildListItem = function(activity) {
   content.append(message);
 
   var time = $('<div class="activity-row">' +
-                '<a ' + (activity.link?'href="' + activity.link + '" ':'') + ' class="timestamp">' +
-                  '<span title="' + activity.published + '" data-activity-published="' + activity.published + '">' + Lobby.timeToDescription(activity.published) + '</span>' +
-                '</a>' +
+                  '<span class="timestamp" title="' + activity.published + '" data-activity-published="' + activity.published + '">' + Lobby.timeToDescription(activity.published) + '</span>' +
                 '<span class="activity-actions">' +
                   /*'<span class="tweet-action action-favorite">' +
                     '<a href="#" class="like-action" data-activity="like" title="Like"><span><i></i><b>Like</b></span></a>' +
@@ -266,4 +268,11 @@ Lobby.timeToDescription = function(time) {
     desc = time.getDay() + " " + ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"][time.getMonth()];
   }
   return desc;
+};
+
+Lobby.prototype._pingForBoardsUpdate = function () {
+  $data = {
+    channelName: this.settings.channelName,
+
+  };
 };

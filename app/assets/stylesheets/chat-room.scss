@@ -35,16 +35,16 @@
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
 .pusher-chat-widget-input textarea::-webkit-input-placeholder {
-  color: #ccc;
+  color: #616161;
 }
 .pusher-chat-widget-input textarea:-moz-placeholder {
-  color: #ccc;
+  color: #616161;
 }
 .pusher-chat-widget-input textarea::-moz-placeholder {
-  color: #ccc;
+  color: #616161;
 }
 .pusher-chat-widget-input textarea:-ms-input-placeholder {
-  color: #ccc;
+  color: #616161;
 }
 .pusher-chat-widget-send-btn {
   background: linear-gradient(to bottom, rgba(23,44,61,1) 0%,rgba(23,44,61,1) 50%,rgba(13,22,29,1) 50%,rgba(20,37,51,1) 100%);
@@ -68,9 +68,8 @@
 
 .pusher-chat-widget ul.activity-stream {
   padding: 0;
-  min-height: 100px;
-  max-height: 400px;
   overflow: auto;
+  margin: 0 auto;
 }
 .pusher-chat-widget ul.activity-stream li.waiting {
   height: 100%;
@@ -114,8 +113,12 @@
 }
 
 .pusher-chat-widget ul.activity-stream li .screen-name {
+  cursor: default;
   font-weight: bold;
   color: #66afe9 !important;
+}
+.pusher-chat-widget ul.activity-stream li .myself {
+  color: #fffd20 !important;
 }
 
 .pusher-chat-widget ul.activity-stream li .content {
@@ -128,10 +131,24 @@
   position: relative;
   line-height: 15px;
 }
+.pusher-chat-widget ul.activity-stream li .activity-row .timestamp {
+  color: #999;
+  cursor: default;
+  font-size: 0.8em;
+}
 
 .pusher-chat-widget ul.activity-stream li .text {
   padding: 0;
-  font-family: Arial,"Helvetica Neue",sans-serif;
+  // font-family: Arial,"Helvetica Neue",sans-serif;
+  font-size: 1.1em;
   line-height: 19px;
   word-wrap: break-word;
+}
+.pusher-chat-widget ul.activity-stream li.initial {
+  height: 100%;
+  line-height: 100%;
+  text-align: center;
+}
+.pusher-chat-widget ul.activity-stream li.initial:hover {
+  background: none;
 }

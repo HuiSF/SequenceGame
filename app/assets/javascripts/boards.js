@@ -12,6 +12,7 @@ if ($('.boards.index').length > 0) {
     });
     resizeLobbyChatRoom();
     resizeAvatar();
+    resizeMessagesContainer();
 
     var tabs = [], tab, panels = [];
     tabs.push($('.two-players-tab'));
@@ -35,6 +36,7 @@ if ($('.boards.index').length > 0) {
     $window.resize(function() {
       resizeLobbyChatRoom();
       resizeAvatar();
+      resizeMessagesContainer();
     });
 
     function resizeAvatar() {
@@ -59,6 +61,14 @@ if ($('.boards.index').length > 0) {
           $(panel).hide();
         }
       });
+    }
+
+    function resizeMessagesContainer() {
+      var $window = $(window),
+          $activityStream = $('.activity-stream'),
+          $pusherChatWidgetInput = $('.pusher-chat-widget-input'),
+          height = $window.innerHeight() - $pusherChatWidgetInput.innerHeight() - 15;
+      $activityStream.css('max-height', height);
     }
   });
 }
