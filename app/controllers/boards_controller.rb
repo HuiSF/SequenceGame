@@ -53,14 +53,17 @@ class BoardsController < ApplicationController
   def join
     @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
+    teams = @board.teams
     if @board.number_of_players < @board.number_of_seats
-      @board.number_of_seats += 1
-      if @board.number_of_players == @board.number_of_seats
-        redirect_to @board
+      teams.each do |team|
+        if team.users.count < @board.number_of_players_per_team
+          user.current_team = team
+          @board.number_of_seats += 1
+          break
+        end
       end
     end
-    redirect_to 'lobby/boards'
-    #
+    push_info
   end
 
   # the users for this board
@@ -152,6 +155,9 @@ class BoardsController < ApplicationController
     Pusher[@channel_name].trigger(@update_boards_event, @boards_json);
   end
 
+
+
   private
+
 
 end
