@@ -1,13 +1,6 @@
 class BoardsController < ApplicationController
-  protect_from_forgery
-  skip_before_action :verify_authenticity_token, if: :json_request?
-  @is_pusher_set = false
   # page to list all boards (the lobby)
   def index
-    # initialize pusher
-    # when json data is ready call push_info(data)
-    @channel_name = get_channel_name(request.original_url)
-    @update_boards_event = 'updata_boards'
     @boards_2p = Board.find_by_number_of_players(2)
     @boards_3p = Board.find_by_number_of_players(3)
     @boards_4p = Board.find_by_number_of_players(4)
@@ -16,20 +9,23 @@ class BoardsController < ApplicationController
   # page to show a single board (game view)
   def show
     @board = Board.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.json {render :json => @board}
-    end
   end
 
   # page to make a new board
   def new
-
+    @board = Board.new
   end
 
   # create a new board
   def create
-
+    @board = Board.new(:number_of_players)
+    @board.number_of_seats = @board.number_of_players
+    @board.deck = (1...104).to_a.shuffle
+    if @board.save
+      redirect_to @board
+    else
+      render 'new'
+    end
   end
 
   # page to edit board with :id
@@ -45,6 +41,21 @@ class BoardsController < ApplicationController
   # delete board with :id
   def destroy
 
+  end
+
+  # user joins the board
+  # => board_id
+  # => user_id
+  def join
+    @board = Board.find(params[:board_id])
+    user = User.find(params[:user_id])
+    if @board.number_of_players < @board.number_of_seats
+      @board.number_of_seats += 1
+      if @board.number_of_players == @board.number_of_seats
+        redirect_to @board
+      end
+    end
+    redirect_to 'lobby/boards'
   end
 
   # the users for this board
@@ -80,6 +91,8 @@ class BoardsController < ApplicationController
   #   board_id
   #   user_id
   def discard
+    @board = Board.find(params[:board_id])
+    @user = Board.find(params[:user_id])
 
   end
 
@@ -91,20 +104,6 @@ class BoardsController < ApplicationController
 
   end
 
-  def push_info(data)
-    # data will be the json of boards\' data
-    Pusher[@channel_name].trigger(@update_boards_event, data);
-  end
+  private
 
-  protected
-
-  def json_request?
-    request.format.json?
-  end
-
-  def get_channel_name(http_referer)
-    pattern = /(\W)+/
-    channel_name = http_referer.gsub pattern, '-'
-    channel_name
-  end
 end
