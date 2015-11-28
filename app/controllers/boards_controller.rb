@@ -8,7 +8,11 @@ class BoardsController < ApplicationController
 
   # page to show a single board (game view)
   def show
-
+    @board = Board.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.json {render :json => @board}
+    end
   end
 
   # page to make a new board
@@ -26,7 +30,7 @@ class BoardsController < ApplicationController
 
   end
 
-  # update board with :id )
+  # update board with :id
   def update
 
   end
