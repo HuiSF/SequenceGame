@@ -10,7 +10,30 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
-//= require jquery_ujs
-//= require turbolinks
+// require jquery
+// require pusher.min.js
+// require jquery_ujs
+// require turbolinks
 //= require_tree .
+$(document).ready(function() {
+  
+});
+
+function resizeLobbyChatRoom() {
+  $window = $(window);
+  $chatContainer = $('.chat-container');
+  $chatContainer.height($window.innerHeight());
+}
+
+function  showPopup(duration) {
+  $popup = $('<div class="loading-popup"><div class="loading-box"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span class="loading-text">Loading resources...</span></div></div>');
+  $popup.hide();
+  $('body').prepend($popup);
+  $popup.fadeIn(duration);
+}
+
+function hidePopup(duration) {
+  $popup = $('.loading-popup');
+  $popup.fadeOut(duration);
+  $popup.delay(duration).remove();
+}
