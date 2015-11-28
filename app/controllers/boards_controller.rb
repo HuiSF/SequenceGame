@@ -54,15 +54,26 @@ class BoardsController < ApplicationController
     @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
     teams = @board.teams
-    if @board.number_of_players < @board.number_of_seats
+    if @board.number_of_seats > 0
       teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
           user.current_team = team
-          @board.number_of_seats += 1
+          @board.update_number_of_seats
           break
         end
       end
     end
+    push_info
+  end
+
+  # user leaves the board
+  # => board_id
+  # => user_id
+  def leave
+    @board = Board.find(params[:board_id])
+    user = User.find(params[:user_id])
+    user.current_team = nil
+    @board.update_number_of_seats
     push_info
   end
 
