@@ -18,12 +18,14 @@ class BoardsController < ApplicationController
 
   # create a new board
   def create
-    # @board = Board.new(board_params)
-    # if @board.save
-    #   redirect_to @board
-    # else
-    #   render 'new'
-    # end
+    @board = Board.new(:number_of_players)
+    @board.number_of_seats = @board.number_of_players
+    @board.deck = (1...104).to_a.shuffle
+    if @board.save
+      redirect_to @board
+    else
+      render 'new'
+    end
   end
 
   # page to edit board with :id
@@ -39,6 +41,21 @@ class BoardsController < ApplicationController
   # delete board with :id
   def destroy
 
+  end
+
+  # user joins the board
+  # => board_id
+  # => user_id
+  def join
+    @board = Board.find(params[:board_id])
+    user = User.find(params[:user_id])
+    if @board.number_of_players < @board.number_of_seats
+      @board.number_of_seats += 1
+      if @board.number_of_players == @board.number_of_seats
+        redirect_to @board
+      end
+    end
+    redirect_to 'lobby/boards'
   end
 
   # the users for this board
@@ -88,5 +105,5 @@ class BoardsController < ApplicationController
   end
 
   private
-      
+
 end
