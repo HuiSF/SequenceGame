@@ -3,9 +3,12 @@
 <p>Sequence Game</p>
 
 <%- if signed_in? %>
-  <h1>Signed in</h1>
+  <!-- <h1>Signed in</h1>
   <p>Hello, <%= current_user.username %></p>
-  <a href="/users/sign_out">Sign Out</a>
+  <a href="/users/sign_out">Sign Out</a> -->
+  <script type="text/javascript">
+    window.location.href="/lobby/boards"  // put your correct path in a string here
+  </script>
 <%- else -%>
   <script type="text/javascript">
     window.location.href="/users/sign_in"  // put your correct path in a string here
