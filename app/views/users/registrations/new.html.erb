@@ -124,7 +124,8 @@
         <div class="col-sm-3 avatar" data-avatar-path="avatars/avatar_16.jpg">
           <img src="<%= asset_path 'avatars/avatar_16.jpg'%>" alt="">
         </div>
-        <input type="hidden" name="avatar" value="">
+
+        <input type="hidden" name="user[avatar]" id="user_avatar" value="">
       </div>
       <div class="row submit">
         <%= f.submit "Sign up", :class => ('btn btn-info') %>
