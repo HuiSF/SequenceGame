@@ -54,11 +54,10 @@ class BoardsController < ApplicationController
     @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
     teams = @board.teams
-    if @board.number_of_seats > 0
+    if @board.number_of_players < number_of_seats
       teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
           user.current_team = team
-          @board.update_number_of_seats
           break
         end
       end
@@ -73,7 +72,6 @@ class BoardsController < ApplicationController
     @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
     user.current_team = nil
-    @board.update_number_of_seats
     push_info
   end
 
