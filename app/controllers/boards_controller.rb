@@ -22,8 +22,8 @@ class BoardsController < ApplicationController
 
   # create a new board
   def create
-    @board = Board.new(:number_of_players)
-    @board.number_of_seats = @board.number_of_players
+    @board = Board.new(:number_of_seats)
+    @board.number_of_players = 0
     @board.deck = (1...104).to_a.shuffle
     if @board.save
       redirect_to @board
