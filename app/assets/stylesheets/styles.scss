@@ -63,6 +63,10 @@ body.sessions, body.boards, body.registrations {
 .logo .logo-instruction {
   font-size: 0.3em;
 }
+.logo .sign-out-link {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 0.25em;
+}
 .login-container, .registration {
     padding-top: 20px;
 }
@@ -160,6 +164,8 @@ body.sessions, body.boards, body.registrations {
   left: 7.5px;
   width: calc(100% - 15px);
   position: absolute;
+  top: 7.5px;
+  z-index: 999;
 }
 .sign-up-form .submit {
   border-top: 1px solid #4A555E;
