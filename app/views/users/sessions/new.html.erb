@@ -33,6 +33,7 @@
 <div class="container login-container">
   <div class="row">
     <div class="col-md-8 col-sm-12 sign-in-container">
+      <p class="text-danger text-center"><%= devise_error_messages! %></p>
       <%= form_for(resource, :html => {:class => "form-inline sign-in-form"}, as: resource_name, url: session_path(resource_name)) do |f| %>
         <div class="form-group">
           <!-- <label class="sr-only" for="email">Email address</label>
