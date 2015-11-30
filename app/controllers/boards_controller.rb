@@ -226,7 +226,7 @@ class BoardsController < ApplicationController
     avatars = []
     board.teams.each do |team|
       team.users.each do |user|
-        avatars.push(:avatar => user.avatar)
+        avatars.push(user.avatar)
       end
     end
     return avatars
