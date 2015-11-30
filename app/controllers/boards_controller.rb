@@ -71,9 +71,11 @@ class BoardsController < ApplicationController
     @update_boards_event = 'update_boards'
     @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
-    teams = @board.teams
+    if @board.teams.count == 0
+      @board.create_teams
+    end
     if @board.number_of_players < @board.number_of_seats
-      teams.each do |team|
+      @board.teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
           user.current_team = team
           user.save
