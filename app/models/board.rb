@@ -22,4 +22,12 @@ class Board < ActiveRecord::Base
     self.number_of_seats == 4 ? 2 : 1
   end
 
+  def update_number_of_players
+    taken = 0    
+    self.teams.each do |team|   
+      taken += team.users.count   
+    end   
+    self.number_of_players = taken
+  end
+
 end
