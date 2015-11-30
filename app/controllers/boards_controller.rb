@@ -1,3 +1,5 @@
+require 'pusher'
+
 class BoardsController < ApplicationController
   # page to list all boards (the lobby)
   def index
@@ -20,6 +22,9 @@ class BoardsController < ApplicationController
       @teams.push(team)
       @users.push(team.users.all)
     end
+
+    @channel_name = get_channel_name(request.original_url)
+    @update_game_board_event = 'update_game_board'
   end
 
   # page to make a new board
@@ -61,7 +66,7 @@ class BoardsController < ApplicationController
     @board = Board.find(params[:board_id])
     @user = User.find(params[:user_id])
     @teams = @board.teams
-    if @board.number_of_players < number_of_seats
+    if @board.number_of_players < @board.number_of_seats
       teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
           user.current_team = team
@@ -173,7 +178,32 @@ class BoardsController < ApplicationController
     Pusher[@channel_name].trigger(@update_boards_event, @boards_json);
   end
 
+  def push_game_info()
+    @board_json = {}
+    @board_json['board'] = []
+    @board_json['teams'] = []
+    @board_json['users'] = []
 
+    @board_json['board'].push(
+      {:board_id => @board.id, :number_of_players => @board.number_of_players, :current_team_id => @board.current_team, :last_discarded => @board.last_discarded}
+    )
+
+    @board.teams.each do |team|
+      @board_json['teams'].push(
+        {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, :tokens => team.tokens, :sequences => team.sequences}
+      )
+      team.users.each do |user|
+        @board_json['users'].push(
+          {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team, :hand => user.hand}
+        )
+      end
+    end
+
+    STDERR.puts @board_json
+    STDERR.puts @channel_name
+    STDERR.puts @update_game_board_event
+    Pusher[@channel_name].trigger(@update_game_board_event, @board_json);
+  end
 
   private
 
