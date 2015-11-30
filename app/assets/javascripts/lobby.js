@@ -327,7 +327,8 @@ Lobby.prototype._boardsBindJoin = function () {
           data: 'board_id=' + targetBoardId + '&user_id=' + userId,
           success: function (data) {
             if (data.joined) {
-              window.location.href = '/boards/' + data.id;
+              console.log(data);
+              // window.location.href = '/boards/' + data.id;
             } else {
               console.log(data);
             }
