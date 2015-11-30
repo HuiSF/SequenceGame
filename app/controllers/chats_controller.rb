@@ -49,6 +49,7 @@ class ChatsController < ApplicationController
     email = chat_info['email'] ? chat_info['email'] : ''
 
     options = {}
+    options['userId'] = chat_info['userId'];
     options['displayName'] = escape_html(chat_info['nickname']).slice(0, 30)
     options['text'] = escape_html(chat_info['text']).slice(0, 300)
     options['email'] = escape_html(email).slice(0, 100)

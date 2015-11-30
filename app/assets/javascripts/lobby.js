@@ -26,6 +26,7 @@ function Lobby(pusher, options) {
 
   this._channel.bind('update_boards', function(data) {
     _this._updateBoards(data);
+    resizeSeats();
   });
   this._channel.bind('chat-message', function(data) {
     _this._chatMessageReceived(data);
@@ -62,6 +63,7 @@ function Lobby(pusher, options) {
     url: '/lobby',
     success: function (data) {
       _this._updateBoards(data);
+      resizeSeats();
     }
   });
   this._startTimeMonitor();
@@ -107,6 +109,7 @@ Lobby.prototype._sendChatButtonClicked = function() {
   }
 
   var chatInfo = {
+    userId: currentUserId,
     nickname: currentUser,
     text: message,
     chatEvent: 'chat-message'
@@ -155,7 +158,7 @@ Lobby.prototype._startTimeMonitor = function() {
 
   setInterval(function() {
     _this._messagesEl.children('.activity').each(function(i, el) {
-      var timeEl = $(el).find('a.timestamp span[data-activity-published]');
+      var timeEl = $(el).find('div.activity-row span[data-activity-published]');
       var time = timeEl.attr('data-activity-published');
       var newDesc = Lobby.timeToDescription(time);
       timeEl.text(newDesc);
@@ -303,6 +306,12 @@ Lobby.prototype._updateBoards = function(data) {
     $tableContainer.append('<div class="table-number">' + (orderInList + 1) + '</div>');
     for (j = 0; j < tableData.number_of_seats; j++) {
       $aSeat = $('<div class="seats"></div>');
+
+      if (tableData.avatars_of_users[j] !== undefined) {
+        var path = '/' + tableData.avatars_of_users[j].avatar;
+        $img = $('<img src="' + path + '" alt="' + tableData.avatars_of_users[j].username + '" title="' + tableData.avatars_of_users[j].username + '">');
+        $aSeat.append($img);
+      }
       $tableContainer.append($aSeat);
     }
     $status = $('<div class="status"></div>');
@@ -310,7 +319,6 @@ Lobby.prototype._updateBoards = function(data) {
     $aTable.append($tableContainer);
     return $aTable;
   }
-  $(window).resize();
   this._boardsBindJoin();
 };
 Lobby.prototype._boardsBindJoin = function () {
@@ -327,8 +335,8 @@ Lobby.prototype._boardsBindJoin = function () {
           data: 'board_id=' + targetBoardId + '&user_id=' + userId,
           success: function (data) {
             if (data.joined) {
-              // console.log(data);
-              window.location.href = '/boards/' + data.redirect_to_id;
+              console.log(data);
+              // window.location.href = '/boards/' + data.redirect_to_id;
             } else {
               console.log(data);
             }

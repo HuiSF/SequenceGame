@@ -18,7 +18,7 @@ class Activity
     if( options['get_gravatar'] &&
         options['email'] )
 
-      @image["url"] = get_gravatar(options['email'])
+      @image["url"] = get_gravatar(options['userId'])
 
     end
 
@@ -71,20 +71,9 @@ class Activity
   # @return String containing either just a URL or a complete image tag
   # @source http://gravatar.com/site/implement/images/php/
   #
-  def get_gravatar( email, s = 80, d = 'mm', r = 'g' )
-  	# get the email from URL-parameters or what have you and make lowercase
-    email_address = email.downcase
-
-    # create the md5 hash
-    hash = Digest::MD5.hexdigest(email_address)
-
-    url = 'http://www.gravatar.com/avatar/'
-  	url += hash
-  	url += "?s=" + s.to_s()
-  	url += "&d=" + d
-  	url += "&r=" + r
-
-  	return url
+  def get_gravatar(user_id)
+  	user = User.find(user_id)
+    '/' + user.avatar
   end
 
 end

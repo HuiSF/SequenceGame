@@ -253,7 +253,15 @@ body.sessions, body.boards, body.registrations, body.welcome {
   border-radius: 4px;
   box-shadow: 0 0 5px rgba(0, 54, 82, 0.80) inset, 0 2px 5px rgba(0, 54, 82, 0.80) inset;
   margin-right: 15px;
+  overflow: hidden;
   width: 17.5%;
+}
+.table-container .seats img {
+  border-radius: 2px;
+  margin: 1px;
+  height: calc(100% - 2px);
+  overflow: hidden;
+  width: calc(100% - 2px);
 }
 
 .table-container .status {

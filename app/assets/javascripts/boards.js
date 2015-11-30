@@ -11,7 +11,6 @@ if ($('.boards.index').length > 0) {
       boardsEndPoint: '/lobby/boards'
     });
     resizeLobbyChatRoom();
-    resizeSeats();
     resizeMessagesContainer();
 
     var tabs = [], tab, panels = [];
@@ -39,14 +38,7 @@ if ($('.boards.index').length > 0) {
       resizeMessagesContainer();
     });
 
-    function resizeSeats() {
-      var tableContainerWidth = $('.table-container').innerWidth(),
-        tableStatusWidth = $('.table-number').outerWidth(),
-        seatsWidth = (tableContainerWidth - tableStatusWidth - 72) / 4;
-      $('.seats').each(function() {
-        $(this).width(seatsWidth).height(seatsWidth);
-      });
-    }
+
 
     function switchTabs(tab, panels) {
       var $tab = $(tab),
@@ -70,5 +62,15 @@ if ($('.boards.index').length > 0) {
           height = $window.innerHeight() - $pusherChatWidgetInput.innerHeight() - 15;
       $activityStream.css('max-height', height);
     }
+  });
+}
+function resizeSeats() {
+  var tableContainerWidth = $('.table-container:visible').innerWidth(),
+    tableStatusWidth = $('.table-number:visible').outerWidth(),
+    seatsWidth = (tableContainerWidth - tableStatusWidth - 72) / 4;
+
+    console.log(tableContainerWidth, tableStatusWidth, seatsWidth);
+  $('.seats').each(function() {
+    $(this).width(seatsWidth).height(seatsWidth);
   });
 }
