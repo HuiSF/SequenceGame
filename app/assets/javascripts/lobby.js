@@ -158,7 +158,7 @@ Lobby.prototype._startTimeMonitor = function() {
 
   setInterval(function() {
     _this._messagesEl.children('.activity').each(function(i, el) {
-      var timeEl = $(el).find('a.timestamp span[data-activity-published]');
+      var timeEl = $(el).find('div.activity-row span[data-activity-published]');
       var time = timeEl.attr('data-activity-published');
       var newDesc = Lobby.timeToDescription(time);
       timeEl.text(newDesc);
