@@ -71,6 +71,7 @@ class BoardsController < ApplicationController
     @update_boards_event = 'update_boards'
     @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
+    result = {"joined" => false, "redirect_to_id" => ''}
     if @board.teams.count == 0
       @board.create_teams
     end
@@ -81,12 +82,15 @@ class BoardsController < ApplicationController
           user.save
           @board.update_number_of_players
           @board.save
+          result["joined"] = true
+          result["redirect_to_id"] = @board.id
           break
         end
       end
     end
     push_boards_info
-    redirect_to @board
+    # redirect_to @board
+    render :json => result
   end
 
   # user leaves the board
