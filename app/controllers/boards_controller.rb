@@ -80,6 +80,7 @@ class BoardsController < ApplicationController
           user.current_team = team
           user.save
           @board.update_number_of_players
+          @board.save
           break
         end
       end
