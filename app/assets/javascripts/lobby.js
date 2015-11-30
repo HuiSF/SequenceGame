@@ -272,21 +272,21 @@ Lobby.prototype._updateBoards = function(data) {
 
   $('.two-players-boards').html('');
   for (i = 0; i < twoPlayersTables.length; i++) {
-    $aTable = createATable(twoPlayersTables[i]);
+    $aTable = createATable(twoPlayersTables[i], i);
     $('.two-players-boards').append($aTable);
   }
   $('.three-players-boards').html('');
   for (i = 0; i < threePlayersTables.length; i++) {
-    $aTable = createATable(threePlayersTables[i]);
+    $aTable = createATable(threePlayersTables[i], i);
     $('.three-players-boards').append($aTable);
   }
   $('.four-players-boards').html('');
   for (i = 0; i < fourPlayersTables.length; i++) {
-    $aTable = createATable(fourPlayersTables[i]);
+    $aTable = createATable(fourPlayersTables[i], i);
     $('.four-players-boards').append($aTable);
   }
 
-  function createATable(tableData) {
+  function createATable(tableData, orderInList) {
     $aTable = $('<div class="col-sm-6 col-md-4"></div>');
     $tableContainer = $('<div class="table-container"></div>');
     $tableContainer.attr({
@@ -300,7 +300,7 @@ Lobby.prototype._updateBoards = function(data) {
       $tableContainer.addClass('full');
       $tableContainer.attr('data-joinable', false);
     }
-    $tableContainer.append('<div class="table-number">' + tableData.board_id + '</div>');
+    $tableContainer.append('<div class="table-number">' + (orderInList + 1) + '</div>');
     for (j = 0; j < tableData.number_of_seats; j++) {
       $aSeat = $('<div class="seats"></div>');
       $tableContainer.append($aSeat);
