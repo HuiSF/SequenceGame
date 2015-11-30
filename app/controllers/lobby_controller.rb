@@ -24,50 +24,50 @@ class LobbyController < ApplicationController
           # error
       end
     end
-    @boards_json = {
-      "2players" => [
-        {"board_id" => 1, "number_of_seats" => 2, "number_of_players": 2, "user_avatars": []},
-        {"board_id" => 2, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 3, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 4, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 5, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 6, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 7, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 8, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 9, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 10, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 11, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 12, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []}
-      ],
-      "3players" => [
-        {"board_id" => 1, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 2, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 3, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 4, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 5, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 6, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 7, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 8, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 9, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 10, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 11, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 12, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []}
-      ],
-      "4players" => [
-        {"board_id" => 1, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 2, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 3, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 4, "number_of_seats" => 4, "number_of_players": 4, "user_avatars": []},
-        {"board_id" => 5, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 6, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 7, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 8, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 9, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 10, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 11, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
-        {"board_id" => 12, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []}
-      ]
-    }
+    # @boards_json = {
+    #   "2players" => [
+    #     {"board_id" => 1, "number_of_seats" => 2, "number_of_players": 2, "user_avatars": []},
+    #     {"board_id" => 2, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 3, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 4, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 5, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 6, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 7, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 8, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 9, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 10, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 11, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 12, "number_of_seats" => 2, "number_of_players": 0, "user_avatars": []}
+    #   ],
+    #   "3players" => [
+    #     {"board_id" => 1, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 2, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 3, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 4, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 5, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 6, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 7, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 8, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 9, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 10, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 11, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 12, "number_of_seats" => 3, "number_of_players": 0, "user_avatars": []}
+    #   ],
+    #   "4players" => [
+    #     {"board_id" => 1, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 2, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 3, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 4, "number_of_seats" => 4, "number_of_players": 4, "user_avatars": []},
+    #     {"board_id" => 5, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 6, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 7, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 8, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 9, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 10, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 11, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []},
+    #     {"board_id" => 12, "number_of_seats" => 4, "number_of_players": 0, "user_avatars": []}
+    #   ]
+    # }
     render :json => @boards_json
   end
 

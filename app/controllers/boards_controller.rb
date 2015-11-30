@@ -1,6 +1,9 @@
 require 'pusher'
+require 'json'
 
 class BoardsController < ApplicationController
+  protect_from_forgery
+  skip_before_action :verify_authenticity_token, if: :json_request?
   # page to list all boards (the lobby)
   def index
     # initialize pusher
@@ -63,6 +66,9 @@ class BoardsController < ApplicationController
   # => board_id
   # => user_id
   def join
+    # get channel name and set event name in each session
+    @channel_name = get_channel_name(request.referer)
+    @update_boards_event = 'update_boards'
     @board = Board.find(params[:board_id])
     @user = User.find(params[:user_id])
     @teams = @board.teams
@@ -172,9 +178,6 @@ class BoardsController < ApplicationController
           # error
       end
     end
-    STDERR.puts @boards_json
-    STDERR.puts @channel_name
-    STDERR.puts @update_boards_event
     Pusher[@channel_name].trigger(@update_boards_event, @boards_json);
   end
 
@@ -198,14 +201,14 @@ class BoardsController < ApplicationController
         )
       end
     end
-
-    STDERR.puts @board_json
-    STDERR.puts @channel_name
-    STDERR.puts @update_game_board_event
     Pusher[@channel_name].trigger(@update_game_board_event, @board_json);
   end
 
   private
 
+  protected
+  def json_request?
+    request.format.json?
+  end
 
 end
