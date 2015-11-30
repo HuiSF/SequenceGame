@@ -7,7 +7,7 @@ class LobbyController < ApplicationController
 
     boards = Board.all
     boards.each do |each_board|
-      case each_board.number_of_players
+      case each_board.number_of_seats
         when 2
           @boards_json['2players'].push(
               {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
@@ -24,6 +24,7 @@ class LobbyController < ApplicationController
           # error
       end
     end
+    STDERR.puts @boards_json
     # @boards_json = {
     #   "2players" => [
     #     {"board_id" => 1, "number_of_seats" => 2, "number_of_players": 2, "user_avatars": []},

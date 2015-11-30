@@ -80,7 +80,7 @@ class BoardsController < ApplicationController
         end
       end
     end
-    push_info
+    push_boards_info
     redirect_to @board
   end
 
@@ -153,7 +153,7 @@ class BoardsController < ApplicationController
     channel_name
   end
 
-  def push_info()
+  def push_boards_info()
     @boards_json = {}
     @boards_json['2players'] = []
     @boards_json['3players'] = []
@@ -161,7 +161,7 @@ class BoardsController < ApplicationController
 
     boards = Board.all
     boards.each do |each_board|
-      case each_board.number_of_players
+      case each_board.number_of_seats
         when 2
           @boards_json['2players'].push(
               {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
