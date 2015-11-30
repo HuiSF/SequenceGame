@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151124193452) do
+ActiveRecord::Schema.define(version: 20151129221706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20151124193452) do
     t.text     "sequences",       default: [],              array: true
     t.text     "tokens",          default: [],              array: true
     t.integer  "board_id"
+    t.integer  "game_result"
   end
 
   add_index "teams", ["board_id"], name: "index_teams_on_board_id", using: :btree

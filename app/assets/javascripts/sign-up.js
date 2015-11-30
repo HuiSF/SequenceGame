@@ -1,7 +1,7 @@
 if ($('.registrations').length > 0) {
   $(document).ready(function() {
     var avatarPickers = $('.avatar'),
-        $avatarPathInput = $('input[name="avatar"]');
+        $avatarPathInput = $('input[name="user[avatar]"]');
     $.each(avatarPickers, function (key, avatar) {
       $(avatar).on('click', function () {
         $('.avatar.selected').removeClass('selected');
