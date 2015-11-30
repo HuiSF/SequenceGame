@@ -22,12 +22,23 @@ class Board < ActiveRecord::Base
     self.number_of_seats == 4 ? 2 : 1
   end
 
+  def number_of_teams
+    self.number_of_seats == 3 ? 3 : 2
+  end
+
   def update_number_of_players
     taken = 0    
     self.teams.each do |team|   
       taken += team.users.count   
     end   
     self.number_of_players = taken
+  end
+
+  def create_teams
+    for x in 0..(self.number_of_teams-1)
+      team = Team.new(:board => self, :color => x)
+      team.save
+    end
   end
 
 end
