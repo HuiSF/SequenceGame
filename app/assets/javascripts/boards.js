@@ -65,7 +65,6 @@ if ($('.boards.index').length > 0) {
   });
 }
 function resizeSeats() {
-  console.log($('.table-container:visible'));
   var tableContainerWidth = $('.table-container:visible').innerWidth(),
     tableStatusWidth = $('.table-number:visible').outerWidth(),
     seatsWidth = (tableContainerWidth - tableStatusWidth - 72) / 4;

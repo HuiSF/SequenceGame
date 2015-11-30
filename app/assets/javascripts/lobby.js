@@ -109,6 +109,7 @@ Lobby.prototype._sendChatButtonClicked = function() {
   }
 
   var chatInfo = {
+    userId: currentUserId,
     nickname: currentUser,
     text: message,
     chatEvent: 'chat-message'
