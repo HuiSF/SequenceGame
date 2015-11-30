@@ -70,12 +70,14 @@ class BoardsController < ApplicationController
     @channel_name = get_channel_name(request.referer)
     @update_boards_event = 'update_boards'
     @board = Board.find(params[:board_id])
-    @user = User.find(params[:user_id])
-    @teams = @board.teams
+    user = User.find(params[:user_id])
+    teams = @board.teams
     if @board.number_of_players < @board.number_of_seats
-      @teams.each do |team|
+      teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
           user.current_team = team
+          user.save
+          @board.update_number_of_players
           break
         end
       end
@@ -91,6 +93,8 @@ class BoardsController < ApplicationController
     @board = Board.find(params[:board_id])
     @user = User.find(params[:user_id])
     user.current_team = nil
+    user.save
+    @board.update_number_of_players
     push_info
     redirect_to 'lobby/boards'
   end
