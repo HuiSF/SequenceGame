@@ -311,4 +311,27 @@ Lobby.prototype._updateBoards = function(data) {
     return $aTable;
   }
   $(window).resize();
+  this._boardsBindJoin();
+};
+Lobby.prototype._boardsBindJoin = function () {
+  var tables = $('.table-container');
+  $.each(tables, function (key, table) {
+    $(table).on('click', function () {
+      var joinable = $(this).data('joinable'),
+          targetBoardId = $(this).data('table-id'),
+          userId = currentUserId;
+      if (joinable) {
+        $.ajax({
+          type: 'POST',
+          url: '/boards/join',
+          data: 'board_id=' + targetBoardId + '&user_id=' + userId,
+          success: function (data) {
+            if (data.success) {
+              window.location.href = '/boards/' + data.id;
+            }
+          }
+        });
+      }
+    });
+  });
 };

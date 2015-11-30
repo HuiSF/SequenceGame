@@ -14,6 +14,7 @@
 <script>
   <% if user_signed_in? %>
   var currentUser = '' || '<%= current_user.username%>';
+  var currentUserId = '' || '<%= current_user.id%>';
   <%end%>
 </script>
 
