@@ -102,6 +102,7 @@ class BoardsController < ApplicationController
     user.current_team = nil
     user.save
     @board.update_number_of_players
+    @board.save
     push_info
     redirect_to 'lobby/boards'
   end
@@ -174,19 +175,19 @@ class BoardsController < ApplicationController
     boards.each do |each_board|
       case each_board.number_of_seats
         when 2
-          avatars_of_users = []
+          avatars_of_users = avatars_for_board_users(each_board)
           # push avatar paths of users who are in current board into avatars_of_users
           @boards_json['2players'].push(
               {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats, :avatars_of_users => avatars_of_users}
           )
         when 3
-          avatars_of_users = []
+          avatars_of_users = avatars_for_board_users(each_board)
           # push avatar paths of users who are in current board into avatars_of_users
           @boards_json['3players'].push(
               {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats, :avatars_of_users => avatars_of_users}
           )
         when 4
-          avatars_of_users = []
+          avatars_of_users = avatars_for_board_users(each_board)
           # push avatar paths of users who are in current board into avatars_of_users
           @boards_json['4players'].push(
               {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats, :avatars_of_users => avatars_of_users}
@@ -219,6 +220,16 @@ class BoardsController < ApplicationController
       end
     end
     Pusher[@channel_name].trigger(@update_game_board_event, @board_json);
+  end
+
+  def avatars_for_board_users(board)
+    avatars = []
+    board.teams.each do |team|
+      team.users.each do |user|
+        avatars.push(:avatar => user.avatar)
+      end
+    end
+    return avatars
   end
 
   private
