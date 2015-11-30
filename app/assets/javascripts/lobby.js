@@ -326,8 +326,10 @@ Lobby.prototype._boardsBindJoin = function () {
           url: '/boards/join',
           data: 'board_id=' + targetBoardId + '&user_id=' + userId,
           success: function (data) {
-            if (data.success) {
+            if (data.joined) {
               window.location.href = '/boards/' + data.id;
+            } else {
+              console.log(data);
             }
           }
         });
