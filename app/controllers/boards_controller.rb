@@ -13,6 +13,13 @@ class BoardsController < ApplicationController
   # page to show a single board (game view)
   def show
     @board = Board.find(params[:id])
+    @teams = []
+    @users = []
+
+    @board.teams.each do |team|
+      @teams.push(team)
+      @users.push(team.users.all)
+    end
   end
 
   # page to make a new board
@@ -52,8 +59,8 @@ class BoardsController < ApplicationController
   # => user_id
   def join
     @board = Board.find(params[:board_id])
-    user = User.find(params[:user_id])
-    teams = @board.teams
+    @user = User.find(params[:user_id])
+    @teams = @board.teams
     if @board.number_of_players < number_of_seats
       teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
@@ -63,6 +70,7 @@ class BoardsController < ApplicationController
       end
     end
     push_info
+    redirect_to @board
   end
 
   # user leaves the board
@@ -70,9 +78,10 @@ class BoardsController < ApplicationController
   # => user_id
   def leave
     @board = Board.find(params[:board_id])
-    user = User.find(params[:user_id])
+    @user = User.find(params[:user_id])
     user.current_team = nil
     push_info
+    redirect_to 'lobby/boards'
   end
 
   # the users for this board
