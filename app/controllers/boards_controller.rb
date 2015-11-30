@@ -174,16 +174,22 @@ class BoardsController < ApplicationController
     boards.each do |each_board|
       case each_board.number_of_seats
         when 2
+          avatars_of_users = []
+          # push avatar paths of users who are in current board into avatars_of_users
           @boards_json['2players'].push(
-              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
+              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats, :avatars_of_users => avatars_of_users}
           )
         when 3
+          avatars_of_users = []
+          # push avatar paths of users who are in current board into avatars_of_users
           @boards_json['3players'].push(
-              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
+              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats, :avatars_of_users => avatars_of_users}
           )
         when 4
+          avatars_of_users = []
+          # push avatar paths of users who are in current board into avatars_of_users
           @boards_json['4players'].push(
-              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats}
+              {:board_id => each_board.id, :number_of_players => each_board.number_of_players, :number_of_seats => each_board.number_of_seats, :avatars_of_users => avatars_of_users}
           )
         else
           # error
