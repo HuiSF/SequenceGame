@@ -139,11 +139,14 @@ class BoardsController < ApplicationController
   # update user hand (i.e., "draw")
   #   board_id
   #   user_id
-  def discard
+  #   card (token)
+  def updateHand
     @board = Board.find(params[:board_id])
-    @user = Board.find(params[:user_id])
-
+    @user = User.find(params[:user_id])
+    # discard card
+    # draw card
   end
+  
 
   # notify team to add new sequence, check for win,
   # lock positions (so tokens cannot be removed from sequence)
@@ -230,6 +233,38 @@ class BoardsController < ApplicationController
       end
     end
     return avatars
+  end
+
+  def discard(card)
+    position = @user.hand.index(card)
+    if position != nil
+      @board.last_discarded = @user.hand.delete_at(position)
+      @board.save
+      @user.save
+    end
+  end
+
+  def draw
+    # if we want to deal from the top of the deck rather than the end, we can change this
+    if @board.deck.empty?
+      shuffleDeck
+    end
+    @user.hand.push(@board.deck.pop)
+    @board.save
+    @user.save
+  end
+
+  def shuffleDeck
+    @board.deck = (1...104).to_a.shuffle
+    @board.teams.each do |team|
+      team.users.each do |user|
+        user.hand.each do |card|
+          position = @board.deck.index(card)
+          @board.deck.delete_at(position)
+          @board.save
+        end 
+      end
+    end
   end
 
   private
