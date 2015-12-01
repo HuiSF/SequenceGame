@@ -82,14 +82,16 @@ class BoardsController < ApplicationController
   # => board_id
   # => user_id
   def leave
-    # @board = Board.find(params[:board_id])
+    @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
+    @channel_name = get_channel_name(request.referer)
+    @update_boards_event = 'update_boards'
     user.current_team = nil
     user.save
     @board.update_number_of_players
     @board.save
     push_boards_info
-    redirect_to 'lobby/boards'
+    redirect_to '/lobby/boards'
   end
 
   # the users for this board
