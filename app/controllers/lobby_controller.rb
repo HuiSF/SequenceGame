@@ -6,7 +6,7 @@ class LobbyController < ApplicationController
       @boards_json['3players'] = []
       @boards_json['4players'] = []
 
-      boards = Board.all
+      boards = Board.order(:id)
       boards.each do |each_board|
         case each_board.number_of_seats
           when 2
