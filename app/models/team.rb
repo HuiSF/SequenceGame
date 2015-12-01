@@ -11,6 +11,7 @@
 #  sequences       :text             default([]), is an Array
 #  tokens          :text             default([]), is an Array
 #  board_id        :integer
+#  game_result     :integer
 #
 
 class Team < ActiveRecord::Base

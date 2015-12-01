@@ -41,4 +41,34 @@ class Board < ActiveRecord::Base
     end
   end
 
+  def can_add_token?(token_position)
+    self.teams.each do |team|
+      if team.tokens.include? token_position
+        return false
+      end
+    end
+    true
+  end
+
+  def remove_token(token_position)
+    possible = true
+    self.teams.each do |team|
+      if team.tokens.include? token_position
+        team.sequences.each do |seq|
+          if seq.include? token_position
+            possible = false
+            break
+          end
+        end
+        if possible
+          team.tokens.delete(token_position)
+          team.save
+          return true
+        end
+        return false
+      end
+    end
+    return false
+  end
+
 end

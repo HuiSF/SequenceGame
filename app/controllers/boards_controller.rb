@@ -109,8 +109,19 @@ class BoardsController < ApplicationController
   #   user_id
   #   position (token)
   #   card (token)
+  #   channel_name (pusher channel)
+  #   event_name (pusher event)
   def addToken
+    board = Board.find(params[:board_id])
+    user = User.find(params[:user_id])
 
+    if board.can_add_token?(params[:position])
+      user.add_token(params[:card], params[:position])
+    end
+
+    draw(board, user)
+
+    push_game_info(params[:channel_name], params[:event_name], board)
   end
 
   # remove a token from the board
@@ -118,10 +129,20 @@ class BoardsController < ApplicationController
   #   user_id
   #   position (token)
   #   card (token)
+  #   channel_name (pusher channel)
+  #   event_name (pusher event)
   def removeToken
+    board = Board.find(params[:board_id])
+    user = User.find(params[:user_id])
 
+    if user.can_remove_token(params[:card], params[:position])
+      if board.remove_token(params[:position])
+        user.hand.delete(params[:card])
+      end
+    end
+
+    push_game_info(params[:channel_name], params[:event_name], board)
   end
-
 
   # notify team to add new sequence, check for win,
   # lock positions (so tokens cannot be removed from sequence)
@@ -177,27 +198,27 @@ class BoardsController < ApplicationController
     Pusher[@channel_name].trigger(@update_boards_event, @boards_json);
   end
 
-  def push_game_info()
-    @board_json = {}
-    @board_json['board'] = []
-    @board_json['teams'] = []
-    @board_json['users'] = []
+  def push_game_info(channel_name, event_name, board)
+    board_json = {}
+    board_json['board'] = []
+    board_json['teams'] = []
+    board_json['users'] = []
 
-    @board_json['board'].push(
-      {:board_id => @board.id, :number_of_players => @board.number_of_players, :current_team_id => @board.current_team, :last_discarded => @board.last_discarded}
+    board_json['board'].push(
+        {:board_id => board.id, :number_of_players => board.number_of_players, :current_team_id => board.current_team, :last_discarded => board.last_discard}
     )
 
-    @board.teams.each do |team|
-      @board_json['teams'].push(
-        {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, :tokens => team.tokens, :sequences => team.sequences}
+    board.teams.each do |team|
+      board_json['teams'].push(
+          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, :tokens => team.tokens, :sequences => team.sequences}
       )
       team.users.each do |user|
-        @board_json['users'].push(
-          {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team, :hand => user.hand}
+        board_json['users'].push(
+            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team, :hand => user.hand}
         )
       end
     end
-    Pusher[@channel_name].trigger(@update_game_board_event, @board_json);
+    Pusher[channel_name].trigger(event_name, board_json)
   end
 
   def avatars_for_board_users(board)
@@ -213,19 +234,19 @@ class BoardsController < ApplicationController
   def discard(user, card)
     position = user.hand.index(card)
     if position != nil
-      @board.last_discarded = user.hand.delete_at(position)
+      @board.last_discard = user.hand.delete_at(position)
       @board.save
       user.save
     end
   end
 
-  def draw(user)
+  def draw(board, user)
     # if we want to deal from the top of the deck rather than the end, we can change this
-    if @board.deck.empty?
+    if board.deck.empty?
       shuffleDeck
     end
-    user.hand.push(@board.deck.pop)
-    @board.save
+    user.hand.push(board.deck.pop)
+    board.save
     user.save
   end
 
