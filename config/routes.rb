@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   get 'lobby' => 'boards#index'
   post 'boards/users' => 'boards#users'
-  post 'boards/add_token' => 'boards#addToken'
-  post 'boards/remove_token' => 'boards#removeToken'
   post 'boards/join' => 'boards#join'
   post 'boards/leave' => 'boards#leave'
+
+  post 'game/start' => 'game#start'
+  post 'game/add_token' => 'game#add_token'
+  post 'game/remove_token' => 'game#remove_token'
 
   # get board data through ajax
   get 'lobby/boards' => 'lobby#boards' #first time access lobby and generate list of boards
