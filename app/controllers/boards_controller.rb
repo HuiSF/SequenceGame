@@ -91,7 +91,7 @@ class BoardsController < ApplicationController
     @board.update_number_of_players
     @board.save
     push_boards_info
-    redirect_to '/lobby/boards'
+    redirect_to '/lobby'
   end
 
   # the users for this board
