@@ -1,5 +1,6 @@
 require 'pusher'
 require 'json'
+require 'uri'
 
 class BoardsController < ApplicationController
   protect_from_forgery
@@ -82,16 +83,18 @@ class BoardsController < ApplicationController
   # => board_id
   # => user_id
   def leave
+    @callbackUrl = request.protocol + request.host_with_port + '/lobby'
     @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
-    @channel_name = get_channel_name(request.referer)
+    @channel_name = get_channel_name(@callbackUrl)
     @update_boards_event = 'update_boards'
     user.current_team = nil
     user.save
     @board.update_number_of_players
     @board.save
     push_boards_info
-    redirect_to '/lobby'
+    # redirect_to '/lobby'
+    render :json => {"test" => "test"};
   end
 
   # the users for this board
@@ -164,7 +167,9 @@ class BoardsController < ApplicationController
     channel_name
   end
 
-  def push_boards_info()
+  def push_boards_info
+    STDERR.puts @channel_name
+    STDERR.puts @update_boards_event
     @boards_json = {}
     @boards_json['2players'] = []
     @boards_json['3players'] = []
