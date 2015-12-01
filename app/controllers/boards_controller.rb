@@ -54,21 +54,21 @@ class BoardsController < ApplicationController
     # get channel name and set event name in each session
     @channel_name = get_channel_name(request.referer)
     @update_boards_event = 'update_boards'
-    board = Board.find(params[:board_id])
+    @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
     result = {"joined" => false, "redirect_to_id" => ''}
-    if board.teams.count == 0
-      board.create_teams
+    if @board.teams.count == 0
+      @board.create_teams
     end
-    if board.number_of_players < board.number_of_seats
-      board.teams.each do |team|
-        if team.users.count < board.number_of_players_per_team
+    if @board.number_of_players < @board.number_of_seats
+      @board.teams.each do |team|
+        if team.users.count < @board.number_of_players_per_team
           user.current_team = team
           user.save
-          board.update_number_of_players
-          board.save
+          @board.update_number_of_players
+          @board.save
           result["joined"] = true
-          result["redirect_to_id"] = board.id
+          result["redirect_to_id"] = @board.id
           break
         end
       end
@@ -82,14 +82,14 @@ class BoardsController < ApplicationController
   # => board_id
   # => user_id
   def leave
-    board = Board.find(params[:board_id])
+    # @board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
     user.current_team = nil
     user.save
-    board.update_number_of_players
-    board.save
-    # push_game_info(board)
-    redirect_to '/lobby/boards'
+    @board.update_number_of_players
+    @board.save
+    push_boards_info
+    redirect_to 'lobby/boards'
   end
 
   # the users for this board
@@ -175,17 +175,17 @@ class BoardsController < ApplicationController
     Pusher[@channel_name].trigger(@update_boards_event, @boards_json);
   end
 
-  def push_game_info(board)
+  def push_game_info()
     @board_json = {}
     @board_json['board'] = []
     @board_json['teams'] = []
     @board_json['users'] = []
 
     @board_json['board'].push(
-      {:board_id => board.id, :number_of_players => board.number_of_players, :current_team_id => board.current_team, :last_discarded => board.last_discarded}
+      {:board_id => @board.id, :number_of_players => @board.number_of_players, :current_team_id => @board.current_team, :last_discarded => @board.last_discarded}
     )
 
-    board.teams.each do |team|
+    @board.teams.each do |team|
       @board_json['teams'].push(
         {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, :tokens => team.tokens, :sequences => team.sequences}
       )
@@ -208,36 +208,35 @@ class BoardsController < ApplicationController
     return avatars
   end
 
-  def discard(board, user, card)
+  def discard(user, card)
     position = user.hand.index(card)
     if position != nil
-      board.last_discarded = user.hand.delete_at(position)
-      board.save
+      @board.last_discarded = user.hand.delete_at(position)
+      @board.save
       user.save
     end
   end
 
-  def draw(board, user)
+  def draw(user)
     # if we want to deal from the top of the deck rather than the end, we can change this
-    if board.deck.empty?
+    if @board.deck.empty?
       shuffleDeck
     end
-    user.hand.push(board.deck.pop)
-    board.save
+    user.hand.push(@board.deck.pop)
+    @board.save
     user.save
   end
 
-  def shuffleDeck(board)
-    board.deck = (1...104).to_a.shuffle
-    board.teams.each do |team|
+  def shuffleDeck
+    @board.deck = (1...104).to_a.shuffle
+    @board.teams.each do |team|
       team.users.each do |user|
         user.hand.each do |card|
           position = @board.deck.index(card)
-          board.deck.delete_at(position)
-          board.save
+          @board.deck.delete_at(position)
+          @board.save
         end
       end
     end
   end
-
 end
