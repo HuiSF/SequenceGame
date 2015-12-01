@@ -28,4 +28,18 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   belongs_to :current_team, :class_name => 'Team'
+
+  def add_token(card, token_position)
+    if self.hand.include?(card)
+      self.current_team.tokens.push(token_position)
+      self.current_team.save
+      self.hand.delete(card)
+      self.save
+    end
+  end
+
+  def can_remove_token(card, token_position)
+    self.hand.include?(card) and not self.current_team.tokens.include?(token_position)
+  end
+
 end
