@@ -8,7 +8,7 @@ if ($('.boards.index').length > 0) {
     var pusher = new Pusher('0857c097b4d9be5b3e9e');
     var chatWidget = new Lobby(pusher, {
       chatsEndPoint: '/chats',
-      boardsEndPoint: '/lobby/boards'
+      boardsEndPoint: '/lobby'
     });
     resizeLobbyChatRoom();
     resizeMessagesContainer();

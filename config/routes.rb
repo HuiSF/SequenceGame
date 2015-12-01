@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
-  get 'lobby/boards' => 'boards#index'
+  get 'lobby' => 'boards#index'
   post 'boards/users' => 'boards#users'
   post 'boards/add_token' => 'boards#addToken'
   post 'boards/remove_token' => 'boards#removeToken'
   post 'boards/join' => 'boards#join'
   post 'boards/leave' => 'boards#leave'
-  get 'lobby' => 'lobby#boards' #first time access lobby and generate list of boards
+
+  # get board data through ajax
+  get 'lobby/boards' => 'lobby#boards' #first time access lobby and generate list of boards
 
   post 'boards/discard' => 'boards#discard'
   resources :boards

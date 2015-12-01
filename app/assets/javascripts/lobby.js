@@ -60,7 +60,7 @@ function Lobby(pusher, options) {
 
   $.ajax({
     type: 'GET',
-    url: '/lobby',
+    url: '/lobby/boards',
     success: function (data) {
       _this._updateBoards(data);
       resizeSeats();
