@@ -268,6 +268,7 @@ Lobby.timeToDescription = function(time) {
 };
 
 Lobby.prototype._updateBoards = function(data) {
+  console.log(data);
   var twoPlayersTables = data['2players'],
       threePlayersTables = data['3players'],
       fourPlayersTables = data['4players'],
@@ -335,8 +336,8 @@ Lobby.prototype._boardsBindJoin = function () {
           data: 'board_id=' + targetBoardId + '&user_id=' + userId,
           success: function (data) {
             if (data.joined) {
-              console.log(data);
-              // window.location.href = '/boards/' + data.redirect_to_id;
+              // console.log(data);
+              window.location.href = '/boards/' + data.redirect_to_id;
             } else {
               console.log(data);
             }

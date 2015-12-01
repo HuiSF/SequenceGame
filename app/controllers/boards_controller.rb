@@ -88,8 +88,8 @@ class BoardsController < ApplicationController
     user.save
     board.update_number_of_players
     board.save
-    push_info
-    redirect_to 'lobby/boards'
+    # push_game_info(board)
+    redirect_to '/lobby/boards'
   end
 
   # the users for this board
@@ -235,7 +235,7 @@ class BoardsController < ApplicationController
           position = @board.deck.index(card)
           board.deck.delete_at(position)
           board.save
-        end 
+        end
       end
     end
   end
