@@ -65,6 +65,7 @@ class BoardsController < ApplicationController
       @board.teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
           user.current_team = team
+          user.state = :waiting
           user.save
           @board.update_number_of_players
           @board.save
@@ -89,6 +90,7 @@ class BoardsController < ApplicationController
     @channel_name = get_channel_name(@callbackUrl)
     @update_boards_event = 'update_boards'
     user.current_team = nil
+    user.state = :lobby
     user.save
     @board.update_number_of_players
     @board.save

@@ -4,7 +4,13 @@ Rails.application.routes.draw do
   post 'boards/join' => 'boards#join'
   post 'boards/leave' => 'boards#leave'
 
+  # check if enough players to start
   post 'game/start' => 'game#start'
+
+  # post that user_id is ready
+  post 'game/ready' => 'game#ready'
+
+  # add and remove tokens
   post 'game/add_token' => 'game#add_token'
   post 'game/remove_token' => 'game#remove_token'
 
