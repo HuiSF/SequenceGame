@@ -268,7 +268,6 @@ Lobby.timeToDescription = function(time) {
 };
 
 Lobby.prototype._updateBoards = function(data) {
-  console.log(data);
   var twoPlayersTables = data['2players'],
       threePlayersTables = data['3players'],
       fourPlayersTables = data['4players'],

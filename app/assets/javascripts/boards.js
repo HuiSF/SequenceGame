@@ -68,8 +68,6 @@ function resizeSeats() {
   var tableContainerWidth = $('.table-container:visible').innerWidth(),
     tableStatusWidth = $('.table-number:visible').outerWidth(),
     seatsWidth = (tableContainerWidth - tableStatusWidth - 72) / 4;
-
-    console.log(tableContainerWidth, tableStatusWidth, seatsWidth);
   $('.seats').each(function() {
     $(this).width(seatsWidth).height(seatsWidth);
   });
