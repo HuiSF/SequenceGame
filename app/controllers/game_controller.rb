@@ -1,6 +1,29 @@
+require 'pusher'
+require 'json'
+require 'uri'
+
 class GameController < ApplicationController
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :json_request?
+
+  # check if table are full
+  # :board_id
+  # :channel_name
+  # :event_name
+  def board_full
+    @board = Board.find(params[:board_id])
+    @channel_name = params[:channel_name]
+    @event_name = params[:event_name]
+    response = {}
+    response['board_full'] = true
+    if @board.number_of_players < @board.number_of_seats
+      response['board_full'] = false
+    else
+      response['game_start'] = true
+      Pusher[@channel_name].trigger(@event_name, response);
+    end
+    render :json => response
+  end
 
   # check if game is ready to start
   # :board_id
@@ -39,6 +62,12 @@ class GameController < ApplicationController
 
   def remove_token
 
+  end
+
+  protected
+
+  def json_request?
+    request.format.json?
   end
 
 end

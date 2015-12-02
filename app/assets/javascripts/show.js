@@ -9,9 +9,9 @@ if ($('.boards.show').length > 0) {
     //
     var pusher = new Pusher('0857c097b4d9be5b3e9e');
     var chatWidget = new Board(pusher, {
-      checkGameStartEndPoint: '/boards/game_start',
+      checkBoardFull: '/game/board_full',
       chatsEndPoint: '/chats',
-      sendReadyEndPoint: 'boards/ready'
+      sendReadyEndPoint: 'game/ready'
     });
 
     function  showWatingPopup(duration) {

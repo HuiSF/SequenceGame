@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   post 'boards/join' => 'boards#join'
   post 'boards/leave' => 'boards#leave'
 
+  # check if the table is full when user just join in game
+  post 'game/board_full' => 'game#board_full'
+
   # check if enough players to start
   post 'game/start' => 'game#start'
 

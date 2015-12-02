@@ -76,12 +76,13 @@ Board.prototype._createGame = function () {
   var pusherEvent = 'game_ready';
   var $popup = $('<div class="loading-popup"><div class="loading-box"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span class="loading-text">Loading resources...</span></div></div>');
   $('body').prepend($popup);
-  $popup.fadeIn(duration);
+  $popup.fadeIn(0);
   console.log('Starting to loading resources');
   this._game = new Game();
 };
 
 Board.prototype._startWaiting = function (duration) {
+  var _this = this;
   var pusherEvent = 'game_start';
   var $popup = $('<div class="waiting-popup"><div class="waiting-box"><p>Hi ' + currentUser + ', we will be waiting for other players joining the game, Just a second! The game wil automatically start.</p><form action="/boards/leave?board_id=' + currentBoardId + '&user_id=' + currentUserId + '" method="post"><button type="submit" class="leave btn btn-info">Leave</button></form></div></div>').hide();
   $('body').prepend($popup);
@@ -97,17 +98,21 @@ Board.prototype._startWaiting = function (duration) {
   // post to /boards/game_start to inform pusher channel and events
   $.ajax({
     type: 'POST',
-    url: this.settings.checkGameStartEndPoint,
+    url: this.settings.checkBoardFull,
     data: {
       user_id: currentUserId,
       board_id: currentBoardId,
-      channelName: this.settings.channelName,
-      eventName: pusherEvent
+      channel_name: this.settings.channelName,
+      event_name: pusherEvent
     },
     success: function (data) {
-      if (this.settings.debug) {
+      if (_this.settings.debug) {
         console.log('User waiting channel and event sent');
-        console.log(data.status);
+        console.log(data);
+      }
+      if (data.game_star) {
+        _this._endWaiting();
+        _this._createGame();
       }
     }
   });
