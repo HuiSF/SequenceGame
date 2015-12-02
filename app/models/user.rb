@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   belongs_to :current_team, :class_name => 'Team'
+  enum state: [:waiting, :ready, :lobby]
 
   def add_token(card, token_position)
     if self.hand.include?(card)
