@@ -73,9 +73,12 @@ Board.prototype._createChatRoom = function () {
 };
 
 Board.prototype._createGame = function () {
+  var _this = this;
   this._startLoading();
   console.log('Starting to loading resources');
-  this._game = new Game({}, this._channel, this.settings.channelName, this);
+  setTimeout(function () {
+    _this._game = new Game({}, _this._channel, _this.settings.channelName, _this);
+  }, 4000);
 };
 
 Board.prototype._startWaiting = function (duration) {
@@ -110,7 +113,10 @@ Board.prototype._startWaiting = function (duration) {
       if (data.game_start) {
         console.log('game start');
         _this._endWaiting();
-        _this._createGame();
+        setTimeout(function () {
+          _this._createGame();
+        }, 4000);
+
       }
     }
   });
@@ -127,14 +133,16 @@ Board.prototype._endWaiting = function () {
 };
 
 Board.prototype._startLoading = function () {
+  console.log('start loading');
   var pusherEvent = 'game_ready';
-  var $popup = $('<div class="loading-popup"><div class="loading-box"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span class="loading-text">Loading resources...</span></div></div>');
+  var $popup = $('<div class="loading-popup"><div class="loading-box"><span class="loading-indecator animate-icon glyphicon glyphicon-refresh"></span>&nbsp;<span class="loading-text">Loading resources...</span></div></div>');
   $('body').prepend($popup);
   $popup.fadeIn(0);
 };
 
 Board.prototype._endLoading = function () {
-  $('.loading-popup').html('').text('Loading Complete!');
+  $('.loading-indecator').removeClass('animate-icon glyphicon-refresh').addClass('glyphicon-thumbs-up');
+  $('.loading-text').html('').text('Loading Complete!');
   setTimeout(function () {
     $('.loading-popup').fadeOut(500);
     $('.waiting-popup').delay(500).remove();

@@ -54,8 +54,9 @@ class GameController < ApplicationController
     @channel_name = params[:channel_name];
     @public_update_even_name = params[:public_update_even_name]
     @user_update_event_name = params[:user_update_event_name]
+    @users_are_ready_event_name = params[:users_are_ready_event_name]
     @board = Board.find(params[:board_id])
-    # @user = User.find(params[:user_id])
+    @user = User.find(params[:user_id])
     response = {}
     response['all_ready'] = true
     user = User.find(params[:user_id])
@@ -65,8 +66,9 @@ class GameController < ApplicationController
     @board.teams.each do |team|
       team.users.each do |auser|
         STDERR.puts auser.state
-        if auser.state.eql? :ready
-          STDERR.puts "Someone is not ready"
+        state = auser.state
+        if !state.eql?('ready') # here can't use :ready has to use 'ready' for comparison...
+          STDERR.puts 'someone is not ready'
           response['all_ready'] = false
           break
         end
@@ -79,8 +81,10 @@ class GameController < ApplicationController
     # Pusher[@channel_name].trigger(@public_update_even_name, public_board_info)
     # Pusher[@channel_name].trigger(@user_update_event_name, user_hand_info)
     if (response['all_ready'])
-      push_public_board_info(@channel_name, @public_update_even_name, @board)
-      push_user_hand_info(@channel_name, @user_update_event_name, user)
+      STDERR.puts "Trigger pusher ========"
+      Pusher[@channel_name].trigger(@users_are_ready_event_name, {'all_ready' => true, 'user_id' => params[:user_id]})
+      # push_public_board_info(@channel_name, @public_update_even_name, @board)
+      # push_user_hand_info(@channel_name, @user_update_event_name, user)
     end
     render :json => response
   end

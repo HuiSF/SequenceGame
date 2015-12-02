@@ -55,7 +55,6 @@ Game.prototype._loadSprites = function() {
       _this._initializeHand();
       _this._addCanvas();
       _this._start();
-      _this._gameReady();
       // _this._setHandCard(1, {'suit':'club', 'rank': 10});
     });
 };
@@ -140,7 +139,7 @@ Game.prototype._start = function() {
       i;
   // console.log(this);
   animate();
-
+  this._gameReady();
   function animate() {
     requestAnimationFrame(animate);
     _this.renderer.render(_this.containers.gameContainer);
@@ -339,11 +338,17 @@ Game.prototype._gameReady = function () {
   var _this = this;
   var public_update_event_name = 'board_public_update';
   var user_update_event_name = 'user_hand_' + currentUserId;
+  var users_are_ready_event_name = 'users_are_ready';
   this.pusherChannel.bind(public_update_event_name, function (data) {
     _this._updateBoard(data);
   });
   this.pusherChannel.bind(user_update_event_name, function (data) {
     _this._updateHand(data);
+  });
+  this.pusherChannel.bind(users_are_ready_event_name, function(data) {
+    if (data.user_id !== currentUserId) {
+      _this.boardView._endLoading();
+    }
   });
 
   $.ajax({
@@ -353,6 +358,7 @@ Game.prototype._gameReady = function () {
       channel_name: this.pusherChannelName,
       public_update_even_name: public_update_event_name,
       user_update_event_name: user_update_event_name,
+      users_are_ready_event_name: users_are_ready_event_name,
       user_id: currentUserId,
       board_id: currentBoardId,
       game_ready: true
@@ -367,9 +373,13 @@ Game.prototype._gameReady = function () {
 };
 
 Game.prototype._updateBoard = function (data) {
+  console.log('Board info:= =============');
   console.log(data);
+  console.log('Board info:= =============');
 };
 
 Game.prototype._updateHand = function (data) {
+  console.log('Hand info:= =============');
   console.log(data);
+  console.log('Hand info:= =============');
 };
