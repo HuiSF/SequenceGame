@@ -68,6 +68,8 @@ class GameController < ApplicationController
     # otherwise, trigger pusher
     # Pusher[@channel_name].trigger(@public_update_even_name, public_board_info)
     # Pusher[@channel_name].trigger(@user_update_event_name, user_hand_info)
+    push_public_board_info(@channel_name, @public_update_even_name, @board)
+    push_user_hand_info(@channel_name, @user_update_event_name, user)
     render :json => response
   end
 
@@ -83,6 +85,37 @@ class GameController < ApplicationController
 
   def json_request?
     request.format.json?
+  end
+
+  def push_public_board_info(channel_name, event_name, board)
+    board_json = {}
+    board_json['board'] = []
+    board_json['teams'] = []
+    board_json['users'] = []
+
+    board_json['board'].push(
+        {:board_id => board.id, :number_of_players => board.number_of_players, :current_team_id => board.current_team, :last_discarded => board.last_discard}
+    )
+
+    board.teams.each do |team|
+      board_json['teams'].push(
+          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, :tokens => team.tokens, :sequences => team.sequences}
+      )
+      team.users.each do |user|
+        board_json['users'].push(
+            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team}
+        )
+      end
+    end
+    Pusher[channel_name].trigger(event_name, board_json)
+  end
+
+  def push_user_hand_info(channel_name, event_name, user)
+    user_json = []
+    user_json.push(
+            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team, :hand => user.hand}
+        )
+    Pusher[channel_name].trigger(event_name, user_json)
   end
 
 end
