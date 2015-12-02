@@ -73,12 +73,9 @@ Board.prototype._createChatRoom = function () {
 };
 
 Board.prototype._createGame = function () {
-  var pusherEvent = 'game_ready';
-  var $popup = $('<div class="loading-popup"><div class="loading-box"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span class="loading-text">Loading resources...</span></div></div>');
-  $('body').prepend($popup);
-  $popup.fadeIn(0);
+  this._startLoading();
   console.log('Starting to loading resources');
-  this._game = new Game();
+  this._game = new Game({}, this._channel, this.settings.channelName, this);
 };
 
 Board.prototype._startWaiting = function (duration) {
@@ -110,7 +107,8 @@ Board.prototype._startWaiting = function (duration) {
         console.log('User waiting channel and event sent');
         console.log(data);
       }
-      if (data.game_star) {
+      if (data.game_start) {
+        console.log('game start');
         _this._endWaiting();
         _this._createGame();
       }
@@ -119,18 +117,26 @@ Board.prototype._startWaiting = function (duration) {
 };
 
 Board.prototype._endWaiting = function () {
+  console.log('end wiating');
   $('.waiting-box').children('p').text('All players arrived, the game will start now!');
   $('.waiting-box').children('form').remove();
   setTimeout(function () {
-    $('.waiting-popup').fadeOut(300);
-    $('.waiting-popup').delay(300).remove();
+    $('.waiting-popup').fadeOut(500);
+    $('.waiting-popup').delay(500).remove();
   }, 4000);
 };
 
 Board.prototype._startLoading = function () {
-
+  var pusherEvent = 'game_ready';
+  var $popup = $('<div class="loading-popup"><div class="loading-box"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span class="loading-text">Loading resources...</span></div></div>');
+  $('body').prepend($popup);
+  $popup.fadeIn(0);
 };
 
 Board.prototype._endLoading = function () {
-
+  $('.loading-popup').html('').text('Loading Complete!');
+  setTimeout(function () {
+    $('.loading-popup').fadeOut(500);
+    $('.waiting-popup').delay(500).remove();
+  }, 4000);
 };

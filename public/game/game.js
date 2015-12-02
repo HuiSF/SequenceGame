@@ -1,5 +1,8 @@
-var Game = function(renderOptions, pusherChannel) {
-  this.game_id = '';
+var Game = function(renderOptions, pusherChannel, channelName, board) {
+  this.game_id = currentBoardId;
+  this.pusherChannel = pusherChannel;
+  this.pusherChannelName = channelName;
+  this.board = board;
   this.renderOptions = $.extend({
     "autoResize": true,
     "resolution": 2,
@@ -19,6 +22,7 @@ var Game = function(renderOptions, pusherChannel) {
   this.boardFitsWidth = true;
   this.boardScrollBottomLimit = 0;
   this._loadSprites();
+
 };
 
 Game.prototype._resize = function(width, height) {
@@ -51,7 +55,7 @@ Game.prototype._loadSprites = function() {
       _this._initializeHand();
       _this._addCanvas();
       _this._start();
-      _this._setHandCard(1, {'suit':'club', 'rank': 10});
+      // _this._setHandCard(1, {'suit':'club', 'rank': 10});
     });
 };
 
@@ -135,6 +139,7 @@ Game.prototype._start = function() {
       i;
   // console.log(this);
   animate();
+  this._gameReady();
   function animate() {
     requestAnimationFrame(animate);
     _this.renderer.render(_this.containers.gameContainer);
@@ -327,4 +332,42 @@ Game.prototype._resizeHandContainer = function () {
   components.textDiscardCards.position.x = rightStartPosition;
   rightStartPosition += (components.textDiscardCards._texture.width + 15) * zoomScale;
   components.discardCards.position.x = rightStartPosition;
+};
+
+Game.prototype._gameReady = function () {
+  var _this = this;
+  var public_update_event_name = 'board_public_update';
+  var user_update_event_name = 'user_hand_' + currentUserId;
+  this.pusherChannel.bind(public_update_event_name, function (data) {
+    this._updateBoard(data);
+  });
+  this.pusherChannel.bind(user_update_event_name, function (data) {
+    this._updateHand(data);
+  });
+
+  $.ajax({
+    type: 'POST',
+    url: '/game/ready',
+    data: {
+      channel_name: this.pusherChannelName,
+      public_update_even_name: public_update_event_name,
+      user_update_event_name: user_update_event_name,
+      user_id: currentUserId,
+      board_id: currentBoardId,
+      game_ready: true
+    },
+    success: function (data) {
+      if (data.game_start) {
+        _this.board._endLoading();
+      }
+    }
+  });
+};
+
+Game.prototype._updateBoard = function (data) {
+  console.log(data);
+};
+
+Game.prototype._updateHand = function (data) {
+  console.log(data);
 };
