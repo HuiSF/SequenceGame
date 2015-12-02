@@ -21,5 +21,15 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="//js.pusher.com/3.0/pusher.min.js"></script>
 <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+<% if action_name == 'show' %>
+<script src="/game/pixi.js" charset="utf-8"></script>
+<script src="/game/pixi-extra-filters.min.js" charset="utf-8"></script>
+<script src="/game/jquery.mousewheel.min.js" charset="utf-8"></script>
+<script src="/game/game.js" charset="utf-8"></script>
+<script src="/game/board-card.js" charset="utf-8"></script>
+<script src="/game/deck-card.js" charset="utf-8"></script>
+<script src="/game/filters.js" charset="utf-8"></script>
+<script src="/game/sequence.js" charset="utf-8"></script>
+<% end %>
 </body>
 </html>

@@ -21,9 +21,10 @@ body.sessions, body.boards, body.registrations, body.welcome {
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
   top: calc(50% - 50px);
   width: 400px;
-  z-index: 1000;
+  z-index: 999999998;
 }
 .loading-text {
+  color: #4B9ECC;
   font-family: 'Cinzel', serif;
 }
 .loading-box .glyphicon {
