@@ -55,21 +55,33 @@ class GameController < ApplicationController
     @public_update_even_name = params[:public_update_even_name]
     @user_update_event_name = params[:user_update_event_name]
     @board = Board.find(params[:board_id])
-    @user = User.find(params[:user_id])
+    # @user = User.find(params[:user_id])
     response = {}
     response['all_ready'] = true
     user = User.find(params[:user_id])
     user.state = :ready
     user.save
 
+    @board.teams.each do |team|
+      team.users.each do |auser|
+        STDERR.puts auser.state
+        if auser.state.eql? :ready
+          STDERR.puts "Someone is not ready"
+          response['all_ready'] = false
+          break
+        end
+      end
+    end
     # todo
     # check if all users in current board have a ready states
     # if not, assign false to User.find(params[:user_id])
     # otherwise, trigger pusher
     # Pusher[@channel_name].trigger(@public_update_even_name, public_board_info)
     # Pusher[@channel_name].trigger(@user_update_event_name, user_hand_info)
-    push_public_board_info(@channel_name, @public_update_even_name, @board)
-    push_user_hand_info(@channel_name, @user_update_event_name, user)
+    if (response['all_ready'])
+      push_public_board_info(@channel_name, @public_update_even_name, @board)
+      push_user_hand_info(@channel_name, @user_update_event_name, user)
+    end
     render :json => response
   end
 
