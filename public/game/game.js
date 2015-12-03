@@ -337,7 +337,7 @@ Game.prototype._resizeHandContainer = function () {
 Game.prototype._gameReady = function () {
   var _this = this;
   var public_update_event_name = 'board_public_update';
-  var user_update_event_name = 'user_hand_' + currentUserId;
+  var user_update_event_name = 'user_hand_';
   var users_are_ready_event_name = 'users_are_ready';
   this.pusherChannel.bind(public_update_event_name, function (data) {
     _this._updateBoard(data);
