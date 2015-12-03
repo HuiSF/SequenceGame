@@ -25,36 +25,6 @@ class GameController < ApplicationController
     render :json => response
   end
 
-  # check if game is ready to start
-  # :board_id
-  # :channel_name
-  # :event_name
-  def start
-    response = {}
-    response['game_ready'] = true
-
-    board = Board.find(params[:board_id])
-    board.teams.each do |team|
-      team.users.each do |user|
-        if user.state != :ready
-          response['game_ready'] = false
-          break
-        end
-      end
-    end
-
-    if response['game_ready']
-      (1..5).each do |blah|
-        board.users.each do |user|
-          user.hand.push(board.deck.pop)
-          user.save
-        end
-      end
-    end
-
-    render :json => response
-  end
-
   # user leaves
   # board_id
   # user_id
@@ -74,34 +44,36 @@ class GameController < ApplicationController
   # notify that passed in user is ready
   # user_id
   # channel_name
-  # event_name
+  # user_update_event_name
   def ready
-    @channel_name = params[:channel_name];
-    @public_update_even_name = params[:public_update_even_name]
-    @user_update_event_name = params[:user_update_event_name]
-    @users_are_ready_event_name = params[:users_are_ready_event_name]
-    @board = Board.find(params[:board_id])
-    @user = User.find(params[:user_id])
+    # @channel_name = params[:channel_name];
+    # @public_update_even_name = params[:public_update_even_name]
+    # @user_update_event_name = params[:user_update_event_name]
+    # @users_are_ready_event_name = params[:users_are_ready_event_name]
+    # @board = Board.find(params[:board_id])
+    # @user = User.find(params[:user_id])
     response = {}
-    response['all_ready'] = true
+    response['success'] = true
     user = User.find(params[:user_id])
     user.state = :ready
     user.save
 
-    @board.teams.each do |team|
-      team.users.each do |auser|
-        state = auser.state
-        if !state.eql?('ready') # here can't use :ready has to use 'ready' for comparison...'
-          response['all_ready'] = false
-          break
-        end
-      end
-    end
-    if (response['all_ready'])
-      Pusher[@channel_name].trigger(@users_are_ready_event_name, {'all_ready' => true, 'user_id' => params[:user_id]})
-      push_public_board_info(@channel_name, @public_update_even_name, @board)
-      push_user_hand_info(@channel_name, @user_update_event_name, user)
-    end
+    start(params[:channel_name], params[:user_update_event_name])
+
+    # @board.teams.each do |team|
+    #   team.users.each do |auser|
+    #     state = auser.state
+    #     if !state.eql?('ready') # here can't use :ready has to use 'ready' for comparison...'
+    #       response['all_ready'] = false
+    #       break
+    #     end
+    #   end
+    # end
+    # if (response['all_ready'])
+    #   Pusher[@channel_name].trigger(@users_are_ready_event_name, {'all_ready' => true, 'user_id' => params[:user_id]})
+    #   push_public_board_info(@channel_name, @public_update_even_name, @board)
+    #   push_user_hand_info(@channel_name, @user_update_event_name, user)
+    # end
     render :json => response
   end
 
@@ -154,6 +126,36 @@ class GameController < ApplicationController
   end
 
   protected
+
+  # check if game is ready to start
+  # :board_id
+  # :channel_name
+  # :user_hand_event_name{_:id}
+  def start(channel_name, user_event_name)
+
+    ready = true
+
+    board = Board.find(params[:board_id])
+    board.teams.each do |team|
+      team.users.each do |user|
+        if user.state != :ready
+          ready = false
+          break
+        end
+      end
+    end
+
+    if ready
+      (1..5).each do |deal|
+        board.users.each do |user|
+          user.hand.push(board.deck.pop)
+          user.save
+          board.save
+          push_user_hand_info(channel_name, user_event_name + user.id.to_s, user)
+        end
+      end
+    end
+  end
 
   def discard(board, user, card)
     position = user.hand.index(card)
