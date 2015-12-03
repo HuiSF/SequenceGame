@@ -347,6 +347,7 @@ Game.prototype._gameReady = function () {
   });
   this.pusherChannel.bind(users_are_ready_event_name, function(data) {
     if (data.user_id !== currentUserId) {
+      _this.boardView._createChatRoom();
       _this.boardView._endLoading();
     }
   });
@@ -356,7 +357,7 @@ Game.prototype._gameReady = function () {
     url: '/game/ready',
     data: {
       channel_name: this.pusherChannelName,
-      public_update_even_name: public_update_event_name,
+      public_update_event_name: public_update_event_name,
       user_update_event_name: user_update_event_name,
       users_are_ready_event_name: users_are_ready_event_name,
       user_id: currentUserId,
@@ -366,6 +367,7 @@ Game.prototype._gameReady = function () {
     success: function (data) {
       console.log(data);
       if (data.all_ready) {
+        _this.boardView._createChatRoom();
         _this.boardView._endLoading();
       }
     }

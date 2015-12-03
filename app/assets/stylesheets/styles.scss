@@ -331,3 +331,24 @@ body.sessions, body.boards, body.registrations, body.welcome {
   font-size: 1.0em;
   margin: 0 auto;
 }
+
+
+// game view
+.container-fluid {
+  overflow: hidden;
+}
+.game-view {
+  background-color: #999;
+  overflow: hidden;
+}
+
+.game-columns {
+  padding-left: 0;
+  padding-right: 0;
+}
+.game-panel {
+  left: 0;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+}
