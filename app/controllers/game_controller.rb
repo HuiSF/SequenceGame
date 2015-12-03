@@ -43,10 +43,21 @@ class GameController < ApplicationController
       end
     end
 
+    if response['game_ready']
+      (1..5).each do |blah|
+        board.users.each do |user|
+          user.hand.push(board.deck.pop)
+          user.save
+        end
+      end
+    end
+
     render :json => response
   end
 
   # user leaves
+  # board_id
+  # user_id
   def in_game_leave
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])

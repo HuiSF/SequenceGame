@@ -50,6 +50,16 @@ class Board < ActiveRecord::Base
     true
   end
 
+  def users
+    results  = []
+    self.teams do |team|
+      team.users.each do |each_user|
+        results.push(each_user)
+      end
+    end
+    results
+  end
+
   def remove_token(token_position)
     possible = true
     self.teams.each do |team|
