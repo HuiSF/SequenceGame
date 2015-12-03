@@ -40,7 +40,7 @@ class BoardsController < ApplicationController
   def create
     @board = Board.new(:number_of_seats)
     @board.number_of_players = 0
-    @board.deck = (1...104).to_a.shuffle
+    @board.deck = (1..104).to_a.shuffle
     if @board.save
       redirect_to @board
     else
@@ -64,11 +64,17 @@ class BoardsController < ApplicationController
     if @board.number_of_players < @board.number_of_seats
       @board.teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
+          old_team = user.current_team
           user.current_team = team
           user.state = :waiting
           user.save
           @board.update_number_of_players
           @board.save
+          unless old_team == nil
+            old_board = old_team.board
+            old_board.update_number_of_players
+            old_board.save
+          end
           result["joined"] = true
           result["redirect_to_id"] = @board.id
           break
@@ -106,26 +112,6 @@ class BoardsController < ApplicationController
     teams.each do |team|
       @users.push(team.users.all)
     end
-  end
-
-  # add a token to the board
-  #   board_id
-  #   user_id
-  #   position (token)
-  #   card (token)
-  #   channel_name (pusher channel)
-  #   event_name (pusher event)
-  def addToken
-    board = Board.find(params[:board_id])
-    user = User.find(params[:user_id])
-
-    if board.can_add_token?(params[:position])
-      user.add_token(params[:card], params[:position])
-    end
-
-    draw(board, user)
-
-    push_game_info(params[:channel_name], params[:event_name], board)
   end
 
   # remove a token from the board
@@ -235,37 +221,5 @@ class BoardsController < ApplicationController
       end
     end
     return avatars
-  end
-
-  def discard(user, card)
-    position = user.hand.index(card)
-    if position != nil
-      @board.last_discard = user.hand.delete_at(position)
-      @board.save
-      user.save
-    end
-  end
-
-  def draw(board, user)
-    # if we want to deal from the top of the deck rather than the end, we can change this
-    if board.deck.empty?
-      shuffleDeck
-    end
-    user.hand.push(board.deck.pop)
-    board.save
-    user.save
-  end
-
-  def shuffleDeck
-    @board.deck = (1...104).to_a.shuffle
-    @board.teams.each do |team|
-      team.users.each do |user|
-        user.hand.each do |card|
-          position = @board.deck.index(card)
-          @board.deck.delete_at(position)
-          @board.save
-        end
-      end
-    end
   end
 end

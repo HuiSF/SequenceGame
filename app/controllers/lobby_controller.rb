@@ -1,5 +1,8 @@
 class LobbyController < ApplicationController
   def boards
+    if Board.all.count == 0
+      initialize_boards
+    end
     if request.xhr?
       @boards_json = {}
       @boards_json['2players'] = []
@@ -47,4 +50,20 @@ class LobbyController < ApplicationController
     end
     return avatars
   end
+
+  protected 
+
+  def initialize_boards
+
+    (1..3).each do |board|
+      board_2 = Board.new(number_of_seats: 2, number_of_players: 0)
+      board_2.save
+      board_3 = Board.new(number_of_seats: 3, number_of_players: 0)
+      board_3.save
+      board_4 = Board.new(number_of_seats: 4, number_of_players: 0)
+      board_4.save
+    end
+    
+  end
+
 end
