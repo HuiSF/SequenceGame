@@ -40,7 +40,7 @@ class BoardsController < ApplicationController
   def create
     @board = Board.new(:number_of_seats)
     @board.number_of_players = 0
-    @board.deck = (1...104).to_a.shuffle
+    @board.deck = (1..104).to_a.shuffle
     if @board.save
       redirect_to @board
     else
@@ -257,7 +257,7 @@ class BoardsController < ApplicationController
   end
 
   def shuffleDeck
-    @board.deck = (1...104).to_a.shuffle
+    @board.deck = (1..104).to_a.shuffle
     @board.teams.each do |team|
       team.users.each do |user|
         user.hand.each do |card|
