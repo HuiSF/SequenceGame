@@ -96,6 +96,7 @@ class BoardsController < ApplicationController
     @channel_name = get_channel_name(@callbackUrl)
     @update_boards_event = 'update_boards'
     user.current_team = nil
+    user.hand.clear
     user.state = :lobby
     user.save
     @board.update_number_of_players
