@@ -343,13 +343,18 @@ Game.prototype._gameReady = function () {
     _this._updateBoard(data);
   });
   this.pusherChannel.bind(user_update_event_name, function (data) {
+    console.log(data);
     _this._updateHand(data);
   });
-  this.pusherChannel.bind(users_are_ready_event_name, function(data) {
-    if (data.user_id !== currentUserId) {
-      _this.boardView._createChatRoom();
-      _this.boardView._endLoading();
-    }
+  console.log(user_update_event_name + currentUserId);
+  this.pusherChannel.bind(user_update_event_name + currentUserId, function(data) {
+    // if (data.user_id !== currentUserId) {
+    //   _this.boardView._createChatRoom();
+    //   _this.boardView._endLoading();
+    // }
+    console.log(data);
+    _this.boardView._createChatRoom();
+    _this.boardView._endLoading();
   });
 
   $.ajax({
@@ -367,8 +372,8 @@ Game.prototype._gameReady = function () {
     success: function (data) {
       console.log(data);
       if (data.all_ready) {
-        _this.boardView._createChatRoom();
-        _this.boardView._endLoading();
+        // _this.boardView._createChatRoom();
+        // _this.boardView._endLoading();
       }
     }
   });
