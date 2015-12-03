@@ -64,11 +64,16 @@ class BoardsController < ApplicationController
     if @board.number_of_players < @board.number_of_seats
       @board.teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
+          old_board = user.current_team
           user.current_team = team
           user.state = :waiting
           user.save
           @board.update_number_of_players
           @board.save
+          if old_board != nil
+            old_board.update_number_of_players
+            old_board.save
+          end
           result["joined"] = true
           result["redirect_to_id"] = @board.id
           break
