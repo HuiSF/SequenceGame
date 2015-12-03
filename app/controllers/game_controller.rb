@@ -134,6 +134,10 @@ class GameController < ApplicationController
         user.hand.delete(params[:card])
       end
     end
+
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
+    push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+
   end
 
   protected
