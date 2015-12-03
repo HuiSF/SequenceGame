@@ -34,8 +34,8 @@ class User < ActiveRecord::Base
     if self.hand.include?(card)
       self.current_team.tokens.push(token_position)
       self.current_team.save
-      self.hand.delete(card)
-      self.save
+      # self.hand.delete(card)
+      # self.save
     end
   end
 

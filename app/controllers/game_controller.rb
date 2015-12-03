@@ -110,6 +110,7 @@ class GameController < ApplicationController
       user.add_token(params[:card], params[:position])
     end
 
+    discard(board, user, params[:card])
     draw(board, user)
 
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
@@ -131,18 +132,23 @@ class GameController < ApplicationController
 
     if user.can_remove_token(params[:card], params[:position])
       if board.remove_token(params[:position])
-        user.hand.delete(params[:card])
+        discard(board, user, params[:card])
+        draw(board, user)
       end
     end
+
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
+    push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+
   end
 
   protected
 
-  def discard(user, card)
+  def discard(board, user, card)
     position = user.hand.index(card)
     if position != nil
-      @board.last_discard = user.hand.delete_at(position)
-      @board.save
+      board.last_discard = user.hand.delete_at(position)
+      board.save
       user.save
     end
   end
