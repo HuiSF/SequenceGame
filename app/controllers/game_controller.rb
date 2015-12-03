@@ -58,7 +58,7 @@ class GameController < ApplicationController
     user.state = :ready
     user.save
 
-    start(params[:channel_name], params[:user_update_event_name])
+    start(params[:channel_name], params[:user_update_event_name], Board.find(params[:board_id]))
 
     # @board.teams.each do |team|
     #   team.users.each do |auser|
@@ -131,14 +131,13 @@ class GameController < ApplicationController
   # :board_id
   # :channel_name
   # :user_hand_event_name{_:id}
-  def start(channel_name, user_event_name)
+  def start(channel_name, user_event_name, board)
 
     ready = true
 
-    board = Board.find(params[:board_id])
     board.teams.each do |team|
       team.users.each do |user|
-        if not user.state.eql? 'ready'
+        unless user.state.eql? 'ready'
           ready = false
           break
         end
