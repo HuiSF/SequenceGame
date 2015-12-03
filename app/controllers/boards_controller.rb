@@ -64,7 +64,8 @@ class BoardsController < ApplicationController
     if @board.number_of_players < @board.number_of_seats
       @board.teams.each do |team|
         if team.users.count < @board.number_of_players_per_team
-          old_board = user.current_team
+          old_team = user.current_team
+          old_board = old_team.board
           user.current_team = team
           user.state = :waiting
           user.save
