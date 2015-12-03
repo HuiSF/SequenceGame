@@ -52,7 +52,7 @@ class Board < ActiveRecord::Base
 
   def users
     results  = []
-    self.teams do |team|
+    self.teams.each do |team|
       team.users.each do |each_user|
         results.push(each_user)
       end

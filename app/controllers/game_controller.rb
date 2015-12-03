@@ -138,6 +138,14 @@ class GameController < ApplicationController
     board.teams.each do |team|
       team.users.each do |user|
         unless user.state.eql? 'ready'
+          puts '================================='
+          puts user.state
+          puts user.state.eql? 'ready'
+          puts user.state.eql? :ready
+          puts user.state.equal? 'ready'
+          puts user.state.equal? :ready
+          puts user.state == :ready
+          puts '================================='
           ready = false
           break
         end
