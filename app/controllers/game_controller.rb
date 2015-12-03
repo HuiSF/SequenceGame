@@ -138,7 +138,7 @@ class GameController < ApplicationController
     board = Board.find(params[:board_id])
     board.teams.each do |team|
       team.users.each do |user|
-        if not user.state.eql? 'ready'
+        unless user.state.eql? 'ready'
           ready = false
           break
         end
