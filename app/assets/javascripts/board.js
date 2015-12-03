@@ -51,6 +51,10 @@ Board.prototype._createChatRoom = function () {
   this._messageInputEl = this._widget.find('textarea');
   this._messagesEl = this._widget.find('ul');
 
+  this._channel.bind('chat-message', function(data) {
+    _this._chatMessageReceived(data);
+  });
+
   this._widget.find('button').click(function(e) {
     e.preventDefault();
     _this._sendChatButtonClicked();
@@ -69,7 +73,7 @@ Board.prototype._createChatRoom = function () {
     var scrollableHeight = (el.scrollHeight - messageEl.height());
     _this._autoScroll = (scrollableHeight === messageEl.scrollTop());
   });
-
+  resizeGameChatRoom();
   this._startTimeMonitor();
 };
 

@@ -51,6 +51,7 @@ if ($('.boards.show').length > 0) {
         $gameView.height($window.innerHeight());
         board._game._resize($gameView.innerWidth(), $gameView.innerHeight());
         resizeSidePanel();
+        resizeGameChatRoom();
         if ($window.width() <= 980) {
           showPanelGrabber();
           hidePanel();

@@ -352,3 +352,46 @@ body.sessions, body.boards, body.registrations, body.welcome {
   overflow: hidden;
   top: 0;
 }
+.user-list {
+  padding: 15px 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 3px rgba(0, 0, 0, 0.8);
+  border: 1px solid #4A555E;
+  border-right-width: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+}
+.user-info {
+  border-radius: 4px;
+  cursor: default;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+}
+.user-info:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.user-info img {
+  border-radius: 4px;
+  height: 40px;
+  width: 43px;
+}
+.red-team img {
+  border-left: 3px solid #ff0000;
+}
+.blue-team img {
+  border-left: 3px solid #3496fa;
+}
+.in-turn {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.user-info .user-name, .user-info .user-score {
+  display: block;
+  width: 100%;
+}
+.user-info .user-name {
+  color: #fff;
+}
+.user-info .user-score {
+  color: #ccc;
+  font-size: 0.8em;
+}

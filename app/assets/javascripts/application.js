@@ -16,13 +16,21 @@
 // require turbolinks
 //= require_tree .
 $(document).ready(function() {
-  
+
 });
 
 function resizeLobbyChatRoom() {
   $window = $(window);
   $chatContainer = $('.chat-container');
   $chatContainer.height($window.innerHeight());
+}
+
+function resizeGameChatRoom() {
+  console.log('resizing chat room');
+  $window = $(window);
+  $chatContainer = $('.chat-container');
+  $userList = $('.user-list');
+  $chatContainer.height($window.innerHeight() - $userList.outerHeight());
 }
 
 function  showPopup(duration) {
