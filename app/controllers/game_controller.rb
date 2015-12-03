@@ -44,10 +44,11 @@ class GameController < ApplicationController
     end
 
     if response['game_ready']
-      (1..5).each do |blah|
+      (1..5).each do |deal|
         board.users.each do |user|
           user.hand.push(board.deck.pop)
           user.save
+          board.save
         end
       end
     end
