@@ -352,8 +352,9 @@ Game.prototype._gameReady = function () {
     //   _this.boardView._createChatRoom();
     //   _this.boardView._endLoading();
     // }
-    console.log(data);
+    // console.log(data);
     _this.boardView._createChatRoom();
+    _this._updateHand(data);
     _this.boardView._endLoading();
   });
 
@@ -386,7 +387,11 @@ Game.prototype._updateBoard = function (data) {
 };
 
 Game.prototype._updateHand = function (data) {
-  console.log('Hand info:= =============');
+  console.log('Hand updating:= =============');
   console.log(data);
-  console.log('Hand info:= =============');
+  var i;
+  for (i = 0; i < data.hand.length; i++) {
+    _this._setHandCard(i, data.hand[i]);
+  }
+  console.log('Hand updated:= =============');
 };
