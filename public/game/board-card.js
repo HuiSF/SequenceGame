@@ -10,7 +10,9 @@ BoardCard.prototype= {
     this.rank = rank;
     this.game = game;
     this.hasToken = false;
-    this.acceptToken = true;
+    this.addToken = true;
+    this.removeToken = false;
+    this.anyToken = false;
     if (this.rank === 0) {
       this.spriteName = 'back.png';
     } else {
@@ -109,7 +111,7 @@ BoardCard.prototype= {
   },
   addToken: function() {
     var _this = this;
-    if (this.acceptToken) {
+    if (this.anyToken) {
       console.log(_this.game.currentChosenCardInHand);
       // send request to server through pusher
       $.ajax({
@@ -121,7 +123,8 @@ BoardCard.prototype= {
           user_id: currentUserId,
           card: _this.game.currentChosenCardInHand,
           position: _this.id,
-          user_event_name: 'user_hand_' + currentUserId,
+          user_update_event_name: 'user_hand_' + currentUserId,
+          public_update_event_name: 'board_public_update'
         },
         success: function (data) {
 

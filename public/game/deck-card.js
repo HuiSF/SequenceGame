@@ -54,6 +54,10 @@ DeckCard.prototype= {
     return this.cardTexture.scaleX;
   },
   updateCard: function (texture, cardData, idInDeck) {
+    for (i = 0; i < this.pairBoardCards.length; i++) {
+      this.pairBoardCards[i].unhighlight();
+    }
+    // this.startToFloatDown();
     this.suit = cardData.suit;
     this.rank = cardData.rank;
     this.idInDeck = idInDeck;
@@ -78,6 +82,7 @@ DeckCard.prototype= {
     }
     for (i = 0; i < this.pairBoardCards.length; i++) {
       this.pairBoardCards[i].highlight();
+      this.pairBoardCards[i].anyToken = true;
     }
     this.moving = true;
     this.floatUp = true;
