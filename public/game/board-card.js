@@ -10,9 +10,9 @@ BoardCard.prototype= {
     this.rank = rank;
     this.game = game;
     this.hasToken = false;
-    this.addToken = true;
-    this.removeToken = false;
-    this.anyToken = false;
+    this.canAddToken = true;
+    this.canRemoveToken = false;
+    this.anyToken = true;
     if (this.rank === 0) {
       this.spriteName = 'back.png';
     } else {
@@ -106,13 +106,15 @@ BoardCard.prototype= {
     this.cardTexture.mouseup = function (e) {
 
       this.position.y = this.beforeMousedownPositionY;
-      _this.addToken();
+      if (_this.anyToken) {
+        _this.addToken();
+      }
+
     };
   },
   addToken: function() {
     var _this = this;
-    if (this.anyToken) {
-      console.log(_this.game.currentChosenCardInHand);
+    console.log(_this.game.currentChosenCardInHand);
       // send request to server through pusher
       $.ajax({
         type: 'POST',
@@ -130,6 +132,5 @@ BoardCard.prototype= {
 
         }
       });
-    }
   }
 };
