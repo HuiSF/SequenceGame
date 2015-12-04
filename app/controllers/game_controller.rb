@@ -148,6 +148,7 @@ class GameController < ApplicationController
       board.deck = (1..104).to_a.shuffle
       (1..5).each do |deal|
         board.users.each do |user|
+          user.hand = []
           user.hand.push(board.deck.pop)
           user.save
           board.save
