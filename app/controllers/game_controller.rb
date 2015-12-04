@@ -151,10 +151,14 @@ class GameController < ApplicationController
           user.hand.push(board.deck.pop)
           user.save
           board.save
-          push_user_hand_info(channel_name, user_event_name + user.id.to_s, user)
         end
       end
     end
+
+    board.users.each do |each_user|
+      push_user_hand_info(channel_name, user_event_name + each_user.id.to_s, each_user)
+    end
+
   end
 
   def reset_cards(board)
