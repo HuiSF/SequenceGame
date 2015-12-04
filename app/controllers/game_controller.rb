@@ -138,14 +138,6 @@ class GameController < ApplicationController
     board.teams.each do |team|
       team.users.each do |user|
         unless user.state.eql? 'ready'
-          puts '================================='
-          puts user.state
-          puts user.state.eql? 'ready'
-          puts user.state.eql? :ready
-          puts user.state.equal? 'ready'
-          puts user.state.equal? :ready
-          puts user.state == :ready
-          puts '================================='
           ready = false
           break
         end
@@ -153,11 +145,14 @@ class GameController < ApplicationController
     end
 
     if ready
+      board.deck = (1..104).to_a.shuffle
       (1..5).each do |deal|
         board.users.each do |user|
+          user.hand = []
           user.hand.push(board.deck.pop)
           user.save
           board.save
+          puts user_event_name + user.id.to_s
           push_user_hand_info(channel_name, user_event_name + user.id.to_s, user)
         end
       end
