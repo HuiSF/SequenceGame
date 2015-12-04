@@ -145,18 +145,25 @@ class GameController < ApplicationController
     end
 
     if ready
-      board.deck = (1..104).to_a.shuffle
+      reset_cards(board)
       (1..5).each do |deal|
         board.users.each do |user|
-          user.hand = []
           user.hand.push(board.deck.pop)
           user.save
           board.save
-          puts user_event_name + user.id.to_s
           push_user_hand_info(channel_name, user_event_name + user.id.to_s, user)
         end
       end
     end
+  end
+
+  def reset_cards(board)
+    board.users.each do |each_user|
+      each_user.hand = []
+      each_user.save
+    end
+    board.deck = (1..104).to_a.shuffle
+    board.save
   end
 
   def discard(board, user, card)
