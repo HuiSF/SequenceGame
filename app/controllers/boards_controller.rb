@@ -96,6 +96,7 @@ class BoardsController < ApplicationController
     @channel_name = get_channel_name(@callbackUrl)
     @update_boards_event = 'update_boards'
     user.current_team = nil
+    user.hand.clear
     user.state = :lobby
     user.save
     @board.update_number_of_players
@@ -112,26 +113,6 @@ class BoardsController < ApplicationController
     teams.each do |team|
       @users.push(team.users.all)
     end
-  end
-
-  # remove a token from the board
-  #   board_id
-  #   user_id
-  #   position (token)
-  #   card (token)
-  #   channel_name (pusher channel)
-  #   event_name (pusher event)
-  def removeToken
-    board = Board.find(params[:board_id])
-    user = User.find(params[:user_id])
-
-    if user.can_remove_token(params[:card], params[:position])
-      if board.remove_token(params[:position])
-        user.hand.delete(params[:card])
-      end
-    end
-
-    push_game_info(params[:channel_name], params[:event_name], board)
   end
 
   # notify team to add new sequence, check for win,
@@ -206,7 +187,7 @@ class BoardsController < ApplicationController
       )
       team.users.each do |user|
         board_json['users'].push(
-            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team, :hand => user.hand}
+            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team}
         )
       end
     end

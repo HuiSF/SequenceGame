@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   post 'game/board_full' => 'game#board_full'
 
   # check if enough players to start
-  post 'game/start' => 'game#start'
+  # post 'game/start' => 'game#start'
 
   # post that user_id is ready
   post 'game/ready' => 'game#ready'
