@@ -55,7 +55,7 @@ Game.prototype._loadSprites = function() {
       _this._initializeHand();
       _this._addCanvas();
       _this._start();
-      // _this._setHandCard(1, {'suit':'club', 'rank': 10});
+      // _this._'diamond'andCard(1, {'suit':'club', 'rank': 10});
     });
 };
 
@@ -171,6 +171,7 @@ Game.prototype._generateCards = function () {
 
 Game.prototype._setHandCard = function (index, cardData) {
   // console.log(this.containers.handContainer);
+  console.log(cardData);
   var handCards = this.containers.handContainer.handCards,
       cardSprites = this.sprites.cards,
       spriteName;
@@ -391,7 +392,7 @@ Game.prototype._updateHand = function (data) {
   console.log(data);
   var i;
   for (i = 0; i < data.hand.length; i++) {
-    _this._setHandCard(i, data.hand[i]);
+    this._setHandCard(i, card_id_to_suit_rank[data.hand[i]]);
   }
   console.log('Hand updated:= =============');
 };
