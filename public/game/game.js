@@ -21,6 +21,7 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.board.cards = [];
   this.boardFitsWidth = true;
   this.boardScrollBottomLimit = 0;
+  this.currentChosenCardInHand = 0;
   this._loadSprites();
 
 };
@@ -169,7 +170,7 @@ Game.prototype._generateCards = function () {
   this._resizeCards();
 };
 
-Game.prototype._setHandCard = function (index, cardData) {
+Game.prototype._setHandCard = function (index, cardData, idInDeck) {
   // console.log(this.containers.handContainer);
   console.log(cardData);
   var handCards = this.containers.handContainer.handCards,
@@ -184,7 +185,7 @@ Game.prototype._setHandCard = function (index, cardData) {
       spriteName = cardData.suit + '_' + cardData.rank + '.png';
     }
   }
-  handCards[index].updateCard(cardSprites[spriteName], cardData);
+  handCards[index].updateCard(cardSprites[spriteName], cardData, idInDeck);
   // console.log(handCards);
 };
 
@@ -392,7 +393,7 @@ Game.prototype._updateHand = function (data) {
   console.log(data);
   var i;
   for (i = 0; i < data.hand.length; i++) {
-    this._setHandCard(i, card_id_to_suit_rank[data.hand[i]]);
+    this._setHandCard(i, card_id_to_suit_rank[data.hand[i]], data.hand[i]);
   }
   console.log('Hand updated:= =============');
 };

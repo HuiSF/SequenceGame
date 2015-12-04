@@ -20,6 +20,7 @@ DeckCard.prototype= {
     this.boardCards = this.game.board.cards;
     this.pairBoardCards = [];
     this.moving = false;
+    this.idInDeck = 0;
     if (this.rank === 0) {
       this.spriteName = 'back.png';
     } else {
@@ -52,9 +53,10 @@ DeckCard.prototype= {
   getTextureScale: function () {
     return this.cardTexture.scaleX;
   },
-  updateCard: function (texture, cardData) {
+  updateCard: function (texture, cardData, idInDeck) {
     this.suit = cardData.suit;
     this.rank = cardData.rank;
+    this.idInDeck = idInDeck;
     this.cardTexture.texture = texture;
     this.getPairFromBoard();
   },
@@ -139,6 +141,7 @@ DeckCard.prototype= {
     };
     this.cardTexture.mouseup = function (e) {
       // this.position.y -= 2;
+      _this.game.currentChosenCardInHand = _this.idInDeck;
       if (_this.cardTexture.position.y === -24) {
         _this.startToFloatDown();
       } else {

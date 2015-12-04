@@ -108,8 +108,25 @@ BoardCard.prototype= {
     };
   },
   addToken: function() {
+    var _this = this;
     if (this.acceptToken) {
+      console.log(_this.game.currentChosenCardInHand);
       // send request to server through pusher
+      $.ajax({
+        type: 'POST',
+        url: '/game/add_token',
+        data: {
+          channel_name: _this.game.pusherChannelName,
+          board_id: currentBoardId,
+          user_id: currentUserId,
+          card: _this.game.currentChosenCardInHand,
+          position: _this.id,
+          user_event_name: 'user_hand_' + currentUserId,
+        },
+        success: function (data) {
+
+        }
+      });
     }
   }
 };
