@@ -177,31 +177,30 @@ class GameController < ApplicationController
   def discard(board, user, card)
     position = user.hand.index(card)
     if position != nil
-      board.last_discard = user.hand.delete_at(position)
+      board.last_discard = user.hand.at(position)
       board.save
+      user.hand[position] = draw(board)
       user.save
     end
   end
 
-  def draw(board, user)
+  def draw(board)
     # if we want to deal from the top of the deck rather than the end, we can change this
     if board.deck.empty?
       shuffleDeck
     end
-    user.hand.push(board.deck.pop)
+    card = (board.deck.pop)
     board.save
-    user.save
+    card
   end
 
-  def shuffleDeck
-    @board.deck = (1..104).to_a.shuffle
-    @board.teams.each do |team|
-      team.users.each do |user|
-        user.hand.each do |card|
-          position = @board.deck.index(card)
-          @board.deck.delete_at(position)
-          @board.save
-        end
+  def shuffleDeck(board)
+    board.deck = (1..104).to_a.shuffle
+    board.users.each do |user|
+      user.hand.each do |card|
+        position = board.deck.index(card)
+        board.deck.delete_at(position)
+        board.save
       end
     end
   end
