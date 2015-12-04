@@ -230,10 +230,7 @@ class GameController < ApplicationController
   end
 
   def push_user_hand_info(channel_name, event_name, user)
-    user_json = []
-    user_json.push(
-        {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team, :hand => user.hand}
-    )
+    user_json = {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team, :hand => user.hand}
     Pusher[channel_name].trigger(event_name, user_json)
   end
 
