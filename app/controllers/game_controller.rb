@@ -94,7 +94,6 @@ class GameController < ApplicationController
     end
 
     discard(board, user, params[:card])
-    draw(board, user)
 
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
@@ -118,7 +117,6 @@ class GameController < ApplicationController
     if user.can_remove_token(params[:card], params[:position])
       if board.remove_token(params[:position])
         discard(board, user, params[:card])
-        draw(board, user)
       end
     end
 
