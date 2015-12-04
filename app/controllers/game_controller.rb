@@ -99,6 +99,8 @@ class GameController < ApplicationController
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
 
+    render :json => {:success => true}
+
   end
 
   # add a token to the board
@@ -122,6 +124,8 @@ class GameController < ApplicationController
 
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+
+    render :json => {:success => true}
 
   end
 
