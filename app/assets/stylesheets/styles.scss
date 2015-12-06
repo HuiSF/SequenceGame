@@ -1,7 +1,7 @@
 body.sessions, body.boards, body.registrations, body.welcome {
     background: #0d2432 image-url('background_pattern.png') fixed;
 }
-.loading-popup, .waiting-popup {
+.loading-popup, .waiting-popup, .warning-popup {
   background: rgba(0, 0, 0, 1) image-url('background_pattern.png');
   bottom: 0;
   position: fixed;
@@ -10,7 +10,10 @@ body.sessions, body.boards, body.registrations, body.welcome {
   top: 0;
   z-index: 999999999;
 }
-.loading-box {
+// .warning-popup {
+//   background: rgba(0, 0, 0, 0.8) image-url('background_pattern.png');
+// }
+.loading-box{
   color: #fff;
   cursor: default;
   font-size: 2em;
@@ -22,6 +25,9 @@ body.sessions, body.boards, body.registrations, body.welcome {
   top: calc(50% - 50px);
   width: 400px;
   z-index: 999999998;
+}
+.warning-box {
+  line-height: 100%;
 }
 .loading-text {
   color: #4B9ECC;
@@ -46,7 +52,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
   100% { transform: rotate(360deg); }
 }
 
-.waiting-box {
+.waiting-box, .warning-box {
   color: #4B9ECC;
   cursor: default;
   border-radius: 4px;
@@ -116,7 +122,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
-.sign-in-form .btn-info, .sign-up-form .btn-info, .waiting-box .btn-info {
+.sign-in-form .btn-info, .sign-up-form .btn-info, .waiting-box .btn-info, .warning-box .btn-info {
     -moz-user-select: none;
     background: linear-gradient(to bottom, rgba(23,44,61,1) 0%,rgba(23,44,61,1) 50%,rgba(13,22,29,1) 50%,rgba(20,37,51,1) 100%);
     border: 1px solid #4A555E;
@@ -136,7 +142,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
     transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s, color 0.15s;
 }
 
-.sign-in-form .btn-info:hover, .sign-up-form .btn-info:hover, .waiting-box .btn-info:hover {
+.sign-in-form .btn-info:hover, .sign-up-form .btn-info:hover, .waiting-box .btn-info:hover, .warning-box .btn-info:hover {
     color: #fff;
     border-color: #66afe9;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);

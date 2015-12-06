@@ -390,9 +390,14 @@ Game.prototype._gameReady = function() {
 Game.prototype._updateBoard = function(data) {
   console.log('Board info:= =============');
   console.log(data);
-  this._generateUserList(data);
-  this._updateDiscardCard(data);
-  this._updateTokens(data);
+  if (!data.board.game_abort) {
+    this._generateUserList(data);
+    this._updateDiscardCard(data);
+    this._updateTokens(data);
+  } else {
+    this._gameAbort(data);
+  }
+
   console.log('Board info:= =============');
 };
 
@@ -407,6 +412,7 @@ Game.prototype._updateHand = function(data) {
 Game.prototype._generateUserList = function(data) {
   var $userList = $('.user-list'),
       i;
+  $('.user-list').html('');  
   for (i = 0; i < data.users.length; i++) {
     $userList.append(generateUserContainer(data.users[i]));
   }
@@ -460,5 +466,12 @@ Game.prototype._updateTokens = function (data) {
         this.board.cards[boardCardPosition - 1].addTokenTexture(data.teams[i].team_id, data.teams[i].color);
       }
     }
+  }
+};
+
+Game.prototype._gameAbort = function (data) {
+  if (data.board.game_abort) {
+    console.log('Game aborted due to other user left during game. You will be redirected to lobby now.');
+    window.location.replace('/lobby');
   }
 };

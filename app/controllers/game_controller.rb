@@ -48,6 +48,7 @@ class GameController < ApplicationController
     reset_board(board)
     board.save
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board, true)
+    render :json => {'success' => true}
   end
 
   # notify that passed in user is ready
@@ -230,7 +231,7 @@ class GameController < ApplicationController
 
   def push_public_board_info(channel_name, event_name, board, game_abort = false)
     board_json = {}
-    board_json['board'] = []
+    board_json['board'] = {}
     board_json['teams'] = []
     board_json['users'] = []
 
@@ -238,13 +239,13 @@ class GameController < ApplicationController
       :board_id => board.id,
       :number_of_players => board.number_of_players,
       :current_team_id => board.current_team,
-      :last_discarded => board.last_discard
+      :last_discarded => board.last_discard,
       :game_abort => game_abort
     }
 
     board.teams.each do |team|
       board_json['teams'].push(
-          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, 
+          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user,
             :tokens => team.tokens, :sequences => team.sequences, :game_result => team.game_result}
       )
       team.users.each do |user|
