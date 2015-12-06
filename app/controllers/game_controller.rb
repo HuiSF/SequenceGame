@@ -28,17 +28,26 @@ class GameController < ApplicationController
   # user leaves
   # board_id
   # user_id
+  # channel_name
+  # public_update_event_name (pusher event)
   def in_game_leave
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
+    losing_team = user.current_team
 
     board.teams.each do |team|
+      team.game_result = team == losing_team ? :loss : :win
+      team.save
       team.users.each do |each_user|
         each_user.current_team = nil
-        each_user.status = :lobby
+        each_user.state = :lobby
         each_user.save
+        redirect_to '/lobby'
       end
     end
+    board.update_number_of_players
+    board.save
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
   end
 
   # notify that passed in user is ready
@@ -223,7 +232,8 @@ class GameController < ApplicationController
 
     board.teams.each do |team|
       board_json['teams'].push(
-          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, :tokens => team.tokens, :sequences => team.sequences}
+          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, 
+            :tokens => team.tokens, :sequences => team.sequences, :game_result => team.game_result}
       )
       team.users.each do |user|
         board_json['users'].push(
