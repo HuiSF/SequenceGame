@@ -30,7 +30,8 @@ function resizeGameChatRoom() {
   $window = $(window);
   $chatContainer = $('.chat-container');
   $userList = $('.user-list');
-  $chatContainer.height($window.innerHeight() - $userList.outerHeight());
+  $gameButtons = $('.game-buttons');
+  $chatContainer.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight());
 }
 
 function  showPopup(duration) {

@@ -21,21 +21,6 @@ function Board(pusher, options) {
   this.settings.channelName = Board.getValidChannelName(this.settings.channelName);
   this._channel = this._pusher.subscribe(this.settings.channelName);
   this._startWaiting(0);
-  // bind pusher events
-  // this._channel.bind('update-waiting-user-list', function(data) {
-  //   _this._updateWaitingUserList(data);
-  // });
-  // this._channle.bind('update-board', function (data) {
-  //   _this._game.updateBoard(data);
-  // });
-  // this._channle.bind('update-hand-' + currentUserId, function () {
-  //   _this._game.updateHand(data);
-  // });
-  // this._channel.bind('chat-message', function(data) {
-  //   _this._chatMessageReceived(data);
-  // });
-
-
 }
 
 Board.prototype._startGame = function () {
@@ -43,6 +28,7 @@ Board.prototype._startGame = function () {
 };
 
 Board.prototype._createChatRoom = function () {
+  console.log('Creating chat room');
   var _this = this;
   this._itemCount = 0;
   this._widget = Board._createHTML(this.settings.appendTo);
@@ -156,7 +142,7 @@ Board.prototype._endLoading = function () {
 
 /* @private */
 Board.prototype._chatMessageReceived = function(data) {
-  console.log('message coming');
+  console.log(data);
   var _this = this;
 
   if (this._itemCount === 0) {

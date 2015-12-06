@@ -395,3 +395,22 @@ body.sessions, body.boards, body.registrations, body.welcome {
   color: #ccc;
   font-size: 0.8em;
 }
+.game-buttons {
+  color: #4B9ECC;
+  line-height: 36px;
+  height: 36px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 3px rgba(0, 0, 0, 0.8);
+  border: 1px solid #4A555E;
+  border-right-width: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+}
+.game-buttons div {
+  cursor: pointer;
+  transition: text-shadow 0.15s;
+}
+.game-buttons div:hover {
+  text-shadow: 0 0 8px rgba(102,175,233,.6);
+}

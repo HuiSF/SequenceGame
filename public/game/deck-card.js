@@ -63,6 +63,9 @@ DeckCard.prototype= {
     this.idInDeck = idInDeck;
     this.cardTexture.texture = texture;
     this.getPairFromBoard();
+    if (this.cardTexture.position.y === -24) {
+      this.startToFloatDown();
+    }
   },
   getPairFromBoard: function () {
     this.pairBoardCards = [];
@@ -82,7 +85,6 @@ DeckCard.prototype= {
     }
     for (i = 0; i < this.pairBoardCards.length; i++) {
       this.pairBoardCards[i].highlight();
-      this.pairBoardCards[i].anyToken = true;
     }
     this.moving = true;
     this.floatUp = true;
@@ -90,6 +92,7 @@ DeckCard.prototype= {
     // this.cardTexture.filters = [shadow];
   },
   startToFloatDown: function () {
+    var i;
     for (i = 0; i < this.pairBoardCards.length; i++) {
       this.pairBoardCards[i].unhighlight();
     }

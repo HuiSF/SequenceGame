@@ -22,6 +22,7 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.boardFitsWidth = true;
   this.boardScrollBottomLimit = 0;
   this.currentChosenCardInHand = 0;
+  this.gameInitialStart = true;
   this._loadSprites();
 
 };
@@ -171,8 +172,6 @@ Game.prototype._generateCards = function () {
 };
 
 Game.prototype._setHandCard = function (index, cardData, idInDeck) {
-  // console.log(this.containers.handContainer);
-  console.log(cardData);
   var handCards = this.containers.handContainer.handCards,
       cardSprites = this.sprites.cards,
       spriteName;
@@ -185,6 +184,7 @@ Game.prototype._setHandCard = function (index, cardData, idInDeck) {
       spriteName = cardData.suit + '_' + cardData.rank + '.png';
     }
   }
+  console.log(spriteName);
   handCards[index].updateCard(cardSprites[spriteName], cardData, idInDeck);
   // console.log(handCards);
 };
@@ -344,20 +344,15 @@ Game.prototype._gameReady = function () {
   this.pusherChannel.bind(public_update_event_name, function (data) {
     _this._updateBoard(data);
   });
-  // this.pusherChannel.bind(user_update_event_name, function (data) {
-  //   console.log(data);
-  //   _this._updateHand(data);
-  // });
-  console.log(user_update_event_name + currentUserId);
   this.pusherChannel.bind(user_update_event_name + currentUserId, function(data) {
-    // if (data.user_id !== currentUserId) {
-    //   _this.boardView._createChatRoom();
-    //   _this.boardView._endLoading();
-    // }
-    // console.log(data);
-    _this.boardView._createChatRoom();
+    if (_this.gameInitialStart) {
+      _this.boardView._createChatRoom();
+      _this.boardView._endLoading();
+      _this.gameInitialStart = false;
+    }
     _this._updateHand(data);
-    _this.boardView._endLoading();
+
+    // _this._checkUsers();
   });
 
   $.ajax({
@@ -390,7 +385,6 @@ Game.prototype._updateBoard = function (data) {
 
 Game.prototype._updateHand = function (data) {
   console.log('Hand updating:= =============');
-  console.log(data);
   var i;
   for (i = 0; i < data.hand.length; i++) {
     this._setHandCard(i, card_id_to_suit_rank[data.hand[i]], data.hand[i]);
