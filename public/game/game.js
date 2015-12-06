@@ -22,7 +22,8 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.boardFitsWidth = true;
   this.boardScrollBottomLimit = 0;
   this.currentChosenCardInHand = 0;
-  this.gameInitialStart = true;
+  this.gameInitialHand = true;
+  this.gameInitialBoard = true;
   this._loadSprites();
 
 };
@@ -86,9 +87,9 @@ Game.prototype._initializeHand = function() {
   console.log('initializing hand...');
   this.containers.handContainer = new PIXI.Container();
   var handContainer = this.containers.handContainer,
-      componentSprites = this.sprites.components,
-      cardSprites = this.sprites.cards,
-      i, aCard;
+    componentSprites = this.sprites.components,
+    cardSprites = this.sprites.cards,
+    i, aCard;
 
   handContainer.interactive = true;
   handContainer.components = {};
@@ -140,12 +141,13 @@ Game.prototype._addCanvas = function() {
 
 Game.prototype._start = function() {
   var _this = this,
-      handContainer = this.containers.handContainer,
-      handCards = handContainer.handCards,
-      i;
+    handContainer = this.containers.handContainer,
+    handCards = handContainer.handCards,
+    i;
   // console.log(this);
   animate();
   this._gameReady();
+
   function animate() {
     requestAnimationFrame(animate);
     _this.renderer.render(_this.containers.gameContainer);
@@ -155,14 +157,14 @@ Game.prototype._start = function() {
   }
 };
 
-Game.prototype._generateCards = function () {
+Game.prototype._generateCards = function() {
   var boardData = this.sprites.boardData;
   var numberOfCards = boardData.numberOfCards,
-      numberOfColumns = boardData.numberOfColumns,
-      numberOfRows = Math.ceil(numberOfCards / numberOfColumns),
-      boardContainer = this.containers.boardContainer,
-      cardSprites = this.sprites.cards,
-      i, aCard;
+    numberOfColumns = boardData.numberOfColumns,
+    numberOfRows = Math.ceil(numberOfCards / numberOfColumns),
+    boardContainer = this.containers.boardContainer,
+    cardSprites = this.sprites.cards,
+    i, aCard;
   console.log('Generating ' + numberOfCards + ' cards, ' + numberOfColumns + ' cards per row.');
 
   for (i = 1; i <= numberOfCards; i++) {
@@ -175,10 +177,10 @@ Game.prototype._generateCards = function () {
   this._resizeCards();
 };
 
-Game.prototype._setHandCard = function (index, cardData, idInDeck) {
+Game.prototype._setHandCard = function(index, cardData, idInDeck) {
   var handCards = this.containers.handContainer.handCards,
-      cardSprites = this.sprites.cards,
-      spriteName;
+    cardSprites = this.sprites.cards,
+    spriteName;
   if (cardData.rank === 0) {
     spriteName = 'back.png';
   } else {
@@ -193,19 +195,19 @@ Game.prototype._setHandCard = function (index, cardData, idInDeck) {
   // console.log(handCards);
 };
 
-Game.prototype._bindEventsToBoard = function () {
-    var boardContainer = this.containers.boardContainer,
-        _this = this;
-    _this.$gameView.on('mousewheel', function (e) {
-      // console.log(e.originalEvent.changedTouches[0]);
-      var upLimit = 0 - (boardContainer.renderedHeight - _this.rendererHeight + 150);
-      var downLimit = -14;
-      if (e.deltaY < 0 && boardContainer.position.y >= upLimit) {
-        boardContainer.position.y -= 14;
-      } else if (e.deltaY > 0 && boardContainer.position.y <= downLimit) {
-        boardContainer.position.y += 14;
-      }
-    });
+Game.prototype._bindEventsToBoard = function() {
+  var boardContainer = this.containers.boardContainer,
+    _this = this;
+  _this.$gameView.on('mousewheel', function(e) {
+    // console.log(e.originalEvent.changedTouches[0]);
+    var upLimit = 0 - (boardContainer.renderedHeight - _this.rendererHeight + 150);
+    var downLimit = -14;
+    if (e.deltaY < 0 && boardContainer.position.y >= upLimit) {
+      boardContainer.position.y -= 14;
+    } else if (e.deltaY > 0 && boardContainer.position.y <= downLimit) {
+      boardContainer.position.y += 14;
+    }
+  });
 };
 
 Game.prototype._resizeBackground = function() {
@@ -216,24 +218,24 @@ Game.prototype._resizeBackground = function() {
   background.scale.y = y;
 };
 
-Game.prototype._resizeCards = function () {
+Game.prototype._resizeCards = function() {
   var originalWidth = this.sprites.cards.originalWidth,
-      originalHeight = this.sprites.cards.originalHeight,
-      boardData = this.sprites.boardData,
-      numberOfColumns = boardData.numberOfColumns,
-      numberOfCards = boardData.numberOfCards,
-      numberOfRows = Math.ceil(numberOfCards / numberOfColumns),
-      rendererWidth = this.rendererWidth,
-      rendererHeight = this.rendererHeight,
-      cards = this.board.cards,
-      boardContainer = this.containers.boardContainer;
+    originalHeight = this.sprites.cards.originalHeight,
+    boardData = this.sprites.boardData,
+    numberOfColumns = boardData.numberOfColumns,
+    numberOfCards = boardData.numberOfCards,
+    numberOfRows = Math.ceil(numberOfCards / numberOfColumns),
+    rendererWidth = this.rendererWidth,
+    rendererHeight = this.rendererHeight,
+    cards = this.board.cards,
+    boardContainer = this.containers.boardContainer;
 
   var desiredWidth, desiredHeight,
-      totalCardsWidth, totalCardsHeight,
-      startPositionX, startPositionY = 10,
-      row = 0,
-      zoomScale = 0,
-      i;
+    totalCardsWidth, totalCardsHeight,
+    startPositionX, startPositionY = 10,
+    row = 0,
+    zoomScale = 0,
+    i;
 
   if (this.boardFitsWidth) {
     totalCardsWidth = originalWidth * numberOfColumns + 10 * (numberOfColumns + 1);
@@ -284,19 +286,19 @@ Game.prototype._resizeCards = function () {
   }
 };
 
-Game.prototype._resizeHandContainer = function () {
+Game.prototype._resizeHandContainer = function() {
   var handContainer = this.containers.handContainer,
-      components = handContainer.components,
-      cards = handContainer.handCards,
-      componentSprites = this.sprites.components,
-      cardSprites = this.sprites.cards,
-      positionY = 24,
-      leftStartPosition = 15,
-      rightStartPosition = 15,
-      handWidth = this.rendererWidth,
-      handHeight = cardSprites.renderedHeight + 41,
-      zoomScale = this.sprites.cards.zoomScale,
-      i;
+    components = handContainer.components,
+    cards = handContainer.handCards,
+    componentSprites = this.sprites.components,
+    cardSprites = this.sprites.cards,
+    positionY = 24,
+    leftStartPosition = 15,
+    rightStartPosition = 15,
+    handWidth = this.rendererWidth,
+    handHeight = cardSprites.renderedHeight + 41,
+    zoomScale = this.sprites.cards.zoomScale,
+    i;
 
 
   handContainer.position.x = 0;
@@ -318,41 +320,41 @@ Game.prototype._resizeHandContainer = function () {
   components.discardCards.position.y = positionY;
   components.discardCard.position.y = positionY;
 
-  rightStartPosition = handWidth - (rightStartPosition + components.discardCards._texture.width + components.textDiscardCards._texture.width +  components.deckCards._texture.width + components.textDeckCards._texture.width + 45) * zoomScale;
+  rightStartPosition = handWidth - (rightStartPosition + components.discardCards._texture.width + components.textDiscardCards._texture.width + components.deckCards._texture.width + components.textDeckCards._texture.width + 45) * zoomScale;
 
   components.textHandCards.position.x = leftStartPosition;
-  leftStartPosition += (components.textHandCards._texture.width  + 15) * zoomScale;
+  leftStartPosition += (components.textHandCards._texture.width + 15) * zoomScale;
   for (i = 0; i < cards.length; i++) {
     // console.log(cards[i]);
     cards[i].cardTexture.scale.x = zoomScale;
     cards[i].cardTexture.scale.y = zoomScale;
     cards[i].cardTexture.position.x = leftStartPosition;
     cards[i].cardTexture.renderedPositionX = cards[i].cardTexture.position.x;
-    leftStartPosition += (cards[i].cardTexture._texture.width + 10) * zoomScale ;
+    leftStartPosition += (cards[i].cardTexture._texture.width + 10) * zoomScale;
     cards[i].cardTexture.position.y = positionY;
     cards[i].cardTexture.renderedPositionY = cards[i].cardTexture.position.y;
   }
 
   components.textDeckCards.position.x = rightStartPosition;
-  rightStartPosition += (components.textDeckCards._texture.width + 15) * zoomScale ;
+  rightStartPosition += (components.textDeckCards._texture.width + 15) * zoomScale;
   components.deckCards.position.x = rightStartPosition;
-  rightStartPosition += (components.deckCards._texture.width + 15) * zoomScale ;
+  rightStartPosition += (components.deckCards._texture.width + 15) * zoomScale;
   components.textDiscardCards.position.x = rightStartPosition;
   rightStartPosition += (components.textDiscardCards._texture.width + 15) * zoomScale;
   components.discardCards.position.x = rightStartPosition;
   components.discardCard.position.x = rightStartPosition;
 };
 
-Game.prototype._gameReady = function () {
+Game.prototype._gameReady = function() {
   var _this = this;
   var public_update_event_name = 'board_public_update';
   var user_update_event_name = 'user_hand_';
   var users_are_ready_event_name = 'users_are_ready';
-  this.pusherChannel.bind(public_update_event_name, function (data) {
+  this.pusherChannel.bind(public_update_event_name, function(data) {
     _this._updateBoard(data);
   });
   this.pusherChannel.bind(user_update_event_name + currentUserId, function(data) {
-    if (_this.gameInitialStart) {
+    if (_this.gameInitialHand) {
       _this.boardView._createChatRoom();
       _this.boardView._endLoading();
       _this.gameInitialStart = false;
@@ -374,7 +376,7 @@ Game.prototype._gameReady = function () {
       board_id: currentBoardId,
       game_ready: true
     },
-    success: function (data) {
+    success: function(data) {
       console.log(data);
       if (data.all_ready) {
         // _this.boardView._createChatRoom();
@@ -384,7 +386,7 @@ Game.prototype._gameReady = function () {
   });
 };
 
-Game.prototype._updateBoard = function (data) {
+Game.prototype._updateBoard = function(data) {
   console.log('Board info:= =============');
   console.log(data);
   this._generateUserList(data);
@@ -392,7 +394,7 @@ Game.prototype._updateBoard = function (data) {
   console.log('Board info:= =============');
 };
 
-Game.prototype._updateHand = function (data) {
+Game.prototype._updateHand = function(data) {
   console.log('Hand updating:= =============');
   var i;
   for (i = 0; i < data.hand.length; i++) {
@@ -400,16 +402,16 @@ Game.prototype._updateHand = function (data) {
   }
   console.log('Hand updated:= =============');
 };
-Game.prototype._generateUserList = function (data) {
+Game.prototype._generateUserList = function(data) {
 
 };
-Game.prototype._updateDiscardCard = function (data) {
-  if (!this.gameInitialStart) {
+Game.prototype._updateDiscardCard = function(data) {
+  if (data.board.last_discarded) {
     var lastDiscardCard = data.board.last_discarded,
-        handContainer = this.containers.handContainer,
-        components = handContainer.components,
-        cardData = card_id_to_suit_rank[lastDiscardCard],
-        spriteName;
+      handContainer = this.containers.handContainer,
+      components = handContainer.components,
+      cardData = card_id_to_suit_rank[lastDiscardCard],
+      spriteName;
     if (cardData.rank === 0) {
       spriteName = 'back.png';
     } else {
