@@ -238,7 +238,7 @@ class GameController < ApplicationController
       :board_id => board.id,
       :number_of_players => board.number_of_players,
       :current_team_id => board.current_team,
-      :last_discarded => board.last_discard
+      :last_discarded => board.last_discard,
       :game_abort => game_abort
     }
 
