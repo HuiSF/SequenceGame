@@ -145,10 +145,5 @@ BoardCard.prototype= {
         success: function (data) {
         }
       });
-  },
-  fixPosition: function () {
-    if (this.card) {
-
-    }
   }
 };
