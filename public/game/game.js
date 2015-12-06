@@ -100,7 +100,8 @@ Game.prototype._initializeHand = function() {
   var textDeckCards = new PIXI.Sprite(componentSprites['text-deck-cards.png']);
   var textDiscardCards = new PIXI.Sprite(componentSprites['text-discard-cards.png']);
   var deckCards = new PIXI.Sprite(componentSprites['deck-cards.png']);
-  var discardCards = new PIXI.Sprite(componentSprites['discard-cards.png']);
+  var discardCards = new PIXI.Sprite(componentSprites['deck-cards.png']);
+  var discardCard = new PIXI.Sprite(cardSprites['back.png']);
 
   handContainer.components.background = handBackground;
   handContainer.components.textHandCards = textHandCards;
@@ -108,6 +109,7 @@ Game.prototype._initializeHand = function() {
   handContainer.components.textDiscardCards = textDiscardCards;
   handContainer.components.deckCards = deckCards;
   handContainer.components.discardCards = discardCards;
+  handContainer.components.discardCard = discardCard;
 
   handContainer.addChild(handBackground);
   handContainer.addChild(textHandCards);
@@ -115,6 +117,8 @@ Game.prototype._initializeHand = function() {
   handContainer.addChild(textDiscardCards);
   handContainer.addChild(deckCards);
   handContainer.addChild(discardCards);
+  handContainer.addChild(discardCard);
+
 
   // hand cards size difined by the data from back end
   for (i = 1; i <= 5; i++) {
@@ -304,6 +308,7 @@ Game.prototype._resizeHandContainer = function () {
   components.textDiscardCards.scale.x = components.textDiscardCards.scale.y = zoomScale;
   components.deckCards.scale.x = components.deckCards.scale.y = zoomScale;
   components.discardCards.scale.x = components.discardCards.scale.y = zoomScale;
+  components.discardCard.scale.x = components.discardCard.scale.y = zoomScale;
   // leftStartPosition += components.textHandCards._texture.width * zoomScale + 15;
 
   components.textHandCards.position.y = positionY;
@@ -311,6 +316,7 @@ Game.prototype._resizeHandContainer = function () {
   components.textDiscardCards.position.y = positionY;
   components.deckCards.position.y = positionY;
   components.discardCards.position.y = positionY;
+  components.discardCard.position.y = positionY;
 
   rightStartPosition = handWidth - (rightStartPosition + components.discardCards._texture.width + components.textDiscardCards._texture.width +  components.deckCards._texture.width + components.textDeckCards._texture.width + 45) * zoomScale;
 
@@ -334,6 +340,7 @@ Game.prototype._resizeHandContainer = function () {
   components.textDiscardCards.position.x = rightStartPosition;
   rightStartPosition += (components.textDiscardCards._texture.width + 15) * zoomScale;
   components.discardCards.position.x = rightStartPosition;
+  components.discardCard.position.x = rightStartPosition;
 };
 
 Game.prototype._gameReady = function () {
@@ -380,6 +387,8 @@ Game.prototype._gameReady = function () {
 Game.prototype._updateBoard = function (data) {
   console.log('Board info:= =============');
   console.log(data);
+  this._generateUserList(data);
+  this._updateDiscardCard(data);
   console.log('Board info:= =============');
 };
 
@@ -390,4 +399,27 @@ Game.prototype._updateHand = function (data) {
     this._setHandCard(i, card_id_to_suit_rank[data.hand[i]], data.hand[i]);
   }
   console.log('Hand updated:= =============');
+};
+Game.prototype._generateUserList = function (data) {
+
+};
+Game.prototype._updateDiscardCard = function (data) {
+  if (!this.gameInitialStart) {
+    var lastDiscardCard = data.board.last_discarded,
+        handContainer = this.containers.handContainer,
+        components = handContainer.components,
+        cardData = card_id_to_suit_rank[lastDiscardCard],
+        spriteName;
+    if (cardData.rank === 0) {
+      spriteName = 'back.png';
+    } else {
+      if (cardData.rank < 10) {
+        spriteName = cardData.suit + '_0' + cardData.rank + '.png';
+      } else {
+        spriteName = cardData.suit + '_' + cardData.rank + '.png';
+      }
+    }
+    components.discardCards.texture = this.sprites.components['discard-cards.png'];
+    components.discardCard.texture = this.sprites.cards[spriteName];
+  }
 };

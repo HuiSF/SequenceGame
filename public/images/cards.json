@@ -476,14 +476,23 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":115},
 	"sourceSize": {"w":85,"h":115},
 	"pivot": {"x":0.5,"y":0.5}
+},
+"transparent.png":
+{
+	"frame": {"x":1481,"y":236,"w":85,"h":115},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":115},
+	"sourceSize": {"w":85,"h":115},
+	"pivot": {"x":0.5,"y":0.5}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "cards.png",
 	"format": "RGBA8888",
-	"size": {"w":1568,"h":353},
+	"size": {"w":1569,"h":353},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:ba90a04f10612dc603e8a67917071b57:a3b31792b0b000e941e824923bfbe76e:8056528aade6b91f4a89f8c9da7f2d4c$"
+	"smartupdate": "$TexturePacker:SmartUpdate:20459be2848024ae357c21bf44b96b32:99c18d3417af99f915cf878e41919d85:8056528aade6b91f4a89f8c9da7f2d4c$"
 }
 }

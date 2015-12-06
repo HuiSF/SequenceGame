@@ -58,7 +58,7 @@ class GameController < ApplicationController
     user.state = :ready
     user.save
 
-    start(params[:channel_name], params[:user_update_event_name], Board.find(params[:board_id]))
+    start(params[:channel_name], params[:public_update_event_name], params[:user_update_event_name], Board.find(params[:board_id]))
 
     # @board.teams.each do |team|
     #   team.users.each do |auser|
@@ -133,7 +133,7 @@ class GameController < ApplicationController
   # :board_id
   # :channel_name
   # :user_hand_event_name{_:id}
-  def start(channel_name, user_event_name, board)
+  def start(channel_name, public_update_even_name, user_event_name, board)
 
     ready = true
 
@@ -157,6 +157,7 @@ class GameController < ApplicationController
       end
     end
 
+    push_public_board_info(channel_name, public_update_even_name, board)
     board.users.each do |each_user|
       push_user_hand_info(channel_name, user_event_name + each_user.id.to_s, each_user)
     end
@@ -213,9 +214,12 @@ class GameController < ApplicationController
     board_json['teams'] = []
     board_json['users'] = []
 
-    board_json['board'].push(
-        {:board_id => board.id, :number_of_players => board.number_of_players, :current_team_id => board.current_team, :last_discarded => board.last_discard}
-    )
+    board_json['board'] = {
+      :board_id => board.id,
+      :number_of_players => board.number_of_players,
+      :current_team_id => board.current_team,
+      :last_discarded => board.last_discard
+    }
 
     board.teams.each do |team|
       board_json['teams'].push(

@@ -11,6 +11,7 @@ BoardCard.prototype= {
     this.game = game;
     this.hasToken = false;
     this.respondClick = false;
+    this.highlighting = false;
     if (this.rank === 0) {
       this.spriteName = 'back.png';
     } else {
@@ -46,6 +47,7 @@ BoardCard.prototype= {
         zoomScale = this.game.sprites.cards.zoomScale,
         hilightScale = zoomScale + 0.15;
     this.respondClick = true;
+    this.highlighting = true;
     // console.log(cardTexture, zoomScale);
     cardTexture.scale.x = cardTexture.scale.y = hilightScale;
     // cardTexture.filters = [new PIXI.filters.GlowFilter(this.game.rendererWidth, this.game.rendererHeight, 1, 0, 1, 0x0000FF, 1)];
@@ -65,6 +67,7 @@ BoardCard.prototype= {
     var cardTexture = this.cardTexture,
         zoomScale = this.game.sprites.cards.zoomScale;
     this.respondClick = false;
+    this.highlighting = false;
     cardTexture.scale.x = cardTexture.scale.y = zoomScale;
     cardTexture.position.x = cardTexture.renderedPositionX;
     cardTexture.position.y = cardTexture.renderedPositionY;
@@ -84,6 +87,9 @@ BoardCard.prototype= {
       // }
       // this.beforeMouseoverPositionY = this.position.y;
       // this.position.y = this.position.y - 2;
+      if (_this.highlighting) {
+        this.beforeMouseoverPositionY = this.position.y;
+      }
       _this.cardTexture.position.y = _this.cardTexture.position.y -2;
     };
     this.cardTexture.mouseout = function (e) {
@@ -92,7 +98,11 @@ BoardCard.prototype= {
       // this.position.x = this.renderedPositionX;
       // this.position.y = this.renderedPositionY;
       // this.position.y = this.beforeMouseoverPositionY;
-      _this.cardTexture.position.y = _this.cardTexture.renderedPositionY;
+      if (_this.highlighting) {
+        _this.cardTexture.position.y = this.beforeMouseoverPositionY;
+      } else {
+        _this.cardTexture.position.y = _this.cardTexture.renderedPositionY;
+      }
     };
     this.cardTexture.mousedown = function (e) {
       if (_this.game.boardClickable) {
