@@ -42,12 +42,12 @@ class GameController < ApplicationController
         each_user.current_team = nil
         each_user.state = :lobby
         each_user.save
-        redirect_to '/lobby'
       end
     end
     board.update_number_of_players
+    reset_board(board)
     board.save
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board, true)
   end
 
   # notify that passed in user is ready
@@ -182,6 +182,17 @@ class GameController < ApplicationController
     board.save
   end
 
+  def reset_board(board)
+    reset_cards(board)
+    board.teams.each do |team|
+      team.sequences.clear
+      team.tokens.clear
+      team.save
+    end
+    current_team = nil
+    board.save
+  end
+
   def discard(board, user, card)
     position = user.hand.index(card)
     if position != nil
@@ -217,7 +228,7 @@ class GameController < ApplicationController
     request.format.json?
   end
 
-  def push_public_board_info(channel_name, event_name, board)
+  def push_public_board_info(channel_name, event_name, board, game_abort = false)
     board_json = {}
     board_json['board'] = []
     board_json['teams'] = []
@@ -228,6 +239,7 @@ class GameController < ApplicationController
       :number_of_players => board.number_of_players,
       :current_team_id => board.current_team,
       :last_discarded => board.last_discard
+      :game_abort => game_abort
     }
 
     board.teams.each do |team|
