@@ -246,14 +246,14 @@ Game.prototype._resizeCards = function() {
         if (i % numberOfColumns === 0 && i !== 0) row++;
         positionX = startPositionX + originalWidth * (i % numberOfColumns) + 10 * (i % numberOfColumns);
         positionY = startPositionY + originalHeight * row + 10 * row;
-        cards[i].setPosition(positionX, positionY);
-        cards[i].setScale(1.0, 1.0);
         cards[i].cardTexture.renderedScaleX = 1.0;
         cards[i].cardTexture.renderedScaleY = 1.0;
         cards[i].cardTexture.renderedWidth = originalWidth;
         cards[i].cardTexture.renderedHeight = originalHeight;
         cards[i].cardTexture.renderedPositionX = positionX;
         cards[i].cardTexture.renderedPositionY = positionY;
+        cards[i].setScale(1.0, 1.0);
+        cards[i].setPosition(positionX, positionY);
       }
       boardContainer.renderedHeight = numberOfRows * (10 + originalHeight) + 10;
       this.sprites.cards.renderedWidth = originalWidth;
@@ -268,14 +268,14 @@ Game.prototype._resizeCards = function() {
         if (i % numberOfColumns === 0 && i !== 0) row++;
         positionX = startPositionX + desiredWidth * (i % numberOfColumns) + 10 * (i % numberOfColumns);
         positionY = startPositionY + desiredHeight * row + 10 * row;
-        cards[i].setPosition(positionX, positionY);
-        cards[i].setScale(zoomScale, zoomScale);
         cards[i].cardTexture.renderedScaleX = zoomScale;
         cards[i].cardTexture.renderedScaleY = zoomScale;
         cards[i].cardTexture.renderedWidth = desiredWidth;
         cards[i].cardTexture.renderedHeight = desiredHeight;
         cards[i].cardTexture.renderedPositionX = positionX;
         cards[i].cardTexture.renderedPositionY = positionY;
+        cards[i].setScale(zoomScale, zoomScale);
+        cards[i].setPosition(positionX, positionY);
       }
       boardContainer.renderedHeight = numberOfRows * (10 + desiredHeight) + 10;
       this.sprites.cards.renderedWidth = desiredWidth;
@@ -421,11 +421,12 @@ Game.prototype._generateUserList = function(data) {
     } else if (user.current_team_info.color === 'green') {
       $userInfo.addClass('green-team');
     }
-    $userInfo.append($('<div class="media-left"><img src="' + '/' + user.avatar + '" alt="' + user.username + '" /></div>'));
+    $userInfo.append($('<div class="media-left"><img src="' + '/' + user.avatar + '" alt="' + user.username + '" title="' + user.current_team_info.color + ' team" /></div>'));
     $userInfo.append($('<div class="media-body"><span class="user-name">' + user.username + '</span></div>'));
     $container.append($userInfo);
     return $container;
   }
+  resizeGameChatRoom();
 };
 Game.prototype._updateDiscardCard = function(data) {
   if (data.board.last_discarded) {

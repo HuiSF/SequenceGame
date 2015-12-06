@@ -31,10 +31,18 @@ BoardCard.prototype= {
   setPosition: function (x, y) {
     this.cardTexture.position.x = x;
     this.cardTexture.position.y = y;
+    if (this.hasToken) {
+      this.tokenSprite.position.x = this.cardTexture.renderedPositionX + this.cardTexture.renderedWidth - 1 - 61 * this.tokenSprite.scale.x;
+      this.tokenSprite.position.y = this.cardTexture.position.y + 2;
+    }
   },
   setScale: function (x, y) {
     this.cardTexture.scale.x = x;
     this.cardTexture.scale.y = y;
+    if (this.hasToken) {
+      this.tokenSprite.scale.x = x;
+      this.tokenSprite.scale.y = y;
+    }
   },
   resize: function (x, y) {
     this.cardTexture.scale.x = x;
