@@ -227,7 +227,7 @@ class GameController < ApplicationController
       )
       team.users.each do |user|
         board_json['users'].push(
-            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team}
+            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_info => user.current_team}
         )
       end
     end

@@ -361,6 +361,9 @@ body.sessions, body.boards, body.registrations, body.welcome {
   border-top-width: 0;
   border-bottom-width: 0;
 }
+.user-container {
+  padding: 7.5px 15px;
+}
 .user-info {
   border-radius: 4px;
   cursor: default;
@@ -380,6 +383,9 @@ body.sessions, body.boards, body.registrations, body.welcome {
 }
 .blue-team img {
   border-left: 3px solid #3496fa;
+}
+.green-team img {
+  border-left: 3px solid #53c900;
 }
 .in-turn {
   background-color: rgba(255, 255, 255, 0.4);

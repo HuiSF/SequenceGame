@@ -20,6 +20,10 @@ function Board(pusher, options) {
   // create and subscribe to channle
   this.settings.channelName = Board.getValidChannelName(this.settings.channelName);
   this._channel = this._pusher.subscribe(this.settings.channelName);
+  this._channel.bind('chat-message', function(data) {
+    _this._chatMessageReceived(data);
+  });
+  this._createChatRoom();
   this._startWaiting(0);
 }
 
@@ -37,9 +41,7 @@ Board.prototype._createChatRoom = function () {
   this._messageInputEl = this._widget.find('textarea');
   this._messagesEl = this._widget.find('ul');
 
-  this._channel.bind('chat-message', function(data) {
-    _this._chatMessageReceived(data);
-  });
+
 
   this._widget.find('button').click(function(e) {
     e.preventDefault();

@@ -19,6 +19,7 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.containers = {};
   this.board = {};
   this.board.cards = [];
+  this.board.tokens = [];
   this.boardFitsWidth = true;
   this.boardScrollBottomLimit = 0;
   this.currentChosenCardInHand = 0;
@@ -355,7 +356,7 @@ Game.prototype._gameReady = function() {
   });
   this.pusherChannel.bind(user_update_event_name + currentUserId, function(data) {
     if (_this.gameInitialHand) {
-      _this.boardView._createChatRoom();
+      // _this.boardView._createChatRoom();
       _this.boardView._endLoading();
       _this.gameInitialStart = false;
     }
@@ -391,6 +392,7 @@ Game.prototype._updateBoard = function(data) {
   console.log(data);
   this._generateUserList(data);
   this._updateDiscardCard(data);
+  this._updateTokens(data);
   console.log('Board info:= =============');
 };
 
@@ -403,7 +405,27 @@ Game.prototype._updateHand = function(data) {
   console.log('Hand updated:= =============');
 };
 Game.prototype._generateUserList = function(data) {
-
+  var $userList = $('.user-list'),
+      i;
+  for (i = 0; i < data.users.length; i++) {
+    $userList.append(generateUserContainer(data.users[i]));
+  }
+  $userList.append($('<div class="clearfix"></div>'));
+  function generateUserContainer (user) {
+    var $container = $('<div class="col-sm-6 col-xs-6 user-container"></div>');
+    var $userInfo = $('<div class="media user-info"></div>');
+    if (user.current_team_info.color === 'red') {
+      $userInfo.addClass('red-team');
+    } else if (user.current_team_info.color === 'blue') {
+      $userInfo.addClass('blue-team');
+    } else if (user.current_team_info.color === 'green') {
+      $userInfo.addClass('green-team');
+    }
+    $userInfo.append($('<div class="media-left"><img src="' + '/' + user.avatar + '" alt="' + user.username + '" /></div>'));
+    $userInfo.append($('<div class="media-body"><span class="user-name">' + user.username + '</span></div>'));
+    $container.append($userInfo);
+    return $container;
+  }
 };
 Game.prototype._updateDiscardCard = function(data) {
   if (data.board.last_discarded) {
@@ -423,5 +445,19 @@ Game.prototype._updateDiscardCard = function(data) {
     }
     components.discardCards.texture = this.sprites.components['discard-cards.png'];
     components.discardCard.texture = this.sprites.cards[spriteName];
+  }
+};
+Game.prototype._updateTokens = function (data) {
+  var numberOfTeams = data.teams.length,
+      numberOfTokens, i, j, boardCardPosition;
+  for (i = 0; i < numberOfTeams; i++) {
+    numberOfTokens = data.teams[i].tokens.length;
+    if (numberOfTokens > 0) {
+      for (j = 0; j < numberOfTokens; j++) {
+        boardCardPosition = parseInt(data.teams[i].tokens[j]);
+        // console.log('Add token to ' + boardCardPosition + 'th board cards');
+        this.board.cards[boardCardPosition - 1].addTokenTexture(data.teams[i].team_id, data.teams[i].color);
+      }
+    }
   }
 };

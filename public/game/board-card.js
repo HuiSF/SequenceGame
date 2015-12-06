@@ -12,6 +12,7 @@ BoardCard.prototype= {
     this.hasToken = false;
     this.respondClick = false;
     this.highlighting = false;
+    this.tokenSprite = null;
     if (this.rank === 0) {
       this.spriteName = 'back.png';
     } else {
@@ -145,5 +146,17 @@ BoardCard.prototype= {
         success: function (data) {
         }
       });
+  },
+  addTokenTexture: function (teamId, color) {
+    // console.log(this.suit, this.rank, color);
+    var spriteName = color + '_token.png';
+    var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
+    newToken.teamId = teamId;
+    this.hasToken = true;
+    newToken.position.x = this.cardTexture.renderedPositionX + 24;
+    newToken.position.y = this.cardTexture.renderedPositionY + 2;
+    this.game.containers.boardContainer.addChild(newToken);
+    this.game.board.tokens.push(newToken);
+    this.tokenSprite = newToken;
   }
 };
