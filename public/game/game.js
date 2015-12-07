@@ -25,6 +25,7 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.currentChosenCardInHand = 0;
   this.gameInitialHand = true;
   this.gameInitialBoard = true;
+  this.hasUserList = false;
   this._loadSprites();
 
 };
@@ -410,13 +411,16 @@ Game.prototype._updateHand = function(data) {
   console.log('Hand updated:= =============');
 };
 Game.prototype._generateUserList = function(data) {
-  var $userList = $('.user-list'),
-      i;
-  $('.user-list').html('');  
-  for (i = 0; i < data.users.length; i++) {
-    $userList.append(generateUserContainer(data.users[i]));
+  if (!this.hasUserList) {
+    this.hasUserList = true;
+    var $userList = $('.user-list'),
+        i;
+    $('.user-list').html('');
+    for (i = 0; i < data.users.length; i++) {
+      $userList.append(generateUserContainer(data.users[i]));
+    }
+    $userList.append($('<div class="clearfix"></div>'));
   }
-  $userList.append($('<div class="clearfix"></div>'));
   function generateUserContainer (user) {
     var $container = $('<div class="col-sm-6 col-xs-6 user-container"></div>');
     var $userInfo = $('<div class="media user-info"></div>');
