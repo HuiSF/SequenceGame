@@ -47,7 +47,7 @@ class Team < ActiveRecord::Base
       pos = token.to_i - x
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               # Trying to use two tokens in existed sequences
               interrupt_other_sequence = true
@@ -81,7 +81,7 @@ class Team < ActiveRecord::Base
       pos = token.to_i + x
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               interrupt_other_sequence = true
             else
@@ -115,7 +115,7 @@ class Team < ActiveRecord::Base
       pos = token.to_i - x * 10
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               interrupt_other_sequence = true
             else
@@ -145,7 +145,7 @@ class Team < ActiveRecord::Base
       pos = token.to_i + x * 10
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               interrupt_other_sequence = true
             else
@@ -182,7 +182,7 @@ class Team < ActiveRecord::Base
       end
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               interrupt_other_sequence = true
             else
@@ -214,7 +214,7 @@ class Team < ActiveRecord::Base
       end
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               interrupt_other_sequence = true
             else
@@ -245,13 +245,13 @@ class Team < ActiveRecord::Base
     potential_sequence = [token]
 
     (1..(row_pos - 1)).each do |x|
-      pos = token.to_i - x * 9
+      pos = token.to_i + x * 9
       if pos < 1
         break
       end
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               interrupt_other_sequence = true
             else
@@ -277,13 +277,13 @@ class Team < ActiveRecord::Base
       if potential_sequence.length > 4
         break
       end
-      pos = token.to_i + x * 9
+      pos = token.to_i - x * 9
       if pos > 100
         break
       end
       if(positions.include?(pos))
         self.sequences.each do |sequence|
-          if sequence.include? pos
+          if sequence.include? pos.to_s
             if use_existed_token
               interrupt_other_sequence = true
             else
