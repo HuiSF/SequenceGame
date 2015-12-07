@@ -27,10 +27,10 @@ class Board < ActiveRecord::Base
   end
 
   def update_number_of_players
-    taken = 0    
-    self.teams.each do |team|   
-      taken += team.users.count   
-    end   
+    taken = 0
+    self.teams.each do |team|
+      taken += team.users.count
+    end
     self.number_of_players = taken
   end
 
@@ -39,15 +39,6 @@ class Board < ActiveRecord::Base
       team = Team.new(:board => self, :color => x)
       team.save
     end
-  end
-
-  def can_add_token?(token_position)
-    self.teams.each do |team|
-      if team.tokens.include? token_position
-        return false
-      end
-    end
-    true
   end
 
   def users
@@ -59,6 +50,28 @@ class Board < ActiveRecord::Base
     end
     results
   end
+
+  def can_add_token?(token_position)
+    self.teams.each do |team|
+      if team.tokens.include? token_position
+        return false
+      end
+    end
+    true
+  end
+
+  # def can_remove_token(card, token_position)
+  #   self.hand.include?(card) and not self.current_team.tokens.include?(token_position)
+  # end
+  #
+  # def add_token(card, token_position)
+  #   if self.hand.include?(card)
+  #     self.current_team.tokens.push(token_position)
+  #     self.current_team.save
+  #     # self.hand.delete(card)
+  #     # self.save
+  #   end
+  # end
 
   def remove_token(token_position)
     possible = true
