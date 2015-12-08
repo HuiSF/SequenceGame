@@ -45,9 +45,9 @@ class GameController < ApplicationController
       end
     end
     board.update_number_of_players
-    reset_board(board)
     board.save
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board, true)
+    reset_board(board)
     render :json => {'success' => true}
   end
 
