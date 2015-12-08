@@ -173,6 +173,7 @@ class GameController < ApplicationController
         end
       end
       board.current_team = board.teams.first
+      board.save
     end
 
     push_public_board_info(channel_name, public_update_even_name, board)
