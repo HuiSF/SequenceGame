@@ -26,6 +26,7 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.gameInitialHand = true;
   this.gameInitialBoard = true;
   this.hasUserList = false;
+  this.activeLeave = false;
   this._loadSprites();
 
 };
@@ -391,12 +392,12 @@ Game.prototype._gameReady = function() {
 Game.prototype._updateBoard = function(data) {
   console.log('Board info:= =============');
   console.log(data);
-  if (!data.board.game_abort) {
+  if (!data.board.game_abort && !data.board.game_over) {
     this._generateUserList(data);
     this._updateDiscardCard(data);
     this._updateTokens(data);
   } else {
-    this._gameAbort(data);
+    this._gameOver(data);
   }
 
   console.log('Board info:= =============');
@@ -459,23 +460,40 @@ Game.prototype._updateDiscardCard = function(data) {
   }
 };
 Game.prototype._updateTokens = function (data) {
-  var numberOfTeams = data.teams.length,
+  var numberOfUsers = data.users.length,
       numberOfTokens, i, j, boardCardPosition;
-  for (i = 0; i < numberOfTeams; i++) {
-    numberOfTokens = data.teams[i].tokens.length;
+  for (i = 0; i < numberOfUsers; i++) {
+    numberOfTokens = data.users[i].current_team_info.tokens.length;
     if (numberOfTokens > 0) {
       for (j = 0; j < numberOfTokens; j++) {
-        boardCardPosition = parseInt(data.teams[i].tokens[j]);
+        boardCardPosition = parseInt(data.users[i].current_team_info.tokens[j]);
         // console.log('Add token to ' + boardCardPosition + 'th board cards');
-        this.board.cards[boardCardPosition - 1].addTokenTexture(data.teams[i].team_id, data.teams[i].color);
+        this.board.cards[boardCardPosition - 1].addTokenTexture(data.users[i].current_team_info.id, data.users[i].current_team_info.color);
       }
     }
   }
 };
 
-Game.prototype._gameAbort = function (data) {
+Game.prototype._gameOver = function (data) {
   if (data.board.game_abort) {
     console.log('Game aborted due to other user left during game. You will be redirected to lobby now.');
-    window.location.replace('/lobby');
+    var $popup = $('<div class="gameover-popup"><div class="gameover-box"></div></div>');
+    var $gameoverBox = $('.gameover-box', $popup);
+    $gameoverBox.append($('<p class="gameover-info">You will return to the lobby now...</p>'));
+    $gameoverBox.css('width', $(window).innerHeight() * 0.8);
+    $gameoverBox.css('height', $gameoverBox.outerWidth());
+    $gameoverBox.css('top', ($(window).innerHeight() - $gameoverBox.outerHeight()) / 2);
+    $gameoverBox.css('left', ($(window).innerWidth() - $gameoverBox.outerWidth()) / 2);
+    if (this.activeLeave) {
+      $gameoverBox.css('background-image', 'url("/images/lose.png")');
+    } else {
+      $gameoverBox.css('background-image', 'url("/images/win.png")');
+    }
+    $popup.hide();
+    $popup.fadeIn(300);
+    $('body').prepend($popup);
   }
+  setTimeout(function () {
+    window.location.replace('/lobby');
+  }, 4000);
 };

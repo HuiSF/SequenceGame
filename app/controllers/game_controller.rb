@@ -45,9 +45,9 @@ class GameController < ApplicationController
       end
     end
     board.update_number_of_players
-    reset_board(board)
     board.save
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board, true)
+    reset_board(board)
     render :json => {'success' => true}
   end
 
@@ -104,6 +104,7 @@ class GameController < ApplicationController
     end
 
     discard(board, user, params[:card])
+    end_turn(board)
 
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
@@ -130,11 +131,12 @@ class GameController < ApplicationController
       end
     end
 
+    end_turn(board)
+    
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
 
     render :json => {:success => true}
-
   end
 
   protected
@@ -154,6 +156,9 @@ class GameController < ApplicationController
           break
         end
       end
+      team.current_user = team.users.first
+      team.set_next_user
+      team.save
     end
 
     if ready
@@ -165,6 +170,8 @@ class GameController < ApplicationController
           board.save
         end
       end
+      board.current_team = board.teams.first
+      board.save
     end
 
     push_public_board_info(channel_name, public_update_even_name, board)
@@ -186,11 +193,11 @@ class GameController < ApplicationController
   def reset_board(board)
     reset_cards(board)
     board.teams.each do |team|
-      team.sequences.clear
-      team.tokens.clear
+      team.board_id = nil
       team.save
     end
     current_team = nil
+    board.create_teams
     board.save
   end
 
@@ -223,6 +230,16 @@ class GameController < ApplicationController
         board.save
       end
     end
+  end
+
+  def end_turn(board)
+    current_team = board.current_team
+    current_team.current_user = current_team.next_user
+    current_team.save
+    current_team.set_next_user
+    pos = board.teams.index(current_team)
+    board.current_team = board.teams.at(pos - 1)
+    board.save
   end
 
   def json_request?

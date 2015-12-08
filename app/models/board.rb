@@ -3,7 +3,7 @@
 # Table name: boards
 #
 #  id                :integer          not null, primary key
-#  current_team      :integer
+#  current_team_id   :integer
 #  deck              :text             default([]), is an Array
 #  last_discard      :integer
 #  created_at        :datetime         not null
