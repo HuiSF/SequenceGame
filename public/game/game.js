@@ -27,6 +27,7 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.gameInitialBoard = true;
   this.hasUserList = false;
   this.activeLeave = false;
+  this.inPlaying = false;
   this._loadSprites();
 
 };
@@ -396,6 +397,7 @@ Game.prototype._updateBoard = function(data) {
     this._generateUserList(data);
     this._updateDiscardCard(data);
     this._updateTokens(data);
+    this._playingState(data);
   } else {
     this._gameOver(data);
   }
@@ -433,7 +435,11 @@ Game.prototype._generateUserList = function(data) {
       $userInfo.addClass('green-team');
     }
     $userInfo.append($('<div class="media-left"><img src="' + '/' + user.avatar + '" alt="' + user.username + '" title="' + user.current_team_info.color + ' team" /></div>'));
-    $userInfo.append($('<div class="media-body"><span class="user-name">' + user.username + '</span></div>'));
+    var usernameHighlight = '';
+    if (user.user_id == currentUserId) {
+      usernameHighlight = ' yourself';
+    }
+    $userInfo.append($('<div class="media-body"><span class="user-name' + usernameHighlight + '">' + user.username + '</span></div>'));
     $container.append($userInfo);
     return $container;
   }
@@ -471,6 +477,14 @@ Game.prototype._updateTokens = function (data) {
         this.board.cards[boardCardPosition - 1].addTokenTexture(data.users[i].current_team_info.id, data.users[i].current_team_info.color);
       }
     }
+  }
+};
+
+Game.prototype._playingState = function (data) {
+  if (currentUserId === data.board.current_team_id.current_user_id) {
+    this.inPlaying = true;
+  } else {
+    this.inPlaying = false;
   }
 };
 
