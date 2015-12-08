@@ -22,6 +22,18 @@ class Team < ActiveRecord::Base
   belongs_to :next_user, :class_name => "User"
   belongs_to :board
 
+  def set_next_user
+    if self.users.count == 1 
+      #for 2 & 3 player games 
+      self.next_user = self.current_user
+    else 
+      #for 4 player games
+      pos = self.users.index(self.current_user)
+      self.next_user = self.users.at(pos - 1)
+    end
+    self.save
+  end
+
   def check_for_new_sequence(token)
     positions = [1, 10, 91, 100] # add free corner positions
     self.tokens.each do |pos|
@@ -32,7 +44,6 @@ class Team < ActiveRecord::Base
     self.sequence_in_diagonal_tl_br(token, positions)
     self.sequence_in_diagonal_tr_bl(token, positions)
   end
-
 
   protected
 
