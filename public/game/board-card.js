@@ -10,7 +10,9 @@ BoardCard.prototype= {
     this.rank = rank;
     this.game = game;
     this.hasToken = false;
-    this.acceptToken = true;
+    this.respondClick = false;
+    this.highlighting = false;
+    this.tokenSprite = null;
     if (this.rank === 0) {
       this.spriteName = 'back.png';
     } else {
@@ -29,10 +31,18 @@ BoardCard.prototype= {
   setPosition: function (x, y) {
     this.cardTexture.position.x = x;
     this.cardTexture.position.y = y;
+    if (this.hasToken) {
+      this.tokenSprite.position.x = this.cardTexture.renderedPositionX + this.cardTexture.renderedWidth - 1 - 61 * this.tokenSprite.scale.x;
+      this.tokenSprite.position.y = this.cardTexture.position.y + 2;
+    }
   },
   setScale: function (x, y) {
     this.cardTexture.scale.x = x;
     this.cardTexture.scale.y = y;
+    if (this.hasToken) {
+      this.tokenSprite.scale.x = x;
+      this.tokenSprite.scale.y = y;
+    }
   },
   resize: function (x, y) {
     this.cardTexture.scale.x = x;
@@ -44,8 +54,9 @@ BoardCard.prototype= {
   highlight: function () {
     var cardTexture = this.cardTexture,
         zoomScale = this.game.sprites.cards.zoomScale,
-        hilightScale = zoomScale + 0.2;
-
+        hilightScale = zoomScale + 0.15;
+    this.respondClick = true;
+    this.highlighting = true;
     // console.log(cardTexture, zoomScale);
     cardTexture.scale.x = cardTexture.scale.y = hilightScale;
     // cardTexture.filters = [new PIXI.filters.GlowFilter(this.game.rendererWidth, this.game.rendererHeight, 1, 0, 1, 0x0000FF, 1)];
@@ -55,15 +66,17 @@ BoardCard.prototype= {
       cardTexture.position.x -= (cardTexture.renderedWidth * hilightScale - cardTexture.renderedWidth) / 2;
       cardTexture.position.y -= (cardTexture.renderedHeight * hilightScale - cardTexture.renderedHeight) / 2;
     } else {
-      cardTexture.position.x -= (cardTexture.renderedWidth * 1.2 - cardTexture.renderedWidth) / 2;
-      cardTexture.position.y -= (cardTexture.renderedHeight * 1.2 - cardTexture.renderedHeight) / 2;
+      cardTexture.position.x -= (cardTexture.renderedWidth * 1.15 - cardTexture.renderedWidth) / 2;
+      cardTexture.position.y -= (cardTexture.renderedHeight * 1.15 - cardTexture.renderedHeight) / 2;
     }
-    this.game.containers.boardContainer.removeChild(cardTexture);
-    this.game.containers.boardContainer.addChild(cardTexture);
+    // this.game.containers.boardContainer.removeChild(cardTexture);
+    // this.game.containers.boardContainer.addChild(cardTexture);
   },
   unhighlight: function () {
     var cardTexture = this.cardTexture,
         zoomScale = this.game.sprites.cards.zoomScale;
+    this.respondClick = false;
+    this.highlighting = false;
     cardTexture.scale.x = cardTexture.scale.y = zoomScale;
     cardTexture.position.x = cardTexture.renderedPositionX;
     cardTexture.position.y = cardTexture.renderedPositionY;
@@ -81,19 +94,32 @@ BoardCard.prototype= {
       //   this.position.x -= (this.renderedWidth * 1.04 - this.renderedWidth) / 2;
       //   this.position.y -= (this.renderedHeight * 1.04 - this.renderedHeight) / 2;
       // }
-      this.beforeMouseoverPositionY = this.position.y;
-      this.position.y = this.position.y - 2;
+      // this.beforeMouseoverPositionY = this.position.y;
+      // this.position.y = this.position.y - 2;
+      if (_this.highlighting) {
+        this.beforeMouseoverPositionY = this.position.y;
+      }
+      _this.cardTexture.position.y = _this.cardTexture.position.y -2;
     };
     this.cardTexture.mouseout = function (e) {
       // this.scale.x = this.scaleX;
       // this.scale.y = this.scaleY;
       // this.position.x = this.renderedPositionX;
       // this.position.y = this.renderedPositionY;
-      this.position.y = this.beforeMouseoverPositionY;
+      // this.position.y = this.beforeMouseoverPositionY;
+      if (_this.highlighting) {
+        _this.cardTexture.position.y = this.beforeMouseoverPositionY;
+      } else {
+        _this.cardTexture.position.y = _this.cardTexture.renderedPositionY;
+      }
     };
     this.cardTexture.mousedown = function (e) {
-      this.beforeMousedownPositionY = this.position.y;
-      this.position.y += 2;
+      if (_this.game.boardClickable) {
+        // this.beforeMousedownPositionY = this.position.y;
+        // this.position.y += 2;
+
+        // this.position.y = this.beforeMouseoverPositionY;
+      }
     };
     this.cardTexture.tap = function (e) {
       this.position.y += 2;
@@ -102,14 +128,45 @@ BoardCard.prototype= {
       }, 100);
     };
     this.cardTexture.mouseup = function (e) {
+      if (_this.respondClick) {
+        // this.position.y = this.beforeMousedownPositionY;
+        _this.addToken();
 
-      this.position.y = this.beforeMousedownPositionY;
-      _this.addToken();
+      }
     };
   },
   addToken: function() {
-    if (this.acceptToken) {
+    var _this = this;
+    console.log(_this.game.currentChosenCardInHand);
       // send request to server through pusher
+      $.ajax({
+        type: 'POST',
+        url: '/game/add_token',
+        data: {
+          channel_name: _this.game.pusherChannelName,
+          board_id: currentBoardId,
+          user_id: currentUserId,
+          card: _this.game.currentChosenCardInHand,
+          position: _this.id,
+          user_update_event_name: 'user_hand_' + currentUserId,
+          public_update_event_name: 'board_public_update'
+        },
+        success: function (data) {
+        }
+      });
+  },
+  addTokenTexture: function (teamId, color) {
+    // console.log(this.suit, this.rank, color);
+    if (!this.hasToken) {
+      var spriteName = color + '_token.png';
+      var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
+      newToken.teamId = teamId;
+      this.hasToken = true;
+      newToken.position.x = this.cardTexture.renderedPositionX + 24;
+      newToken.position.y = this.cardTexture.renderedPositionY + 2;
+      this.game.containers.boardContainer.addChild(newToken);
+      this.game.board.tokens.push(newToken);
+      this.tokenSprite = newToken;
     }
   }
 };

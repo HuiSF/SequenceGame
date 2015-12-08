@@ -28,17 +28,27 @@ class GameController < ApplicationController
   # user leaves
   # board_id
   # user_id
+  # channel_name
+  # public_update_event_name (pusher event)
   def in_game_leave
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
+    losing_team = user.current_team
 
     board.teams.each do |team|
+      team.game_result = team == losing_team ? :loss : :win
+      team.save
       team.users.each do |each_user|
         each_user.current_team = nil
-        each_user.status = :lobby
+        each_user.state = :lobby
         each_user.save
       end
     end
+    board.update_number_of_players
+    reset_board(board)
+    board.save
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board, true)
+    render :json => {'success' => true}
   end
 
   # notify that passed in user is ready
@@ -58,7 +68,7 @@ class GameController < ApplicationController
     user.state = :ready
     user.save
 
-    start(params[:channel_name], params[:user_update_event_name], Board.find(params[:board_id]))
+    start(params[:channel_name], params[:public_update_event_name], params[:user_update_event_name], Board.find(params[:board_id]))
 
     # @board.teams.each do |team|
     #   team.users.each do |auser|
@@ -133,7 +143,7 @@ class GameController < ApplicationController
   # :board_id
   # :channel_name
   # :user_hand_event_name{_:id}
-  def start(channel_name, user_event_name, board)
+  def start(channel_name, public_update_even_name, user_event_name, board)
 
     ready = true
 
@@ -157,6 +167,7 @@ class GameController < ApplicationController
       end
     end
 
+    push_public_board_info(channel_name, public_update_even_name, board)
     board.users.each do |each_user|
       push_user_hand_info(channel_name, user_event_name + each_user.id.to_s, each_user)
     end
@@ -169,6 +180,17 @@ class GameController < ApplicationController
       each_user.save
     end
     board.deck = (1..104).to_a.shuffle
+    board.save
+  end
+
+  def reset_board(board)
+    reset_cards(board)
+    board.teams.each do |team|
+      team.sequences.clear
+      team.tokens.clear
+      team.save
+    end
+    current_team = nil
     board.save
   end
 
@@ -207,23 +229,28 @@ class GameController < ApplicationController
     request.format.json?
   end
 
-  def push_public_board_info(channel_name, event_name, board)
+  def push_public_board_info(channel_name, event_name, board, game_abort = false)
     board_json = {}
-    board_json['board'] = []
+    board_json['board'] = {}
     board_json['teams'] = []
     board_json['users'] = []
 
-    board_json['board'].push(
-        {:board_id => board.id, :number_of_players => board.number_of_players, :current_team_id => board.current_team, :last_discarded => board.last_discard}
-    )
+    board_json['board'] = {
+      :board_id => board.id,
+      :number_of_players => board.number_of_players,
+      :current_team_id => board.current_team,
+      :last_discarded => board.last_discard,
+      :game_abort => game_abort
+    }
 
     board.teams.each do |team|
       board_json['teams'].push(
-          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user, :tokens => team.tokens, :sequences => team.sequences}
+          {:team_id => team.id, :color => team.color, :current_user_id => team.current_user,
+            :tokens => team.tokens, :sequences => team.sequences, :game_result => team.game_result}
       )
       team.users.each do |user|
         board_json['users'].push(
-            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_id => user.current_team}
+            {:user_id => user.id, :username => user.username, :avatar => user.avatar, :current_team_info => user.current_team}
         )
       end
     end

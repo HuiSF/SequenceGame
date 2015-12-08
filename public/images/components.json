@@ -27,7 +27,7 @@
 	"sourceSize": {"w":55,"h":44},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"blue_token.png":
+"red_token.png":
 {
 	"frame": {"x":2,"y":206,"w":61,"h":61},
 	"rotated": false,
@@ -36,7 +36,7 @@
 	"sourceSize": {"w":61,"h":61},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"red_token.png":
+"blue_token.png":
 {
 	"frame": {"x":2,"y":269,"w":61,"h":61},
 	"rotated": false,
@@ -45,45 +45,54 @@
 	"sourceSize": {"w":61,"h":61},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"green_token.png":
+{
+	"frame": {"x":2,"y":332,"w":61,"h":61},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":61},
+	"sourceSize": {"w":61,"h":61},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "text-discard-cards.png":
 {
-	"frame": {"x":2,"y":332,"w":74,"h":44},
+	"frame": {"x":2,"y":395,"w":74,"h":44},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":74,"h":44},
 	"sourceSize": {"w":74,"h":44},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"btn-discard-highlight.png":
-{
-	"frame": {"x":2,"y":378,"w":85,"h":36},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":36},
-	"sourceSize": {"w":85,"h":36},
-	"pivot": {"x":0.5,"y":0.5}
-},
 "btn-discard.png":
 {
-	"frame": {"x":2,"y":416,"w":85,"h":36},
+	"frame": {"x":2,"y":441,"w":85,"h":36},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":36},
 	"sourceSize": {"w":85,"h":36},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"discard-cards.png":
+"btn-discard-highlight.png":
 {
-	"frame": {"x":2,"y":454,"w":89,"h":120},
+	"frame": {"x":2,"y":479,"w":85,"h":36},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":36},
+	"sourceSize": {"w":85,"h":36},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"deck-cards.png":
+{
+	"frame": {"x":2,"y":517,"w":89,"h":120},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":89,"h":120},
 	"sourceSize": {"w":89,"h":120},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"deck-cards.png":
+"discard-cards.png":
 {
-	"frame": {"x":2,"y":576,"w":89,"h":120},
+	"frame": {"x":2,"y":639,"w":89,"h":120},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":89,"h":120},
@@ -95,8 +104,8 @@
 	"version": "1.0",
 	"image": "components.png",
 	"format": "RGBA8888",
-	"size": {"w":93,"h":698},
+	"size": {"w":93,"h":761},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:7a7f27748872b4a22988e4dd825aa125:4fbf77fe19603debcc0eb8eca4f49f90:ce7e67fca2e0cfefe7df0ada48b7482a$"
+	"smartupdate": "$TexturePacker:SmartUpdate:57874f499266a9954cd150f9a3aa5e5e:e27c9f4f5832a3480f43e07d55d3adbb:ce7e67fca2e0cfefe7df0ada48b7482a$"
 }
 }

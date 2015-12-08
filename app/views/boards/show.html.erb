@@ -6,15 +6,23 @@
 </script>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-9 col-sm-12 game-columns game-panel">
+    <div class="col-md-9 col-sm-12 col-xs-12 game-columns game-panel">
       <div id="game-view" class="game-view">
         <!-- canvas goes here -->
       </div>
     </div>
-    <div class="col-md-3 col-sm-12 lobby-chat-room">
+    <div class="col-md-3 col-sm-12 lobby-chat-room  side-panel">
       <div class="panel-grabber hidden">Open Panel</div>
+      <div class="game-buttons">
+        <div class="mute col-xs-6">
+          <span class="glyphicon glyphicon-volume-up"></span>&nbsp;Mute
+        </div>
+        <div class="leave col-xs-6">
+          <span class="glyphicon glyphicon-log-out"></span>&nbsp;Leave
+        </div>
+      </div>
       <div class="user-list">
-        <div class="col-md-6 col-sm-6 col-xs-6 user-list-team1">
+        <!-- <div class="col-md-6 col-sm-6 col-xs-6 user-container">
           <div class="media user-info red-team">
             <div class="media-left">
               <img src="http://wiseheartdesign.com/images/articles/default-avatar.png" alt="" />
@@ -24,6 +32,8 @@
               <span class="user-score">4600</span>
             </div>
           </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6 user-container">
           <div class="media user-info red-team in-turn">
             <div class="media-left">
               <img src="http://wiseheartdesign.com/images/articles/default-avatar.png" alt="" />
@@ -34,7 +44,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6 col-sm-6 col-xs-6 user-list-team2">
+        <div class="col-md-6 col-sm-6 col-xs-6 user-container">
           <div class="media user-info blue-team">
             <div class="media-left">
               <img src="http://wiseheartdesign.com/images/articles/default-avatar.png" alt="" />
@@ -44,6 +54,8 @@
               <span class="user-score">100000</span>
             </div>
           </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6 user-container">
           <div class="media user-info blue-team">
             <div class="media-left">
               <img src="http://wiseheartdesign.com/images/articles/default-avatar.png" alt="" />
@@ -53,14 +65,12 @@
               <span class="user-score">4300</span>
             </div>
           </div>
-        </div>
-        <div class="clearfix"></div>
+        </div> -->
+        <!-- <div class="clearfix"></div> -->
       </div>
       <div class="col-sm-12 chat-container">
-        <div class="messages">
-
-        </div>
       </div>
+
     </div>
   </div>
 </div>

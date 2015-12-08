@@ -20,22 +20,14 @@ function Board(pusher, options) {
   // create and subscribe to channle
   this.settings.channelName = Board.getValidChannelName(this.settings.channelName);
   this._channel = this._pusher.subscribe(this.settings.channelName);
+  this._channel.bind('chat-message', function(data) {
+    _this._chatMessageReceived(data);
+  });
+  $('.leave').on('click', function () {
+    _this._abortGame();
+  });
+  this._createChatRoom();
   this._startWaiting(0);
-  // bind pusher events
-  // this._channel.bind('update-waiting-user-list', function(data) {
-  //   _this._updateWaitingUserList(data);
-  // });
-  // this._channle.bind('update-board', function (data) {
-  //   _this._game.updateBoard(data);
-  // });
-  // this._channle.bind('update-hand-' + currentUserId, function () {
-  //   _this._game.updateHand(data);
-  // });
-  // this._channel.bind('chat-message', function(data) {
-  //   _this._chatMessageReceived(data);
-  // });
-
-
 }
 
 Board.prototype._startGame = function () {
@@ -43,6 +35,7 @@ Board.prototype._startGame = function () {
 };
 
 Board.prototype._createChatRoom = function () {
+  console.log('Creating chat room');
   var _this = this;
   this._itemCount = 0;
   this._widget = Board._createHTML(this.settings.appendTo);
@@ -50,6 +43,8 @@ Board.prototype._createChatRoom = function () {
   this._emailEl = this._widget.find('input[name=email]');
   this._messageInputEl = this._widget.find('textarea');
   this._messagesEl = this._widget.find('ul');
+
+
 
   this._widget.find('button').click(function(e) {
     e.preventDefault();
@@ -69,7 +64,7 @@ Board.prototype._createChatRoom = function () {
     var scrollableHeight = (el.scrollHeight - messageEl.height());
     _this._autoScroll = (scrollableHeight === messageEl.scrollTop());
   });
-
+  resizeGameChatRoom();
   this._startTimeMonitor();
 };
 
@@ -150,9 +145,46 @@ Board.prototype._endLoading = function () {
   }, 4000);
 };
 
+Board.prototype._abortGame = function () {
+  var _this = this;
+  var $popup = $('<div class="warning-popup"><div class="warning-box"><p class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;If you leave during the game, you will lose the game and abort the game!</p></div></div>');
+  $warningBox = $('.warning-box', $popup);
+  $leave = $('<button class="btn btn-info">Yes, leave</button>');
+  $cancel = $('<button class="btn btn-info">Cancel</button>');
+  $warningBox.append($leave);
+  $warningBox.append($cancel);
+  $popup.hide();
+  $('body').prepend($popup);
+  $popup.fadeIn(300);
+
+  $leave.on('click', function() {
+    $.ajax({
+      type: 'POST',
+      url: '/game/leave',
+      data: {
+        board_id: currentBoardId,
+        user_id: currentUserId,
+        channel_name: _this.settings.channelName,
+        public_update_event_name: 'board_public_update',
+      },
+      success: function (data) {
+        if (data.success) {
+          console.log('Game will be aborted now and show result.');
+        }
+      }
+    });
+  });
+  $cancel.on('click', function () {
+    $popup.fadeOut(300);
+    setTimeout(function () {
+      $popup.remove();
+    }, 300);
+  });
+};
+
 /* @private */
 Board.prototype._chatMessageReceived = function(data) {
-  console.log('message coming');
+  console.log(data);
   var _this = this;
 
   if (this._itemCount === 0) {
