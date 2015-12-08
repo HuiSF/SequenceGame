@@ -54,6 +54,7 @@ class Board < ActiveRecord::Base
   def can_add_token?(token_position)
     self.teams.each do |team|
       if team.tokens.include? token_position
+        STDERR.puts "========================= can't add token"
         return false
       end
     end

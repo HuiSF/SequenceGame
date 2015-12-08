@@ -99,12 +99,13 @@ class GameController < ApplicationController
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
 
-    if board.can_add_token?(params[:position])
-      user.add_token(params[:card], params[:position])
+    if board.current_team.current_user == user
+      if board.can_add_token?(params[:position])
+        user.add_token(params[:card], params[:position])
+        discard(board, user, params[:card])
+        end_turn(board)
+      end
     end
-
-    discard(board, user, params[:card])
-    end_turn(board)
 
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
@@ -125,14 +126,15 @@ class GameController < ApplicationController
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
 
-    if user.can_remove_token(params[:card], params[:position])
-      if board.remove_token(params[:position])
-        discard(board, user, params[:card])
+    if board.current_team.current_user == user
+      if user.can_remove_token(params[:card], params[:position])
+        if board.remove_token(params[:position])
+          discard(board, user, params[:card])
+          end_turn(board)
+        end
       end
     end
 
-    end_turn(board)
-    
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
 
