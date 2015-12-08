@@ -19,6 +19,7 @@
 #  avatar                 :string
 #  current_team_id        :integer
 #  hand                   :text             default([]), is an Array
+#  state                  :integer
 #
 
 class User < ActiveRecord::Base
