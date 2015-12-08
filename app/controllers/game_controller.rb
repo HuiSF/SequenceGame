@@ -104,11 +104,10 @@ class GameController < ApplicationController
     end
 
     discard(board, user, params[:card])
+    end_turn(board)
 
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
-
-    end_turn(board)
 
     render :json => {:success => true}
 
@@ -132,13 +131,12 @@ class GameController < ApplicationController
       end
     end
 
+    end_turn(board)
+    
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
 
-    end_turn(board)
-    
     render :json => {:success => true}
-
   end
 
   protected
