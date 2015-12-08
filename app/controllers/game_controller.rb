@@ -195,6 +195,8 @@ class GameController < ApplicationController
   def reset_board(board)
     reset_cards(board)
     board.teams.each do |team|
+      team.tokens = []
+      team.sequences = []
       team.board_id = nil
       team.save
     end
