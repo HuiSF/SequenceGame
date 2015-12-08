@@ -1,7 +1,7 @@
 body.sessions, body.boards, body.registrations, body.welcome {
     background: #0d2432 image-url('background_pattern.png') fixed;
 }
-.loading-popup, .waiting-popup, .warning-popup {
+.loading-popup, .waiting-popup, .warning-popup, .gameover-popup {
   background: rgba(0, 0, 0, 1) image-url('background_pattern.png');
   bottom: 0;
   position: fixed;
@@ -69,6 +69,18 @@ body.sessions, body.boards, body.registrations, body.welcome {
   text-align: center;
   top: calc(50% - 100px);
   width: 400px;
+}
+
+.gameover-box {
+  background: url('') center center no-repeat;
+  background-size: contain;
+  position: absolute;
+  z-index: 9999999999;
+}
+.gameover-info {
+  font-size: 1.2em;
+  margin-top: 66%;
+  text-align: center;
 }
 
 .logo {

@@ -158,6 +158,7 @@ Board.prototype._abortGame = function () {
   $popup.fadeIn(300);
 
   $leave.on('click', function() {
+    _this._game.activeLeave = true;
     $.ajax({
       type: 'POST',
       url: '/game/leave',
@@ -170,6 +171,8 @@ Board.prototype._abortGame = function () {
       success: function (data) {
         if (data.success) {
           console.log('Game will be aborted now and show result.');
+          $popup.remove();
+          _this._game._gameOver();
         }
       }
     });
