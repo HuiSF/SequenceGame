@@ -143,6 +143,12 @@ Game.prototype._addCanvas = function() {
   this.containers.gameContainer.addChild(this.containers.handContainer);
   this.$rendererView.addClass('game-canvas');
   this.$gameView.append(this.$rendererView).height(this.$window.innerHeight());
+  this.$audioChoseCard = $('<audio><source src="/images/chosecard.mp3" type="audio/mpeg"></audio>');
+  this.$audioDiscard = $('<audio><source src="/images/discard.mp3" type="audio/mpeg"></audio>');
+  this.$audioPlacetoken = $('<audio><source src="/images/placetoken.mp3" type="audio/mpeg"></audio>');
+  $('body').append(this.$audioChoseCard);
+  $('body').append(this.$audioDiscard);
+  $('body').append(this.$audioPlacetoken);
 };
 
 Game.prototype._start = function() {
@@ -400,7 +406,7 @@ Game.prototype._gameReady = function() {
 Game.prototype._updateBoard = function(data) {
   console.log('Board info:= =============');
   console.log(data);
-  if (!data.board.game_abort && !data.board.game_over) {
+  if (!data.board.game_abort) {
     this._generateUserList(data);
     this._updateDiscardCard(data);
     this._updateTokens(data);
@@ -487,9 +493,20 @@ Game.prototype._updateTokens = function (data) {
       }
     }
   }
+  // for (i = 1; i <= 100; i++) {
+  //   for (j = 0; j < data.users.length; j++) {
+  //     console.log(i, data.users[j].current_team_info.tokens);
+  //     if (data.users[j].current_team_info.tokens.indexOf('' + i) == -1) {
+  //       console.log(i);
+  //       // console.log(this.board.cards[i - 1].suit, this.board.cards[i - 1].rank);
+  //       // this.board.cards[i].removeTokenTexture();
+  //     }
+  //   }
+  // }
 };
 
 Game.prototype._playingState = function (data) {
+  console.log(currentUserId, data.board.current_team_id.current_user_id);
   if (currentUserId == data.board.current_team_id.current_user_id) {
     this.inPlaying = true;
   } else {

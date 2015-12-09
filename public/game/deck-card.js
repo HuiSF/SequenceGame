@@ -90,6 +90,7 @@ DeckCard.prototype= {
     this.moving = true;
     this.floatUp = true;
     this.checkDiscardButton();
+    this.game.$audioChoseCard.get(0).play();
     // this.cardTexture.filters = [shadow];
   },
   startToFloatDown: function () {
@@ -180,7 +181,9 @@ DeckCard.prototype= {
             public_update_event_name: 'board_public_update'
           },
           success: function (data) {
-
+            if (data.success) {
+              _this.game.$audioDiscard.get(0).play();
+            }
           }
         });
       }

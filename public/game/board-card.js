@@ -160,6 +160,7 @@ BoardCard.prototype= {
           public_update_event_name: 'board_public_update'
         },
         success: function (data) {
+          _this.game.$audioPlacetoken.get(0).play();
         }
       });
   },
@@ -179,7 +180,7 @@ BoardCard.prototype= {
       },
       success: function (data) {
         if (data.success) {
-          _this.game.containers.boardContainer.removeChild(_this.tokenSprite);
+
         }
       }
 
@@ -188,16 +189,24 @@ BoardCard.prototype= {
   addTokenTexture: function (teamId, color) {
     // console.log(this.suit, this.rank, color);
     if (!this.hasToken) {
-      var spriteName = color + '_token.png';
-      var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
-      newToken.teamId = teamId;
+      if (this.tokenSprite === null) {
+        var spriteName = color + '_token.png';
+        var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
+        newToken.teamId = teamId;
+        this.tokenColor = color;
+        newToken.position.x = this.cardTexture.renderedPositionX + 24;
+        newToken.position.y = this.cardTexture.renderedPositionY + 2;
+        // this.game.board.tokens.push(newToken);
+        this.tokenSprite = newToken;
+      }
+      this.game.containers.boardContainer.addChild(this.tokenSprite);
       this.hasToken = true;
-      this.tokenColor = color;
-      newToken.position.x = this.cardTexture.renderedPositionX + 24;
-      newToken.position.y = this.cardTexture.renderedPositionY + 2;
-      this.game.containers.boardContainer.addChild(newToken);
-      this.game.board.tokens.push(newToken);
-      this.tokenSprite = newToken;
+    }
+  },
+  removeTokenTexture: function () {
+    if (this.hasToken) {
+      this.game.containers.boardContainer.removeChild(this.tokenSprite);
+      this.hasToken = false;
     }
   }
 };
