@@ -525,6 +525,6 @@ Game.prototype._gameOver = function (data) {
     $('body').prepend($popup);
   }
   setTimeout(function () {
-    // window.location.replace('/lobby');
+    window.location.replace('/lobby');
   }, 4000);
 };
