@@ -123,7 +123,7 @@ class GameController < ApplicationController
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
           reset_board(board)
         else
-          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_added: params[:position]})
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_added_position: params[:position], team_id: user.current_team.id, team_color: user.current_team.color})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
         end
 
@@ -157,7 +157,7 @@ class GameController < ApplicationController
         if board.remove_token(params[:position])
           discard(board, user, params[:card])
           end_turn(board)
-          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_removed: params[:position]})
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_removed_position: params[:position]})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
           result[:success] = true
         else
@@ -301,7 +301,7 @@ class GameController < ApplicationController
     request.format.json?
   end
 
-  def push_public_board_info(channel_name, event_name, board, additional_options = {game_abort: false, token_added: nil, token_removed: nil})
+  def push_public_board_info(channel_name, event_name, board, additional_options = {game_abort: false, token_added_position: nil, token_removed_position: nil})
     board_json = {}
     board_json['board'] = {}
     board_json['teams'] = []
@@ -312,10 +312,20 @@ class GameController < ApplicationController
         :number_of_players => board.number_of_players,
         :current_team_id => board.current_team,
         :last_discarded => board.last_discard,
-        :game_abort => additional_options[:game_abort] ? additional_options[:game_abort] : false,
-        :token_added => additional_options[:token_added] ? additional_options[:token_added] : nil,
-        :token_removed => additional_options[:token_removed] ? additional_options[:token_removed] : nil,
+        :game_abort => additional_options[:game_abort] ? true : false,
     }
+
+    if additional_options[:token_added_position]
+      board_json['board'][:token_added] = {added: true, position: additional_options[:token_added_position], team_id: additional_options[:team_id], team_color: additional_options[:team_color]}
+    else
+      board_json['board'][:token_added] = {added: false}
+    end
+
+    if additional_options[:token_removed_position]
+      board_json['board'][:token_removed] = {added: true, position: additional_options[:token_removed_position]}
+    else
+      board_json['board'][:token_removed] = {added: false}
+    end
 
     board.teams.each do |team|
       board_json['teams'].push(
