@@ -95,4 +95,16 @@ class Board < ActiveRecord::Base
     return false
   end
 
+  def current_team_has_won?
+    self.current_team.sequences.count == self.teams.count
+  end
+
+  # for regular win, i.e., not in game leave, or win by default
+  def process_win(winning_team)
+    self.teams.each do |team|
+      team.game_result = team == winning_team ? :win : :loss
+      team.save
+    end
+  end
+
 end

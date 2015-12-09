@@ -107,8 +107,24 @@ class GameController < ApplicationController
       end
     end
 
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
-    push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+    if board.current_team_has_won?
+      board.process_win(current_team)
+      
+      board.users.each do |each_user|
+        each_user.current_team = nil
+        user.hand = nil
+        each_user.state = :lobby
+        each_user.save
+      end
+      board.update_number_of_players
+      board.save
+      push_public_board_info(params[:channel_name], params[:public_update_event_name], board, true)
+      push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+      reset_board(board)
+    else
+      push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
+      push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+    end
 
     render :json => {:success => true}
 
