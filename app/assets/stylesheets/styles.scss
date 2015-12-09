@@ -410,6 +410,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
   position: relative;
 }
 .in-turn::after {
+  color: rgb(255, 107, 0);
   content: 'current turn';
   font-size: 0.8em;
   font-style: italic;
