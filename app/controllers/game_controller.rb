@@ -141,6 +141,23 @@ class GameController < ApplicationController
     render :json => {:success => true}
   end
 
+  # discard non-playable card from user hand
+  # board_id
+  # user_id
+  # card
+  # channel_name
+  # user_update_event_name
+  def discard_non_playable
+    board = Board.find(params[:board_id])
+    user = User.find(params[:user_id])
+
+    discard(board, user, params[:card])
+
+    push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+
+    render :json => {:success => true}
+  end
+
   protected
 
   # check if game is ready to start
@@ -218,7 +235,7 @@ class GameController < ApplicationController
   def draw(board)
     # if we want to deal from the top of the deck rather than the end, we can change this
     if board.deck.empty?
-      shuffleDeck
+      shuffleDeck(board)
     end
     card = (board.deck.pop)
     board.save
