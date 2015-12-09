@@ -109,7 +109,7 @@ class GameController < ApplicationController
 
     if board.current_team_has_won?
       board.process_win(current_team)
-      
+
       board.users.each do |each_user|
         each_user.current_team = nil
         user.hand = nil
@@ -141,12 +141,14 @@ class GameController < ApplicationController
   def remove_token
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
+    result = {:success => false}
 
     if board.current_team.current_user == user
       if user.can_remove_token(params[:card], params[:position])
         if board.remove_token(params[:position])
           discard(board, user, params[:card])
           end_turn(board)
+          result[:success] = true
         end
       end
     end
@@ -154,7 +156,7 @@ class GameController < ApplicationController
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
 
-    render :json => {:success => true}
+    render :json => result
   end
 
   # discard non-playable card from user hand

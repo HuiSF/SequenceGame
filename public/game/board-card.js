@@ -178,6 +178,9 @@ BoardCard.prototype= {
         public_update_event_name: 'board_public_update'
       },
       success: function (data) {
+        if (data.success) {
+          _this.game.containers.boardContainer.removeChild(_this.tokenSprite);
+        }
       }
 
     });
