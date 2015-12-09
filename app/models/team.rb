@@ -16,17 +16,17 @@
 
 class Team < ActiveRecord::Base
   enum color: [:red, :blue, :green]
-  enum game_result: [:win, :loss]
+  enum game_result: [:loss, :win]
   has_many :users, :foreign_key => "current_team_id"
   belongs_to :current_user, :class_name => "User"
   belongs_to :next_user, :class_name => "User"
   belongs_to :board
 
   def set_next_user
-    if self.users.count == 1 
-      #for 2 & 3 player games 
+    if self.users.count == 1
+      #for 2 & 3 player games
       self.next_user = self.current_user
-    else 
+    else
       #for 4 player games
       pos = self.users.index(self.current_user)
       self.next_user = self.users.at(pos - 1)
@@ -319,7 +319,7 @@ class Team < ActiveRecord::Base
   end
 
   def process_potential_sequence(potential_sequence)
-
+    # STDERR.puts "=============ADD SEQUENCE==============="
     if potential_sequence.length == 5
       self.sequences.push(potential_sequence.sort)
       self.save

@@ -46,7 +46,7 @@ class GameController < ApplicationController
     end
     board.update_number_of_players
     board.save
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board, true)
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
     reset_board(board)
     render :json => {'success' => true}
   end
@@ -99,17 +99,42 @@ class GameController < ApplicationController
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
 
-    if board.can_add_token?(params[:position])
-      user.add_token(params[:card], params[:position])
+    if board.current_team.current_user == user
+
+      if board.can_add_token?(params[:position])
+        user.add_token(params[:card], params[:position])
+        discard(board, user, params[:card])
+        end_turn(board)
+
+        if board.current_team_has_won?
+          board.process_win(current_team)
+
+          board.users.each do |each_user|
+            each_user.current_team = nil
+            user.hand = nil
+            each_user.state = :lobby
+            each_user.save
+          end
+
+          board.update_number_of_players
+          board.save
+
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
+          push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+          reset_board(board)
+        else
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_added_position: params[:position], team_id: user.current_team.id, team_color: user.current_team.color})
+          push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+        end
+
+        render :json => {:success => true}
+      else
+        render :json => {:success => false, :reason => 'cannot add a token here'}
+      end
+
+    else
+      render :json => {:success => false, :reason => 'not this user\'s current turn'}
     end
-
-    discard(board, user, params[:card])
-    end_turn(board)
-
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
-    push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
-
-    render :json => {:success => true}
 
   end
 
@@ -124,15 +149,43 @@ class GameController < ApplicationController
   def remove_token
     board = Board.find(params[:board_id])
     user = User.find(params[:user_id])
+    result = {:success => false}
 
-    if user.can_remove_token(params[:card], params[:position])
-      if board.remove_token(params[:position])
-        discard(board, user, params[:card])
+    if board.current_team.current_user == user
+      if user.can_remove_token(params[:card], params[:position])
+
+        if board.remove_token(params[:position])
+          discard(board, user, params[:card])
+          end_turn(board)
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_removed_position: params[:position]})
+          push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
+          result[:success] = true
+        else
+          result[:reason] = 'cannot remove this token'
+        end
+
+      else
+        result[:reason] = 'cannot remove this token'
       end
+    else
+      result[:reason] = 'not this user\'s current turn'
     end
 
-    end_turn(board)
-    
+    render :json => result
+  end
+
+  # discard non-playable card from user hand
+  # board_id
+  # user_id
+  # card
+  # channel_name
+  # user_update_event_name
+  def discard_non_playable
+    board = Board.find(params[:board_id])
+    user = User.find(params[:user_id])
+
+    discard(board, user, params[:card])
+
     push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
 
@@ -193,6 +246,8 @@ class GameController < ApplicationController
   def reset_board(board)
     reset_cards(board)
     board.teams.each do |team|
+      team.tokens = []
+      team.sequences = []
       team.board_id = nil
       team.save
     end
@@ -214,7 +269,7 @@ class GameController < ApplicationController
   def draw(board)
     # if we want to deal from the top of the deck rather than the end, we can change this
     if board.deck.empty?
-      shuffleDeck
+      shuffleDeck(board)
     end
     card = (board.deck.pop)
     board.save
@@ -246,24 +301,36 @@ class GameController < ApplicationController
     request.format.json?
   end
 
-  def push_public_board_info(channel_name, event_name, board, game_abort = false)
+  def push_public_board_info(channel_name, event_name, board, additional_options = {game_abort: false, token_added_position: nil, token_removed_position: nil})
     board_json = {}
     board_json['board'] = {}
     board_json['teams'] = []
     board_json['users'] = []
 
     board_json['board'] = {
-      :board_id => board.id,
-      :number_of_players => board.number_of_players,
-      :current_team_id => board.current_team,
-      :last_discarded => board.last_discard,
-      :game_abort => game_abort
+        :board_id => board.id,
+        :number_of_players => board.number_of_players,
+        :current_team_id => board.current_team,
+        :last_discarded => board.last_discard,
+        :game_abort => additional_options[:game_abort] ? true : false,
     }
+
+    if additional_options[:token_added_position]
+      board_json['board'][:token_added] = {success: true, position: additional_options[:token_added_position], team_id: additional_options[:team_id], team_color: additional_options[:team_color]}
+    else
+      board_json['board'][:token_added] = {success: false}
+    end
+
+    if additional_options[:token_removed_position]
+      board_json['board'][:token_removed] = {success: true, position: additional_options[:token_removed_position]}
+    else
+      board_json['board'][:token_removed] = {success: false}
+    end
 
     board.teams.each do |team|
       board_json['teams'].push(
           {:team_id => team.id, :color => team.color, :current_user_id => team.current_user,
-            :tokens => team.tokens, :sequences => team.sequences, :game_result => team.game_result}
+           :tokens => team.tokens, :sequences => team.sequences, :game_result => team.game_result}
       )
       team.users.each do |user|
         board_json['users'].push(

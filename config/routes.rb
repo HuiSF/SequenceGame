@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   post 'game/add_token' => 'game#add_token'
   post 'game/remove_token' => 'game#remove_token'
 
+  # discard non-playable card only
+  post 'game/discard_card' => 'game#discard_non_playable'
+
   # get board data through ajax
   get 'lobby/boards' => 'lobby#boards' #first time access lobby and generate list of boards
 

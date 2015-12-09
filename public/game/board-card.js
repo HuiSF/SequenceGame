@@ -85,57 +85,70 @@ BoardCard.prototype= {
   bindEvents: function () {
     var _this = this;
     this.cardTexture.mouseover = function (e) {
-      // this.scale.x = this.scaleX + 0.04;
-      // this.scale.y = this.scaleY + 0.04;
-      // if (this.scale.x >= 1) {
-      //   this.position.x -= (this.renderedWidth * this.scale.x - this.renderedWidth) / 2;
-      //   this.position.y -= (this.renderedHeight * this.scale.y - this.renderedHeight) / 2;
-      // } else {
-      //   this.position.x -= (this.renderedWidth * 1.04 - this.renderedWidth) / 2;
-      //   this.position.y -= (this.renderedHeight * 1.04 - this.renderedHeight) / 2;
-      // }
-      // this.beforeMouseoverPositionY = this.position.y;
-      // this.position.y = this.position.y - 2;
-      if (_this.highlighting) {
-        this.beforeMouseoverPositionY = this.position.y;
+      if (_this.game.inPlaying) {
+        if (_this.highlighting) {
+          this.beforeMouseoverPositionY = this.position.y;
+        }
+        _this.cardTexture.position.y = _this.cardTexture.position.y -2;
       }
-      _this.cardTexture.position.y = _this.cardTexture.position.y -2;
     };
     this.cardTexture.mouseout = function (e) {
-      // this.scale.x = this.scaleX;
-      // this.scale.y = this.scaleY;
-      // this.position.x = this.renderedPositionX;
-      // this.position.y = this.renderedPositionY;
-      // this.position.y = this.beforeMouseoverPositionY;
-      if (_this.highlighting) {
-        _this.cardTexture.position.y = this.beforeMouseoverPositionY;
-      } else {
-        _this.cardTexture.position.y = _this.cardTexture.renderedPositionY;
-      }
-    };
-    this.cardTexture.mousedown = function (e) {
-      if (_this.game.boardClickable) {
-        // this.beforeMousedownPositionY = this.position.y;
-        // this.position.y += 2;
-
-        // this.position.y = this.beforeMouseoverPositionY;
+      if (_this.game.inPlaying) {
+        if (_this.highlighting) {
+          _this.cardTexture.position.y = this.beforeMouseoverPositionY;
+        } else {
+          _this.cardTexture.position.y = _this.cardTexture.renderedPositionY;
+        }
       }
     };
     this.cardTexture.tap = function (e) {
-      this.position.y += 2;
-      setTimeout(function () {
-        _this.cardTexture.position.y -= 2;
-      }, 100);
+      if (_this.game.inPlaying) {
+        this.position.y += 2;
+        setTimeout(function () {
+          _this.cardTexture.position.y -= 2;
+        }, 100);
+      }
     };
     this.cardTexture.mouseup = function (e) {
-      if (_this.respondClick) {
-        // this.position.y = this.beforeMousedownPositionY;
-        _this.addToken();
-
+      console.log(_this.game.currentChosenCardInHandSuit, _this.game.currentChosenCardInHandRank);
+      if (_this.game.inPlaying) {
+        console.log('going to place a token');
+        if (_this.game.currentChosenCardInHandRank == '11') {
+          console.log('if chose a jack');
+          if (_this.game.currentChosenCardInHandSuit == 'club' || _this.game.currentChosenCardInHandSuit == 'diamond') {
+            console.log('if its two eyes jakc ');
+            if (!_this.hasToken) {
+              _this.addToken();
+            }
+          } else {
+            console.log('if its one eye jakc ');
+            if (_this.hasToken && _this.tokenColor != _this.game.teamColor) {
+              _this.removeToken();
+            }
+          }
+        } else {
+          console.log('did not choose a jack');
+          if (!_this.hasToken && _this.respondClick) {
+            _this.addToken();
+          }
+        }
       }
+
+      // if ((_this.game.inPlaying  && !_this.hasToken) || (_this.game.inPlaying  && _this.game.currentChosenCardInHandRank == '11')) {
+      //   if (_this.respondClick) {
+      //     if ((_this.game.currentChosenCardInHandSuit === 'club' || _this.game.currentChosenCardInHandSuit === 'diamond') && _this.game.currentChosenCardInHandRank == '11') {
+      //       _this.addToken();
+      //     } else if ((_this.game.currentChosenCardInHandSuit === 'spade' || _this.game.currentChosenCardInHandSuit === 'heart') && _this.game.currentChosenCardInHandRank == '11') {
+      //       _this.removeToken();
+      //     } else {
+      //       _this.addToken();
+      //     }
+      //   }
+      // }
     };
   },
   addToken: function() {
+    console.log(this.hasToken);
     var _this = this;
     console.log(_this.game.currentChosenCardInHand);
       // send request to server through pusher
@@ -152,21 +165,53 @@ BoardCard.prototype= {
           public_update_event_name: 'board_public_update'
         },
         success: function (data) {
+          _this.game.$audioPlacetoken.get(0).play();
         }
       });
   },
+  removeToken: function() {
+    var _this = this;
+    $.ajax({
+      type: 'POST',
+      url: '/game/remove_token',
+      data: {
+        channel_name: _this.game.pusherChannelName,
+        board_id: currentBoardId,
+        user_id: currentUserId,
+        card: _this.game.currentChosenCardInHand,
+        position: _this.id,
+        user_update_event_name: 'user_hand_' + currentUserId,
+        public_update_event_name: 'board_public_update'
+      },
+      success: function (data) {
+        if (data.success) {
+
+        }
+      }
+
+    });
+  },
   addTokenTexture: function (teamId, color) {
-    // console.log(this.suit, this.rank, color);
+    console.log(this.suit, this.rank, color);
     if (!this.hasToken) {
       var spriteName = color + '_token.png';
       var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
       newToken.teamId = teamId;
-      this.hasToken = true;
+      this.tokenColor = color;
       newToken.position.x = this.cardTexture.renderedPositionX + 24;
       newToken.position.y = this.cardTexture.renderedPositionY + 2;
-      this.game.containers.boardContainer.addChild(newToken);
-      this.game.board.tokens.push(newToken);
+        // this.game.board.tokens.push(newToken);
       this.tokenSprite = newToken;
+      this.game.containers.boardContainer.addChild(this.tokenSprite);
+      this.hasToken = true;
+    }
+  },
+  removeTokenTexture: function () {
+    if (this.hasToken) {
+      this.game.$audioRemovetoken.get(0).play();
+      this.game.containers.boardContainer.removeChild(this.tokenSprite);
+      this.tokenSprite = null;
+      this.hasToken = false;
     }
   }
 };
