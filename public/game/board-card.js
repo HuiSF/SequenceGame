@@ -110,15 +110,36 @@ BoardCard.prototype= {
       }
     };
     this.cardTexture.mouseup = function (e) {
-      if ((_this.game.inPlaying  && !_this.hasToken) || (_this.game.inPlaying  && _this.game.currentChosenCardInHandRank == '11')) {
-        if (_this.respondClick) {
-          if (_this.game.currentChosenCardInHandSuit === 'club' || _this.game.currentChosenCardInHandSuit === 'diamond') {
-            _this.addToken();
+      console.log(_this.game.currentChosenCardInHandSuit, _this.game.currentChosenCardInHandRank);
+      if (_this.game.inPlaying) {
+        if (_this.game.currentChosenCardInHandRank == '11') {
+          if (_this.game.currentChosenCardInHandSuit == 'club' || _this.game.currentChosenCardInHandSuit == 'diamond') {
+            if (!_this.hasToken) {
+              _this.addToken();
+            }
           } else {
-            _this.removeToken();
+            if (_this.hasToken && _this.tokenColor != _this.game.teamColor) {
+              _this.removeToken();
+            }
+          }
+        } else {
+          if (!_this.hasToken && _this.respondClick) {
+            _this.addToken();
           }
         }
       }
+
+      // if ((_this.game.inPlaying  && !_this.hasToken) || (_this.game.inPlaying  && _this.game.currentChosenCardInHandRank == '11')) {
+      //   if (_this.respondClick) {
+      //     if ((_this.game.currentChosenCardInHandSuit === 'club' || _this.game.currentChosenCardInHandSuit === 'diamond') && _this.game.currentChosenCardInHandRank == '11') {
+      //       _this.addToken();
+      //     } else if ((_this.game.currentChosenCardInHandSuit === 'spade' || _this.game.currentChosenCardInHandSuit === 'heart') && _this.game.currentChosenCardInHandRank == '11') {
+      //       _this.removeToken();
+      //     } else {
+      //       _this.addToken();
+      //     }
+      //   }
+      // }
     };
   },
   addToken: function() {
@@ -143,7 +164,23 @@ BoardCard.prototype= {
       });
   },
   removeToken: function() {
-    // TODO implement
+    var _this = this;
+    $.ajax({
+      type: 'POST',
+      url: '/game/remove_token',
+      data: {
+        channel_name: _this.game.pusherChannelName,
+        board_id: currentBoardId,
+        user_id: currentUserId,
+        card: _this.game.currentChosenCardInHand,
+        position: _this.id,
+        user_update_event_name: 'user_hand_' + currentUserId,
+        public_update_event_name: 'board_public_update'
+      },
+      success: function (data) {
+      }
+
+    });
   },
   addTokenTexture: function (teamId, color) {
     // console.log(this.suit, this.rank, color);
@@ -152,6 +189,7 @@ BoardCard.prototype= {
       var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
       newToken.teamId = teamId;
       this.hasToken = true;
+      this.tokenColor = color;
       newToken.position.x = this.cardTexture.renderedPositionX + 24;
       newToken.position.y = this.cardTexture.renderedPositionY + 2;
       this.game.containers.boardContainer.addChild(newToken);

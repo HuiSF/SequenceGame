@@ -421,6 +421,7 @@ Game.prototype._updateHand = function(data) {
   console.log('Hand updated:= =============');
 };
 Game.prototype._generateUserList = function(data) {
+  var _this = this;
   if (!this.hasUserList) {
     this.hasUserList = true;
     var $userList = $('.user-list'),
@@ -445,6 +446,7 @@ Game.prototype._generateUserList = function(data) {
     var usernameHighlight = '';
     if (user.user_id == currentUserId) {
       usernameHighlight = ' yourself';
+      _this.teamColor = user.current_team_info.color;
     }
     $userInfo.append($('<div class="media-body"><span class="user-name' + usernameHighlight + '">' + user.username + '</span></div>'));
     $container.append($userInfo);
@@ -497,6 +499,8 @@ Game.prototype._playingState = function (data) {
   $('.user-info').each(function(key, user) {
     if ($(user).data('user-id') == targetId) {
       $(user).addClass('in-turn');
+    } else {
+      $(user).removeClass('in-turn');
     }
   });
 };

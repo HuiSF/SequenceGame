@@ -164,11 +164,13 @@ DeckCard.prototype= {
   addDiscardButton: function () {
     var _this = this;
     this.discardButton = new PIXI.Sprite(this.game.sprites.components['btn-discard.png']);
+    this.discardButton.interactive = true;
     this.discardButton.mouseup = function (e) {
-      if (_this.inPlaying) {
+      console.log('click');
+      if (_this.game.inPlaying) {
         $.ajax({
           type: 'POST',
-          url: '/game/game/discard_card',
+          url: '/game/discard_card',
           data: {
             channel_name: _this.game.pusherChannelName,
             board_id: currentBoardId,
@@ -199,7 +201,7 @@ DeckCard.prototype= {
     var i, noNeedDiscard = true;
     if (this.rank !== '11') {
       for (i = 0; i < this.pairBoardCards.length; i++) {
-        console.log(this.pairBoardCards[i]);
+        // console.log(this.pairBoardCards[i]);
         console.log(this.pairBoardCards[i].hasToken);
         if (!this.pairBoardCards[i].hasToken) {
 
