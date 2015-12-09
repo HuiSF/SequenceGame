@@ -38,15 +38,15 @@ class GameController < ApplicationController
     board.teams.each do |team|
       team.game_result = team == losing_team ? :loss : :win
       team.save
-      team.users.each do |each_user|
-        each_user.current_team = nil
-        each_user.state = :lobby
-        each_user.save
-      end
+    end
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
+    board.users.each do |each_user|
+      each_user.current_team = nil
+      each_user.state = :lobby
+      each_user.save
     end
     board.update_number_of_players
     board.save
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
     reset_board(board)
     render :json => {'success' => true}
   end
