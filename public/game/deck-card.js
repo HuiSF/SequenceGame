@@ -37,6 +37,7 @@ DeckCard.prototype= {
     this.cardTexture.interactive = true;
     if (this.rank !== -1) this.bindEvents();
     this.getPairFromBoard();
+    this.addDiscardButton();
   },
   setPosition: function (x, y) {
     this.cardTexture.position.x = x;
@@ -88,7 +89,7 @@ DeckCard.prototype= {
     }
     this.moving = true;
     this.floatUp = true;
-
+    this.checkDiscardButton();
     // this.cardTexture.filters = [shadow];
   },
   startToFloatDown: function () {
@@ -99,6 +100,7 @@ DeckCard.prototype= {
     this.moving = true;
     this.floatDown = true;
     // this.cardTexture.filters = [];
+    this.hideDiscardButton();
   },
   update: function () {
     // console.log('updating');
@@ -155,8 +157,39 @@ DeckCard.prototype= {
       } else {
         _this.startToFloatUp();
       }
-
     };
-  }
+  },
+  addDiscardButton: function () {
+    this.discardButton = new PIXI.Sprite(this.game.sprites.components['btn-discard.png']);
+  },
+  showDiscardButton: function () {
+    // console.log('show discard button');
+    var _this = this;
+    setTimeout(function () {
+      _this.game.containers.handContainer.addChild(_this.discardButton);
+    }, 100);
+  },
+  hideDiscardButton: function () {
+    // console.log('hide discard button');
+    this.game.containers.handContainer.removeChild(this.discardButton);
+  },
+  checkDiscardButton: function () {
+    var i, noNeedDiscard = true;
+    if (this.rank !== '11') {
+      for (i = 0; i < this.pairBoardCards.length; i++) {
+        console.log(this.pairBoardCards[i]);
+        console.log(this.pairBoardCards[i].hasToken);
+        if (!this.pairBoardCards[i].hasToken) {
 
+          noNeedDiscard = false;
+          break;
+        }
+      }
+      if (noNeedDiscard) {
+        this.showDiscardButton();
+      } else {
+        this.hideDiscardButton();
+      }
+    }
+  }
 };

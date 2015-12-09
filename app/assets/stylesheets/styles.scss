@@ -407,6 +407,15 @@ body.sessions, body.boards, body.registrations, body.welcome {
 }
 .in-turn {
   background-color: rgba(255, 255, 255, 0.4);
+  position: relative;
+}
+.in-turn::after {
+  content: 'current turn';
+  font-size: 0.8em;
+  font-style: italic;
+  position: absolute;
+  right: 5px;
+  bottom: 0;
 }
 .user-info .user-name, .user-info .user-score {
   display: block;
@@ -418,6 +427,9 @@ body.sessions, body.boards, body.registrations, body.welcome {
 .user-info .user-score {
   color: #ccc;
   font-size: 0.8em;
+}
+.user-info .yourself {
+  color: #fffd20 !important;
 }
 .game-buttons {
   color: #4B9ECC;

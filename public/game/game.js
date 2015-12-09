@@ -27,6 +27,7 @@ var Game = function(renderOptions, pusherChannel, channelName, boardView) {
   this.gameInitialBoard = true;
   this.hasUserList = false;
   this.activeLeave = false;
+  this.inPlaying = false;
   this._loadSprites();
 
 };
@@ -306,7 +307,7 @@ Game.prototype._resizeHandContainer = function() {
 
   handContainer.position.x = 0;
   handContainer.position.y = this.rendererHeight - handHeight + 1;
-  components.background.width = handWidth;
+  components.background._width = handWidth;
   components.background._height = handHeight;
   components.textHandCards.scale.x = components.textHandCards.scale.y = zoomScale;
   components.textDeckCards.scale.x = components.textDeckCards.scale.y = zoomScale;
@@ -331,11 +332,16 @@ Game.prototype._resizeHandContainer = function() {
     // console.log(cards[i]);
     cards[i].cardTexture.scale.x = zoomScale;
     cards[i].cardTexture.scale.y = zoomScale;
+    cards[i].discardButton.scale.x = zoomScale;
+    cards[i].discardButton.scale.y = zoomScale;
     cards[i].cardTexture.position.x = leftStartPosition;
+    cards[i].discardButton.position.x = leftStartPosition;
     cards[i].cardTexture.renderedPositionX = cards[i].cardTexture.position.x;
     leftStartPosition += (cards[i].cardTexture._texture.width + 10) * zoomScale;
     cards[i].cardTexture.position.y = positionY;
+    cards[i].discardButton.position.y = positionY + cards[i].cardTexture._texture.height * zoomScale - cards[i].discardButton._texture.height;
     cards[i].cardTexture.renderedPositionY = cards[i].cardTexture.position.y;
+
   }
 
   components.textDeckCards.position.x = rightStartPosition;
@@ -396,6 +402,7 @@ Game.prototype._updateBoard = function(data) {
     this._generateUserList(data);
     this._updateDiscardCard(data);
     this._updateTokens(data);
+    this._playingState(data);
   } else {
     this._gameOver(data);
   }
@@ -424,7 +431,7 @@ Game.prototype._generateUserList = function(data) {
   }
   function generateUserContainer (user) {
     var $container = $('<div class="col-sm-6 col-xs-6 user-container"></div>');
-    var $userInfo = $('<div class="media user-info"></div>');
+    var $userInfo = $('<div class="media user-info" data-user-id="' + user.user_id + '"></div>');
     if (user.current_team_info.color === 'red') {
       $userInfo.addClass('red-team');
     } else if (user.current_team_info.color === 'blue') {
@@ -433,7 +440,11 @@ Game.prototype._generateUserList = function(data) {
       $userInfo.addClass('green-team');
     }
     $userInfo.append($('<div class="media-left"><img src="' + '/' + user.avatar + '" alt="' + user.username + '" title="' + user.current_team_info.color + ' team" /></div>'));
-    $userInfo.append($('<div class="media-body"><span class="user-name">' + user.username + '</span></div>'));
+    var usernameHighlight = '';
+    if (user.user_id == currentUserId) {
+      usernameHighlight = ' yourself';
+    }
+    $userInfo.append($('<div class="media-body"><span class="user-name' + usernameHighlight + '">' + user.username + '</span></div>'));
     $container.append($userInfo);
     return $container;
   }
@@ -474,6 +485,20 @@ Game.prototype._updateTokens = function (data) {
   }
 };
 
+Game.prototype._playingState = function (data) {
+  if (currentUserId == data.board.current_team_id.current_user_id) {
+    this.inPlaying = true;
+  } else {
+    this.inPlaying = false;
+  }
+  var targetId = data.board.current_team_id.current_user_id;
+  $('.user-info').each(function(key, user) {
+    if ($(user).data('user-id') == targetId) {
+      $(user).addClass('in-turn');
+    }
+  });
+};
+
 Game.prototype._gameOver = function (data) {
   if (data.board.game_abort) {
     console.log('Game aborted due to other user left during game. You will be redirected to lobby now.');
@@ -494,6 +519,6 @@ Game.prototype._gameOver = function (data) {
     $('body').prepend($popup);
   }
   setTimeout(function () {
-    window.location.replace('/lobby');
+    // window.location.replace('/lobby');
   }, 4000);
 };

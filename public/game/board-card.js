@@ -85,57 +85,40 @@ BoardCard.prototype= {
   bindEvents: function () {
     var _this = this;
     this.cardTexture.mouseover = function (e) {
-      // this.scale.x = this.scaleX + 0.04;
-      // this.scale.y = this.scaleY + 0.04;
-      // if (this.scale.x >= 1) {
-      //   this.position.x -= (this.renderedWidth * this.scale.x - this.renderedWidth) / 2;
-      //   this.position.y -= (this.renderedHeight * this.scale.y - this.renderedHeight) / 2;
-      // } else {
-      //   this.position.x -= (this.renderedWidth * 1.04 - this.renderedWidth) / 2;
-      //   this.position.y -= (this.renderedHeight * 1.04 - this.renderedHeight) / 2;
-      // }
-      // this.beforeMouseoverPositionY = this.position.y;
-      // this.position.y = this.position.y - 2;
-      if (_this.highlighting) {
-        this.beforeMouseoverPositionY = this.position.y;
+      if (_this.game.inPlaying) {
+        if (_this.highlighting) {
+          this.beforeMouseoverPositionY = this.position.y;
+        }
+        _this.cardTexture.position.y = _this.cardTexture.position.y -2;
       }
-      _this.cardTexture.position.y = _this.cardTexture.position.y -2;
     };
     this.cardTexture.mouseout = function (e) {
-      // this.scale.x = this.scaleX;
-      // this.scale.y = this.scaleY;
-      // this.position.x = this.renderedPositionX;
-      // this.position.y = this.renderedPositionY;
-      // this.position.y = this.beforeMouseoverPositionY;
-      if (_this.highlighting) {
-        _this.cardTexture.position.y = this.beforeMouseoverPositionY;
-      } else {
-        _this.cardTexture.position.y = _this.cardTexture.renderedPositionY;
-      }
-    };
-    this.cardTexture.mousedown = function (e) {
-      if (_this.game.boardClickable) {
-        // this.beforeMousedownPositionY = this.position.y;
-        // this.position.y += 2;
-
-        // this.position.y = this.beforeMouseoverPositionY;
+      if (_this.game.inPlaying) {
+        if (_this.highlighting) {
+          _this.cardTexture.position.y = this.beforeMouseoverPositionY;
+        } else {
+          _this.cardTexture.position.y = _this.cardTexture.renderedPositionY;
+        }
       }
     };
     this.cardTexture.tap = function (e) {
-      this.position.y += 2;
-      setTimeout(function () {
-        _this.cardTexture.position.y -= 2;
-      }, 100);
+      if (_this.game.inPlaying) {
+        this.position.y += 2;
+        setTimeout(function () {
+          _this.cardTexture.position.y -= 2;
+        }, 100);
+      }
     };
     this.cardTexture.mouseup = function (e) {
-      if (_this.respondClick) {
-        // this.position.y = this.beforeMousedownPositionY;
-        _this.addToken();
-
+      if (_this.game.inPlaying  && !_this.hasToken) {
+        if (_this.respondClick) {
+          _this.addToken();
+        }
       }
     };
   },
   addToken: function() {
+    console.log(this.hasToken);
     var _this = this;
     console.log(_this.game.currentChosenCardInHand);
       // send request to server through pusher
