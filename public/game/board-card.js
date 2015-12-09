@@ -112,17 +112,22 @@ BoardCard.prototype= {
     this.cardTexture.mouseup = function (e) {
       console.log(_this.game.currentChosenCardInHandSuit, _this.game.currentChosenCardInHandRank);
       if (_this.game.inPlaying) {
+        console.log('going to place a token');
         if (_this.game.currentChosenCardInHandRank == '11') {
+          console.log('if chose a jack');
           if (_this.game.currentChosenCardInHandSuit == 'club' || _this.game.currentChosenCardInHandSuit == 'diamond') {
+            console.log('if its two eyes jakc ');
             if (!_this.hasToken) {
               _this.addToken();
             }
           } else {
+            console.log('if its one eye jakc ');
             if (_this.hasToken && _this.tokenColor != _this.game.teamColor) {
               _this.removeToken();
             }
           }
         } else {
+          console.log('did not choose a jack');
           if (!_this.hasToken && _this.respondClick) {
             _this.addToken();
           }
@@ -187,25 +192,25 @@ BoardCard.prototype= {
     });
   },
   addTokenTexture: function (teamId, color) {
-    // console.log(this.suit, this.rank, color);
+    console.log(this.suit, this.rank, color);
     if (!this.hasToken) {
-      if (this.tokenSprite === null) {
-        var spriteName = color + '_token.png';
-        var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
-        newToken.teamId = teamId;
-        this.tokenColor = color;
-        newToken.position.x = this.cardTexture.renderedPositionX + 24;
-        newToken.position.y = this.cardTexture.renderedPositionY + 2;
+      var spriteName = color + '_token.png';
+      var newToken = new PIXI.Sprite(this.game.sprites.components[spriteName]);
+      newToken.teamId = teamId;
+      this.tokenColor = color;
+      newToken.position.x = this.cardTexture.renderedPositionX + 24;
+      newToken.position.y = this.cardTexture.renderedPositionY + 2;
         // this.game.board.tokens.push(newToken);
-        this.tokenSprite = newToken;
-      }
+      this.tokenSprite = newToken;
       this.game.containers.boardContainer.addChild(this.tokenSprite);
       this.hasToken = true;
     }
   },
   removeTokenTexture: function () {
     if (this.hasToken) {
+      this.game.$audioRemovetoken.get(0).play();
       this.game.containers.boardContainer.removeChild(this.tokenSprite);
+      this.tokenSprite = null;
       this.hasToken = false;
     }
   }

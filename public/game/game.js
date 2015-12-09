@@ -146,9 +146,11 @@ Game.prototype._addCanvas = function() {
   this.$audioChoseCard = $('<audio><source src="/images/chosecard.mp3" type="audio/mpeg"></audio>');
   this.$audioDiscard = $('<audio><source src="/images/discard.mp3" type="audio/mpeg"></audio>');
   this.$audioPlacetoken = $('<audio><source src="/images/placetoken.mp3" type="audio/mpeg"></audio>');
+  this.$audioRemovetoken = $('<audio><source src="/images/removetoken.mp3" type="audio/mpeg"></audio>');
   $('body').append(this.$audioChoseCard);
   $('body').append(this.$audioDiscard);
   $('body').append(this.$audioPlacetoken);
+  $('body').append(this.$audioRemovetoken);
 };
 
 Game.prototype._start = function() {
@@ -482,7 +484,15 @@ Game.prototype._updateDiscardCard = function(data) {
   }
 };
 Game.prototype._updateTokens = function (data) {
-
+  var boardCardPosition;
+  if (data.board.token_added.success) {
+    boardCardPosition = parseInt(data.board.token_added.position);
+    this.board.cards[boardCardPosition - 1].addTokenTexture(data.board.token_added.team_id, data.board.token_added.team_color);
+  }
+  if (data.board.token_removed.success) {
+    boardCardPosition = parseInt(data.board.token_removed.position);
+    this.board.cards[boardCardPosition - 1].removeTokenTexture();
+  }
   // var numberOfUsers = data.users.length,
   //     numberOfTokens, i, j, boardCardPosition;
   // for (i = 0; i < numberOfUsers; i++) {
