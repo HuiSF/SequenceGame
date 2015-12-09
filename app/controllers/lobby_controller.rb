@@ -66,10 +66,4 @@ class LobbyController < ApplicationController
     
   end
 
-  def rankings
-    users = Users.all
-    
-    
-  end
-
 end
