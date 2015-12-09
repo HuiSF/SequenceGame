@@ -482,18 +482,19 @@ Game.prototype._updateDiscardCard = function(data) {
   }
 };
 Game.prototype._updateTokens = function (data) {
-  var numberOfUsers = data.users.length,
-      numberOfTokens, i, j, boardCardPosition;
-  for (i = 0; i < numberOfUsers; i++) {
-    numberOfTokens = data.users[i].current_team_info.tokens.length;
-    if (numberOfTokens > 0) {
-      for (j = 0; j < numberOfTokens; j++) {
-        boardCardPosition = parseInt(data.users[i].current_team_info.tokens[j]);
-        // console.log('Add token to ' + boardCardPosition + 'th board cards');
-        this.board.cards[boardCardPosition - 1].addTokenTexture(data.users[i].current_team_info.id, data.users[i].current_team_info.color);
-      }
-    }
-  }
+
+  // var numberOfUsers = data.users.length,
+  //     numberOfTokens, i, j, boardCardPosition;
+  // for (i = 0; i < numberOfUsers; i++) {
+  //   numberOfTokens = data.users[i].current_team_info.tokens.length;
+  //   if (numberOfTokens > 0) {
+  //     for (j = 0; j < numberOfTokens; j++) {
+  //       boardCardPosition = parseInt(data.users[i].current_team_info.tokens[j]);
+  //       // console.log('Add token to ' + boardCardPosition + 'th board cards');
+  //       this.board.cards[boardCardPosition - 1].addTokenTexture(data.users[i].current_team_info.id, data.users[i].current_team_info.color);
+  //     }
+  //   }
+  // }
   // for (i = 1; i <= 100; i++) {
   //   for (j = 0; j < data.users.length; j++) {
   //     console.log(i, data.users[j].current_team_info.tokens);
