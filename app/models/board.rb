@@ -96,7 +96,10 @@ class Board < ActiveRecord::Base
   end
 
   def current_team_has_won?
-    self.current_team.sequences.count == self.teams.count
+    if self.teams.count == 3
+      return self.current_team.sequences.count == 1
+    end
+    self.current_team.sequences.count == 2
   end
 
   # for regular win, i.e., not in game leave, or win by default
