@@ -316,15 +316,15 @@ class GameController < ApplicationController
     }
 
     if additional_options[:token_added_position]
-      board_json['board'][:token_added] = {added: true, position: additional_options[:token_added_position], team_id: additional_options[:team_id], team_color: additional_options[:team_color]}
+      board_json['board'][:token_added] = {success: true, position: additional_options[:token_added_position], team_id: additional_options[:team_id], team_color: additional_options[:team_color]}
     else
-      board_json['board'][:token_added] = {added: false}
+      board_json['board'][:token_added] = {success: false}
     end
 
     if additional_options[:token_removed_position]
-      board_json['board'][:token_removed] = {added: true, position: additional_options[:token_removed_position]}
+      board_json['board'][:token_removed] = {success: true, position: additional_options[:token_removed_position]}
     else
-      board_json['board'][:token_removed] = {added: false}
+      board_json['board'][:token_removed] = {success: false}
     end
 
     board.teams.each do |team|
