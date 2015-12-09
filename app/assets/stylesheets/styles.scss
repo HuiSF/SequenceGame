@@ -134,7 +134,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
-.sign-in-form .btn-info, .sign-up-form .btn-info, .waiting-box .btn-info, .warning-box .btn-info {
+.sign-in-form .btn-info, .sign-up-form .btn-info, .waiting-box .btn-info, .warning-box .btn-info, .side-panel .btn-info {
     -moz-user-select: none;
     background: linear-gradient(to bottom, rgba(23,44,61,1) 0%,rgba(23,44,61,1) 50%,rgba(13,22,29,1) 50%,rgba(20,37,51,1) 100%);
     border: 1px solid #4A555E;
@@ -450,4 +450,12 @@ body.sessions, body.boards, body.registrations, body.welcome {
 }
 .game-buttons div:hover {
   text-shadow: 0 0 8px rgba(102,175,233,.6);
+}
+.panel-grabber {
+  height: 60px;
+  position: fixed;
+  top: 0;
+  width: 80px;
+  text-align: center;
+  z-index: 9999;
 }

@@ -13,17 +13,17 @@ if ($('.boards.show').length > 0) {
       chatsEndPoint: '/chats',
       sendReadyEndPoint: 'game/ready'
     });
-
-    function  showWatingPopup(duration) {
-
-      // bindLeave();
-    }
-
-    function hideWaitingPopup(duration) {
-      $popup = $('.waiting-popup');
-      $popup.fadeOut(duration);
-      $popup.delay(duration).remove();
-    }
+    //
+    // function  showWatingPopup(duration) {
+    //
+    //   // bindLeave();
+    // }
+    //
+    // function hideWaitingPopup(duration) {
+    //   $popup = $('.waiting-popup');
+    //   $popup.fadeOut(duration);
+    //   $popup.delay(duration).remove();
+    // }
 
     // function bindLeave () {
     //   $('.leave').on('click', function () {
@@ -38,9 +38,9 @@ if ($('.boards.show').length > 0) {
       var isPanelShown = false;
 
       if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-    		$('head').append($('<link rel="stylesheet" type="text/css" />').attr('href', 'css/sequence-mobile.css'));
+    		$('head').append($('<link rel="stylesheet" type="text/css" />').attr('href', '/css/mobile.css'));
         $('.side-panel').removeClass('col-sm-5').addClass('col-sm-12');
-        console.log('load css for mobile');
+        // console.log('load css for mobile');
     	}
 
       resizeSidePanel();
@@ -91,12 +91,14 @@ if ($('.boards.show').length > 0) {
       }
 
       function showPanelGrabber() {
+        console.log('show grabber');
         $grabber = $('.panel-grabber');
         $grabber.removeClass('hidden');
         $grabber.css('right', 0);
       }
 
       function hidePanelGrabber() {
+        console.log('hide grabber');
         $grabber = $('.panel-grabber');
         $grabber.addClass('hidden');
         $grabber.css('right', 0);
@@ -118,17 +120,19 @@ if ($('.boards.show').length > 0) {
       }
 
       function showPanel() {
-        console.log('calling');
+        console.log('show panel');
         $panel = $('.side-panel');
-        $panel.show();
         $panel.css('right', 0);
       }
       function hidePanel() {
-        console.log('calling');
+        console.log('hide panel');
         $panel = $('.side-panel');
-        $panel.hide();
-        $offset = $panel.outerWidth();
-        $panel.css('right', (0 - $offset));
+        offset = 0 - $panel.outerWidth();
+        $panel.css({
+          'right': offset,
+          'position': 'absolute',
+          'float': 'none'
+        });
       }
   });
 }

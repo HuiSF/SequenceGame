@@ -535,19 +535,31 @@ Game.prototype._playingState = function (data) {
 };
 
 Game.prototype._gameOver = function (data) {
-  if (data.board.game_abort) {
+  console.log(data);
+  if (data && data.board.game_abort) {
     console.log('Game aborted due to other user left during game. You will be redirected to lobby now.');
     var $popup = $('<div class="gameover-popup"><div class="gameover-box"></div></div>');
     var $gameoverBox = $('.gameover-box', $popup);
+    var i;
     $gameoverBox.append($('<p class="gameover-info">You will return to the lobby now...</p>'));
     $gameoverBox.css('width', $(window).innerHeight() * 0.8);
     $gameoverBox.css('height', $gameoverBox.outerWidth());
     $gameoverBox.css('top', ($(window).innerHeight() - $gameoverBox.outerHeight()) / 2);
     $gameoverBox.css('left', ($(window).innerWidth() - $gameoverBox.outerWidth()) / 2);
-    if (this.activeLeave) {
-      $gameoverBox.css('background-image', 'url("/images/lose.png")');
-    } else {
-      $gameoverBox.css('background-image', 'url("/images/win.png")');
+    // if (this.activeLeave) {
+    //   $gameoverBox.css('background-image', 'url("/images/lose.png")');
+    // } else {
+    //   $gameoverBox.css('background-image', 'url("/images/win.png")');
+    // }
+    for (i = 0; i < data.teams.length; i++) {
+      if (data.teams[i].team_id == cuurentTeamId) {
+        if (data.teams[i].game_result == 'win') {
+          $gameoverBox.css('background-image', 'url("/images/win.png")');
+        } else {
+          $gameoverBox.css('background-image', 'url("/images/lose.png")');
+        }
+        break;
+      }
     }
     $popup.hide();
     $popup.fadeIn(300);
