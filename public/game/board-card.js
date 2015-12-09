@@ -110,9 +110,13 @@ BoardCard.prototype= {
       }
     };
     this.cardTexture.mouseup = function (e) {
-      if (_this.game.inPlaying  && !_this.hasToken) {
+      if ((_this.game.inPlaying  && !_this.hasToken) || (_this.game.inPlaying  && _this.game.currentChosenCardInHandRank == '11')) {
         if (_this.respondClick) {
-          _this.addToken();
+          if (_this.game.currentChosenCardInHandSuit === 'club' || _this.game.currentChosenCardInHandSuit === 'diamond') {
+            _this.addToken();
+          } else {
+            _this.removeToken();
+          }
         }
       }
     };
@@ -137,6 +141,9 @@ BoardCard.prototype= {
         success: function (data) {
         }
       });
+  },
+  removeToken: function() {
+    // TODO implement
   },
   addTokenTexture: function (teamId, color) {
     // console.log(this.suit, this.rank, color);

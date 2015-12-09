@@ -152,6 +152,8 @@ DeckCard.prototype= {
     this.cardTexture.mouseup = function (e) {
       // this.position.y -= 2;
       _this.game.currentChosenCardInHand = _this.idInDeck;
+      _this.game.currentChosenCardInHandSuit = _this.suit;
+      _this.game.currentChosenCardInHandRank = _this.rank;
       if (_this.cardTexture.position.y === -24) {
         _this.startToFloatDown();
       } else {
@@ -160,7 +162,27 @@ DeckCard.prototype= {
     };
   },
   addDiscardButton: function () {
+    var _this = this;
     this.discardButton = new PIXI.Sprite(this.game.sprites.components['btn-discard.png']);
+    this.discardButton.mouseup = function (e) {
+      if (_this.inPlaying) {
+        $.ajax({
+          type: 'POST',
+          url: '/game/game/discard_card',
+          data: {
+            channel_name: _this.game.pusherChannelName,
+            board_id: currentBoardId,
+            user_id: currentUserId,
+            card: _this.game.currentChosenCardInHand,
+            user_update_event_name: 'user_hand_' + currentUserId,
+            public_update_event_name: 'board_public_update'
+          },
+          success: function (data) {
+
+          }
+        });
+      }
+    };
   },
   showDiscardButton: function () {
     // console.log('show discard button');
