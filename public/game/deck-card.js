@@ -78,6 +78,7 @@ DeckCard.prototype= {
   },
   startToFloatUp: function () {
     var i;
+    this.game.$audioChoseCard.get(0).play();
     for (i = 0; i < this.handCards.length; i++) {
       if (this.id != this.handCards[i].id) {
         if (this.handCards[i].up === true)
@@ -90,7 +91,6 @@ DeckCard.prototype= {
     this.moving = true;
     this.floatUp = true;
     this.checkDiscardButton();
-    this.game.$audioChoseCard.get(0).play();
     // this.cardTexture.filters = [shadow];
   },
   startToFloatDown: function () {

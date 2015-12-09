@@ -26,7 +26,7 @@ function resizeLobbyChatRoom() {
 }
 
 function resizeGameChatRoom() {
-  console.log('resizing chat room');
+  // console.log('resizing chat room');
   $window = $(window);
   $chatContainer = $('.chat-container');
   $userList = $('.user-list');

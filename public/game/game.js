@@ -202,7 +202,7 @@ Game.prototype._setHandCard = function(index, cardData, idInDeck) {
       spriteName = cardData.suit + '_' + cardData.rank + '.png';
     }
   }
-  console.log(spriteName);
+  // console.log(spriteName);
   handCards[index].updateCard(cardSprites[spriteName], cardData, idInDeck);
   // console.log(handCards);
 };
@@ -420,6 +420,7 @@ Game.prototype._updateBoard = function(data) {
 
 Game.prototype._updateHand = function(data) {
   console.log('Hand updating:= =============');
+  console.log(data);
   var i;
   for (i = 0; i < data.hand.length; i++) {
     this._setHandCard(i, card_id_to_suit_rank[data.hand[i]], data.hand[i]);
@@ -506,7 +507,7 @@ Game.prototype._updateTokens = function (data) {
 };
 
 Game.prototype._playingState = function (data) {
-  console.log(currentUserId, data.board.current_team_id.current_user_id);
+  // console.log(currentUserId, data.board.current_team_id.current_user_id);
   if (currentUserId == data.board.current_team_id.current_user_id) {
     this.inPlaying = true;
   } else {
