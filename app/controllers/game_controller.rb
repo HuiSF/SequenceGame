@@ -148,14 +148,13 @@ class GameController < ApplicationController
         if board.remove_token(params[:position])
           discard(board, user, params[:card])
           end_turn(board)
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
+          push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
           result[:success] = true
         end
       end
     end
-
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
-    push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
-
+    
     render :json => result
   end
 
