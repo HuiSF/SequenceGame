@@ -111,7 +111,7 @@ class GameController < ApplicationController
 
           board.users.each do |each_user|
             each_user.current_team = nil
-            user.hand = nil
+            each_user.hand = nil
             each_user.state = :lobby
             each_user.save
           end
