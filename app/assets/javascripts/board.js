@@ -74,7 +74,7 @@ Board.prototype._createChatRoom = function () {
 Board.prototype._createGame = function () {
   var _this = this;
   this._startLoading();
-  console.log('Starting to loading resources');
+  // console.log('Starting to loading resources');
   setTimeout(function () {
     _this._game = new Game({}, _this._channel, _this.settings.channelName, _this);
   }, 4000);
@@ -106,11 +106,11 @@ Board.prototype._startWaiting = function (duration) {
     },
     success: function (data) {
       if (_this.settings.debug) {
-        console.log('User waiting channel and event sent');
-        console.log(data);
+        // console.log('User waiting channel and event sent');
+        // console.log(data);
       }
       if (data.game_start) {
-        console.log('game start');
+        // console.log('game start');
         _this._endWaiting();
         setTimeout(function () {
           _this._createGame();
@@ -122,7 +122,7 @@ Board.prototype._startWaiting = function (duration) {
 };
 
 Board.prototype._endWaiting = function () {
-  console.log('end wiating');
+  // console.log('end wiating');
   $('.waiting-box').children('p').text('All players arrived, the game will start now!');
   $('.waiting-box').children('form').remove();
   setTimeout(function () {
@@ -132,7 +132,7 @@ Board.prototype._endWaiting = function () {
 };
 
 Board.prototype._startLoading = function () {
-  console.log('start loading');
+  // console.log('start loading');
   var pusherEvent = 'game_ready';
   var $popup = $('<div class="loading-popup"><div class="loading-box"><span class="loading-indecator animate-icon glyphicon glyphicon-refresh"></span>&nbsp;<span class="loading-text">Loading resources...</span></div></div>');
   $('body').prepend($popup);
@@ -257,7 +257,7 @@ Board.prototype._sendChatMessage = function(data) {
       _this._messageInputEl.removeAttr('readonly');
     },
     success: function(result) {
-      console.log(result);
+      // console.log(result);
       var activity = result.activity;
       var imageInfo = activity.actor.image;
       var image = $('<div class="pusher-chat-widget-current-user-image">' +
