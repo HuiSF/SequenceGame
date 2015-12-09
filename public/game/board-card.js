@@ -110,7 +110,7 @@ BoardCard.prototype= {
       }
     };
     this.cardTexture.mouseup = function (e) {
-      if (_this.game.inPlaying) {
+      if (_this.game.inPlaying  && !_this.hasToken) {
         if (_this.respondClick) {
           _this.addToken();
         }
@@ -118,6 +118,7 @@ BoardCard.prototype= {
     };
   },
   addToken: function() {
+    console.log(this.hasToken);
     var _this = this;
     console.log(_this.game.currentChosenCardInHand);
       // send request to server through pusher
