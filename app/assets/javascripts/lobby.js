@@ -58,6 +58,9 @@ function Lobby(pusher, options) {
     _this._autoScroll = (scrollableHeight === messageEl.scrollTop());
   });
 
+  this.$messageSound = $('<audio class="message-sound"><source src="/images/message.mp3" type="audio/mpeg"></audio>');
+  $('body').append(this.$messageSound);
+
   $.ajax({
     type: 'GET',
     url: '/lobby/boards',
@@ -89,7 +92,7 @@ Lobby.prototype._chatMessageReceived = function(data) {
       _this._messagesEl.scrollTop(messageEl.scrollHeight);
     }
   });
-
+  this.$messageSound.get(0).play();
   ++this._itemCount;
 
   if (this._itemCount > this.settings.maxItems) {

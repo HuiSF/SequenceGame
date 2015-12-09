@@ -64,6 +64,9 @@ Board.prototype._createChatRoom = function () {
     var scrollableHeight = (el.scrollHeight - messageEl.height());
     _this._autoScroll = (scrollableHeight === messageEl.scrollTop());
   });
+
+  this.$messageSound = $('<audio class="message-sound"><source src="/images/message.mp3" type="audio/mpeg"></audio>');
+  $('body').append(this.$messageSound);
   resizeGameChatRoom();
   this._startTimeMonitor();
 };
@@ -187,7 +190,7 @@ Board.prototype._abortGame = function () {
 
 /* @private */
 Board.prototype._chatMessageReceived = function(data) {
-  console.log(data);
+  // console.log(data);
   var _this = this;
 
   if (this._itemCount === 0) {
@@ -204,7 +207,7 @@ Board.prototype._chatMessageReceived = function(data) {
       _this._messagesEl.scrollTop(messageEl.scrollHeight);
     }
   });
-
+  this.$messageSound.get(0).play();
   ++this._itemCount;
 
   if (this._itemCount > this.settings.maxItems) {
