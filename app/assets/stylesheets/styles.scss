@@ -459,7 +459,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
   text-align: center;
   z-index: 9999;
 }
-.turn-reminder {
+.turn-reminder, .sequences-report {
   color: #fffd20;
   line-height: 36px;
   height: 36px;
@@ -478,4 +478,22 @@ body.sessions, body.boards, body.registrations, body.welcome {
   display: block;
   height: 100%;
   width: 100%;
+}
+.sequences-report {
+  color: #ddd;
+  line-height: 120%;
+  padding: 5px 0;
+  height: auto;
+}
+.sequences-report p {
+  margin: 0;
+}
+.sequences-report p .red {
+  color: #ff0000;
+}
+.sequences-report p .blue {
+  color: #3496fa;
+}
+.sequences-report p .green {
+  color: #53c900;
 }

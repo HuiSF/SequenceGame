@@ -37,7 +37,12 @@ DeckCard.prototype= {
     this.cardTexture.interactive = true;
     if (this.rank !== -1) this.bindEvents();
     this.getPairFromBoard();
-    this.addDiscardButton();
+    if (this.rank !== 11) {
+      this.addDiscardButton();
+    } else {
+      this.addInstructionText();
+    }
+
   },
   setPosition: function (x, y) {
     this.cardTexture.position.x = x;
@@ -66,6 +71,11 @@ DeckCard.prototype= {
     this.getPairFromBoard();
     if (this.cardTexture.position.y === -24) {
       this.startToFloatDown();
+    }
+    if (this.rank == '11') {
+      this.addInstructionText();
+    } else {
+      this.addDiscardButton();
     }
   },
   getPairFromBoard: function () {
@@ -164,7 +174,11 @@ DeckCard.prototype= {
   },
   addDiscardButton: function () {
     var _this = this;
-    this.discardButton = new PIXI.Sprite(this.game.sprites.components['btn-discard.png']);
+    if (this.discardButton === undefined) {
+      this.discardButton = new PIXI.Sprite(this.game.sprites.components['btn-discard.png']);
+    } else {
+      this.discardButton.texture = this.game.sprites.components['btn-discard.png'];
+    }
     this.discardButton.interactive = true;
     this.discardButton.mouseup = function (e) {
       console.log('click');
@@ -188,6 +202,16 @@ DeckCard.prototype= {
         });
       }
     };
+  },
+  addInstructionText: function () {
+    var _this = this;
+    // this.discardButton = new PIXI.Sprite(this.game.sprites.components['btn-discard.png']);
+    if (this.suit == 'diamond' || this.suit == 'club') {
+      this.discardButton.texture = this.game.sprites.components['wildcard.png'];
+    } else {
+      this.discardButton.texture = this.game.sprites.components['removecard.png'];
+    }
+    this.discardButton.mouseup = null;
   },
   showDiscardButton: function () {
     // console.log('show discard button');

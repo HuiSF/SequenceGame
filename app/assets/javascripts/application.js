@@ -35,10 +35,11 @@ function resizeGameChatRoom() {
   $chatWidget = $('.pusher-chat-widget');
   $pusherChatWidgetInput = $('.pusher-chat-widget-input');
   $pusherChatWidgetMessages = $('.pusher-chat-widget-messages');
-  $chatContainer.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight());
+  $sequencesReport = $('.sequences-report');
+  $chatContainer.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight() - $sequencesReport.outerHeight());
   // $chatWidget.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight());
   // $pusherChatWidgetMessages.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight() - $pusherChatWidgetInput.outerHeight());
-  $('.activity-stream').css('max-height', $window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight() - $pusherChatWidgetInput.outerHeight() - 5);
+  $('.activity-stream').css('max-height', $window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight() - $pusherChatWidgetInput.outerHeight() -  $sequencesReport.outerHeight() - 5);
 }
 
 function  showPopup(duration) {
@@ -52,4 +53,8 @@ function hidePopup(duration) {
   $popup = $('.loading-popup');
   $popup.fadeOut(duration);
   $popup.delay(duration).remove();
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

@@ -413,6 +413,7 @@ Game.prototype._updateBoard = function(data) {
     this._updateDiscardCard(data);
     this._updateTokens(data);
     this._playingState(data);
+    this._updateSequencesReport(data);
   } else {
     this._gameOver(data);
   }
@@ -537,6 +538,16 @@ Game.prototype._playingState = function (data) {
       $(user).removeClass('in-turn');
     }
   });
+};
+
+Game.prototype._updateSequencesReport = function (data) {
+  var i,
+      $sequencesReport = $('.sequences-report');
+  $sequencesReport.html('');
+  for (i = 0; i < data.teams.length; i++) {
+    $sequencesReport.append($('<p><span class="' + data.teams[i].color + '">' + capitalizeFirstLetter(data.teams[i].color) + '</span> team\'s sequences: ' + data.teams[i].sequences.length + '</p>'));
+  }
+  resizeGameChatRoom();
 };
 
 Game.prototype._gameOver = function (data) {
