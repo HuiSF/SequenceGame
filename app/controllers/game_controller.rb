@@ -39,7 +39,7 @@ class GameController < ApplicationController
       team.game_result = team == losing_team ? :loss : :win
       team.save
     end
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board.id, {game_abort: true})
     board.users.each do |each_user|
       each_user.current_team = nil
       each_user.state = :lobby
@@ -109,7 +109,7 @@ class GameController < ApplicationController
           STDERR.puts "game ended"
           STDERR.puts "========================="
           board.process_win(board.current_team)
-          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board.id, {game_abort: true})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
           board.users.each do |each_user|
             each_user.current_team = nil
@@ -124,7 +124,7 @@ class GameController < ApplicationController
           discard(board, user, params[:card])
           end_turn(board)
 
-          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_added_position: params[:position], team_id: user.current_team.id, team_color: user.current_team.color})
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board.id, {token_added_position: params[:position], team_id: user.current_team.id, team_color: user.current_team.color})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
         end
 
@@ -158,7 +158,7 @@ class GameController < ApplicationController
         if board.remove_token(params[:position])
           discard(board, user, params[:card])
           end_turn(board)
-          push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_removed_position: params[:position]})
+          push_public_board_info(params[:channel_name], params[:public_update_event_name], board.id, {token_removed_position: params[:position]})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
           result[:success] = true
         else
@@ -187,7 +187,7 @@ class GameController < ApplicationController
 
     discard(board, user, params[:card])
 
-    push_public_board_info(params[:channel_name], params[:public_update_event_name], board)
+    push_public_board_info(params[:channel_name], params[:public_update_event_name], board.id)
     push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
 
     render :json => {:success => true}
@@ -228,7 +228,7 @@ class GameController < ApplicationController
       board.save
     end
 
-    push_public_board_info(channel_name, public_update_even_name, board)
+    push_public_board_info(channel_name, public_update_even_name, board.id)
     board.users.each do |each_user|
       push_user_hand_info(channel_name, user_event_name + each_user.id.to_s, each_user)
     end
@@ -302,7 +302,8 @@ class GameController < ApplicationController
     request.format.json?
   end
 
-  def push_public_board_info(channel_name, event_name, board, additional_options = {game_abort: false, token_added_position: nil, token_removed_position: nil})
+  def push_public_board_info(channel_name, event_name, board_id, additional_options = {game_abort: false, token_added_position: nil, token_removed_position: nil})
+    board = Board.find(board_id)
     board_json = {}
     board_json['board'] = {}
     board_json['teams'] = []
