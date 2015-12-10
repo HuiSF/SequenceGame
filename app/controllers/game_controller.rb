@@ -108,7 +108,7 @@ class GameController < ApplicationController
           STDERR.puts "========================="
           STDERR.puts "game ended"
           STDERR.puts "========================="
-          board.process_win(current_team)
+          board.process_win(board.current_team)
           push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
           board.users.each do |each_user|
