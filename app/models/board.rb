@@ -96,13 +96,21 @@ class Board < ActiveRecord::Base
   end
 
   def current_team_has_won?
-    self.current_team.sequences.count == self.teams.count
+    if self.teams.count == 3
+      return self.current_team.sequences.count == 1
+    end
+    self.current_team.sequences.count == 2
   end
 
   # for regular win, i.e., not in game leave, or win by default
   def process_win(winning_team)
     self.teams.each do |team|
-      team.game_result = team == winning_team ? :win : :loss
+      if team == winning_team
+        team.game_result = :win
+      else
+        team.game_result = :loss
+      end
+
       team.save
     end
   end
