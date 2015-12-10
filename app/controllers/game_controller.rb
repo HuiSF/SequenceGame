@@ -314,8 +314,13 @@ class GameController < ApplicationController
         :number_of_players => board.number_of_players,
         :current_team_id => board.current_team,
         :last_discarded => board.last_discard,
-        :game_abort => additional_options[:game_abort] ? true : false,
     }
+
+    if additional_options[:game_abort]
+      board_json['board'][:game_abort] = true
+    else
+      board_json['board'][:game_abort] = false
+    end
 
     STDERR.puts "========================="
     STDERR.puts "game_abort?" + board_json['board'][:game_abort].to_s

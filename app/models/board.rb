@@ -105,7 +105,12 @@ class Board < ActiveRecord::Base
   # for regular win, i.e., not in game leave, or win by default
   def process_win(winning_team)
     self.teams.each do |team|
-      team.game_result = team == winning_team ? :win : :loss
+      if team == winning_team
+        team.game_result = :win
+      else
+        team.game_result = :loss
+      end
+
       team.save
     end
   end
