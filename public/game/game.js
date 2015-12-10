@@ -521,7 +521,12 @@ Game.prototype._playingState = function (data) {
   // console.log(currentUserId, data.board.current_team_id.current_user_id);
   if (currentUserId == data.board.current_team_id.current_user_id) {
     this.inPlaying = true;
+    $('.turn-reminder .content').text('Your turn!');
+    // setInterval(function () {
+      $('.turn-reminder .content').effect( "shake", {times:4}, 1000 );
+    // }, 5000);
   } else {
+    $('.turn-reminder .content').text('Other players\' turn!');
     this.inPlaying = false;
   }
   var targetId = data.board.current_team_id.current_user_id;

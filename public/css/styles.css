@@ -1,8 +1,8 @@
-body.sessions, body.boards, body.registrations, body.welcome {
-    background: #0d2432 image-url('background_pattern.png') fixed;
+body.sessions, body.boards, body.registrations, body.welcome, body.rule-page {
+    background: #0d2432 url('/images/background_pattern.png') fixed;
 }
 .loading-popup, .waiting-popup, .warning-popup, .gameover-popup {
-  background: rgba(0, 0, 0, 1) image-url('background_pattern.png');
+  background: rgba(0, 0, 0, 1) url('/images/background_pattern.png');
   bottom: 0;
   position: fixed;
   left: 0;
@@ -11,7 +11,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
   z-index: 999999999;
 }
 // .warning-popup {
-//   background: rgba(0, 0, 0, 0.8) image-url('background_pattern.png');
+//   background: rgba(0, 0, 0, 0.8) url('/images/background_pattern.png');
 // }
 .loading-box{
   color: #fff;
@@ -72,7 +72,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
 }
 
 .gameover-box {
-  background: url('') center center no-repeat;
+  background: url('/images/') center center no-repeat;
   background-size: contain;
   position: absolute;
   z-index: 9999999999;
@@ -212,7 +212,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
 }
 
 .screenshot {
-  background: image-url('screenshots.png') center top no-repeat;
+  background: url('/images/screenshots.png') center top no-repeat;
   background-size: contain;
   min-height: 400px;
   margin-top: 40px;
@@ -478,4 +478,23 @@ body.sessions, body.boards, body.registrations, body.welcome {
   display: block;
   height: 100%;
   width: 100%;
+}
+.rule-content {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 3px rgba(0, 0, 0, 0.8);
+  border: 1px solid #4A555E;
+  padding: 20px;
+  float: none;
+  margin: 0 auto;
+}
+.rule-page {
+  padding: 20px 0;
+}
+.rule-content h2, .rule-content h3 {
+  color: #4B9ECC;
+  font-family: 'Cinzel', serif;
+}
+.rule-content p {
+  color: #ddd;
 }

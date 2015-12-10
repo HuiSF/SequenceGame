@@ -31,7 +31,14 @@ function resizeGameChatRoom() {
   $chatContainer = $('.chat-container');
   $userList = $('.user-list');
   $gameButtons = $('.game-buttons');
-  $chatContainer.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight());
+  $turnReminder = $('.turn-reminder');
+  $chatWidget = $('.pusher-chat-widget');
+  $pusherChatWidgetInput = $('.pusher-chat-widget-input');
+  $pusherChatWidgetMessages = $('.pusher-chat-widget-messages');
+  $chatContainer.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight());
+  // $chatWidget.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight());
+  // $pusherChatWidgetMessages.height($window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight() - $pusherChatWidgetInput.outerHeight());
+  $('.activity-stream').css('max-height', $window.innerHeight() - $userList.outerHeight() - $gameButtons.outerHeight() - $turnReminder.outerHeight() - $pusherChatWidgetInput.outerHeight() - 5);
 }
 
 function  showPopup(duration) {
