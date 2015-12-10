@@ -103,10 +103,11 @@ class GameController < ApplicationController
 
       if board.can_add_token?(params[:position])
         user.add_token(params[:card], params[:position])
-        discard(board, user, params[:card])
-        end_turn(board)
 
         if board.current_team_has_won?
+          STDERR.puts "========================="
+          STDERR.puts "game ended"
+          STDERR.puts "========================="
           board.process_win(current_team)
           push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {game_abort: true})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
@@ -120,6 +121,9 @@ class GameController < ApplicationController
           board.save
           reset_board(board)
         else
+          discard(board, user, params[:card])
+          end_turn(board)
+
           push_public_board_info(params[:channel_name], params[:public_update_event_name], board, {token_added_position: params[:position], team_id: user.current_team.id, team_color: user.current_team.color})
           push_user_hand_info(params[:channel_name], params[:user_update_event_name], user)
         end
@@ -311,6 +315,11 @@ class GameController < ApplicationController
         :last_discarded => board.last_discard,
         :game_abort => additional_options[:game_abort] ? true : false,
     }
+
+    STDERR.puts "========================="
+    STDERR.puts "game_abort?" + board_json['board'][:game_abort].to_s
+    STDERR.puts "game_abort passed in?" + additional_options[:game_abort].to_s
+    STDERR.puts "========================="
 
     if additional_options[:token_added_position]
       board_json['board'][:token_added] = {success: true, position: additional_options[:token_added_position], team_id: additional_options[:team_id], team_color: additional_options[:team_color]}
