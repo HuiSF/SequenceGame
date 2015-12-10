@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
     if self.hand.include?(card)
       self.current_team.tokens.push(token_position)
       self.current_team.save
+      self.save
       # self.hand.delete(card)
       # self.save
       self.current_team.check_for_new_sequence(token_position)
