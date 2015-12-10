@@ -104,7 +104,7 @@ class GameController < ApplicationController
       if board.can_add_token?(params[:position])
         user.add_token(params[:card], params[:position])
 
-        board.find(params[:board_id])
+        board = Board.find(params[:board_id])
         if board.current_team_has_won?
           STDERR.puts "========================="
           STDERR.puts "game ended"
