@@ -1,4 +1,4 @@
-body.sessions, body.boards, body.registrations, body.welcome {
+body.sessions, body.boards, body.registrations, body.welcome, body.passwords {
     background: #0d2432 image-url('background_pattern.png') fixed;
 }
 .loading-popup, .waiting-popup, .warning-popup, .gameover-popup {
@@ -109,7 +109,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
 .login-container, .registration {
     padding-top: 20px;
 }
-.sign-in-container, .sign-up-container {
+.sign-in-container, .sign-up-container, .password-container {
   float: none;
   margin: 0 auto;
   text-align: center;
@@ -168,7 +168,7 @@ body.sessions, body.boards, body.registrations, body.welcome {
   margin-right: 6px;
 }
 
-.sign-up-container {
+.sign-up-container, .password-container {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.3);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 3px rgba(0, 0, 0, 0.8);

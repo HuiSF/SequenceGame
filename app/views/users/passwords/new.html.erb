@@ -1,4 +1,4 @@
-<h2>Forgot your password?</h2>
+<!-- <h2>Forgot your password?</h2>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
   <%= devise_error_messages! %>
@@ -13,4 +13,27 @@
   </div>
 <% end %>
 
-<%= render "users/shared/links" %>
+<%= render "users/shared/links" %> -->
+<div class="container">
+  <div class="logo">
+    <span class="large">S</span>EQUENCE
+  </div>
+</div>
+<div class="container passwords">
+  <div class="row">
+    <div class="col-md-6 col-sm-12 password-container">
+      <%= devise_error_messages! %>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, :class => "form-horizontal sign-up-form"}) do |f| %>
+      <div class="form-group">
+        <%= f.label :email, :class => ('col-sm-12 col-md-3 control-label') %>
+        <div class="col-sm-12 col-md-7">
+          <%= f.email_field :email, :class => ('form-control'), :placeholder => ('email'), autofocus: true %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.submit "Send me reset password email", :class => ("btn btn-info") %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
