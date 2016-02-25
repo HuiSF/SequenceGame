@@ -1,3 +1,3 @@
-# Term-F
+#Demo
 
-https://protected-waters-9415.herokuapp.com
+https://sequence-game-demo.herokuapp.com/
