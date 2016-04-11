@@ -2,7 +2,7 @@
 
 A HTML5 multiplayer real time game.
 
-The game is design by [Douglas Reuter](https://en.wikipedia.org/wiki/Sequence_%28game%29). The copyrigh is belong to the original inventor.
+The sequence game is designed by [Douglas Reuter](https://en.wikipedia.org/wiki/Sequence_%28game%29). The copyrigh is belong to the original inventor.
 
 The purpose of this project is researching and learning web development techniques.
 
